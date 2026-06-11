@@ -13,6 +13,7 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import * as SecureStore from "expo-secure-store";
+import { API_V1 } from "@/constants/api";
 
 export default function PerfilUsuarioScreen() {
   const router = useRouter();
@@ -71,7 +72,7 @@ export default function PerfilUsuarioScreen() {
 
         // BUSCA USER
         let response = await fetch(
-          `https://selene-mobile.onrender.com/api/v1/users/${buscaId}`,
+          `${API_V1}/users/${buscaId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -90,7 +91,7 @@ export default function PerfilUsuarioScreen() {
 
         // BUSCA EM LISTA USERS
         const resUsers = await fetch(
-          `https://selene-mobile.onrender.com/api/v1/users`,
+          `${API_V1}/users`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -113,7 +114,7 @@ export default function PerfilUsuarioScreen() {
 
         // BUSCA ADMINS
         const resAdmin = await fetch(
-          `https://selene-mobile.onrender.com/api/v1/admin/listar`,
+          `${API_V1}/admin/listar`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -175,8 +176,8 @@ export default function PerfilUsuarioScreen() {
 
             // DEFINE A ROTA CORRETA
             const endpoint = isAdmin
-              ? `https://selene-mobile.onrender.com/api/v1/admin/${buscaId}`
-              : `https://selene-mobile.onrender.com/api/v1/users/${buscaId}`;
+              ? `${API_V1}/admin/${buscaId}`
+              : `${API_V1}/users/${buscaId}`;
 
             const res = await fetch(endpoint, {
               method: "DELETE",

@@ -14,6 +14,7 @@ import axios from "axios";
 import { FontAwesome5 } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import { StatusBar } from "expo-status-bar";
+import { API_V1 } from "@/constants/api";
 
 export default function ForgotPassword() {
   const router = useRouter();
@@ -40,7 +41,7 @@ export default function ForgotPassword() {
     try {
       // 🔹 1ª tentativa: usuário comum
       const response = await axios.post(
-        "https://selene-mobile.onrender.com/api/v1/auth/recuperar-senha",
+        `${API_V1}/auth/recuperar-senha`,
         { email: emailFormatado },
       );
 
@@ -49,7 +50,7 @@ export default function ForgotPassword() {
       try {
         // 🔹 2ª tentativa: admin (fallback)
         const responseAdmin = await axios.post(
-          "https://selene-mobile.onrender.com/api/v1/admin/recuperar-senha",
+          `${API_V1}/admin/recuperar-senha`,
           { email: emailFormatado },
         );
 

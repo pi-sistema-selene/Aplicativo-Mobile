@@ -16,6 +16,7 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
+import { API_V1 } from "@/constants/api";
 
 interface Message {
   _id: string;
@@ -104,8 +105,8 @@ export default function ChatScreen() {
 
       let url =
         role === "admin" || role === "superadmin"
-          ? `https://selene-mobile.onrender.com/api/v1/admin/chats/${chatId}/mensagens`
-          : `https://selene-mobile.onrender.com/api/v1/chats/${chatId}/mensagens`;
+          ? `${API_V1}/admin/chats/${chatId}/mensagens`
+          : `${API_V1}/chats/${chatId}/mensagens`;
 
       const res = await axios.get(url, {
         headers: { Authorization: `Bearer ${token}` },
@@ -126,8 +127,8 @@ export default function ChatScreen() {
 
       let url =
         role === "admin" || role === "superadmin"
-          ? `https://selene-mobile.onrender.com/api/v1/admin/chats/${chatId}/mensagens`
-          : `https://selene-mobile.onrender.com/api/v1/chats/${chatId}/mensagens`;
+          ? `${API_V1}/admin/chats/${chatId}/mensagens`
+          : `${API_V1}/chats/${chatId}/mensagens`;
 
       setIsTyping(true);
 

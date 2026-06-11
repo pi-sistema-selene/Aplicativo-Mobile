@@ -12,6 +12,7 @@ import { Feather } from "@expo/vector-icons";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
+import { API_V1 } from "@/constants/api";
 
 export default function NovoUsuario() {
   const [nome, setNome] = useState("");
@@ -90,8 +91,8 @@ export default function NovoUsuario() {
 
       const endpoint =
         nivel === "superadmin"
-          ? "https://selene-mobile.onrender.com/api/v1/admin/criar"
-          : "https://selene-mobile.onrender.com/api/v1/users";
+          ? `${API_V1}/admin/criar`
+          : `${API_V1}/users`;
 
       // ==========================================
       // BODY ADMIN

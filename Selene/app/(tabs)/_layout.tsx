@@ -1,33 +1,26 @@
 import React from "react";
 import { Tabs } from "expo-router";
 import { SimpleLineIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Colors } from "@/constants/Colors";
 
 export default function TabLayout() {
   return (
     <Tabs
-      // ==========================================
-      // CONFIGURAÇÕES VISUAIS DA TAB BAR
-      // ==========================================
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#95C159", // Verde Selene
-        tabBarInactiveTintColor: "#8E8E8E",
+        tabBarActiveTintColor: Colors.primary,
+        tabBarInactiveTintColor: Colors.tabInactive,
         tabBarStyle: {
           height: 85,
           paddingBottom: 15,
           paddingTop: 10,
-          backgroundColor: "#FFF",
+          backgroundColor: Colors.white,
           borderTopWidth: 1,
-          borderTopColor: "#F0F0F0",
+          borderTopColor: Colors.tabBorder,
         },
         tabBarLabelStyle: { fontSize: 12, fontWeight: "600" },
       }}
     >
-      {/* ---------------------------------------------------------
-          ROTAS VISÍVEIS NA TAB BAR (MENU INFERIOR)
-      ---------------------------------------------------------- */}
-
-      {/* TELA DE INÍCIO */}
       <Tabs.Screen
         name="home"
         options={{
@@ -38,7 +31,6 @@ export default function TabLayout() {
         }}
       />
 
-      {/* TELA DE LISTAGEM DE ESTUFAS */}
       <Tabs.Screen
         name="estufas"
         options={{
@@ -49,7 +41,6 @@ export default function TabLayout() {
         }}
       />
 
-      {/* TELA DE RELATÓRIOS/DETECÇÕES */}
       <Tabs.Screen
         name="relatorios"
         options={{
@@ -64,7 +55,6 @@ export default function TabLayout() {
         }}
       />
 
-      {/* TELA DE CONFIGURAÇÕES GERAIS */}
       <Tabs.Screen
         name="settings"
         options={{
@@ -75,12 +65,6 @@ export default function TabLayout() {
         }}
       />
 
-      {/* ---------------------------------------------------------
-          ROTAS OCULTAS (ACESSÍVEIS APENAS POR LINK/ROUTER)
-          O 'href: null' faz com que elas não criem um botão na barra
-      ---------------------------------------------------------- */}
-
-      {/* TELA DE PERFIL */}
       <Tabs.Screen
         name="profile"
         options={{
@@ -88,7 +72,6 @@ export default function TabLayout() {
         }}
       />
 
-      {/* TELA DE EDIÇÃO DE PERFIL */}
       <Tabs.Screen
         name="edit-profile"
         options={{

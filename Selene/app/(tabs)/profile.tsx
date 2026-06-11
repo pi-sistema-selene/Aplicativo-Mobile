@@ -4,55 +4,45 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  Alert,
   ActivityIndicator,
+  StyleSheet,
 } from "react-native";
 import { Image } from "expo-image";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-
-import { StyleSheet } from "react-native"; // mantém separado
+import { STORAGE_KEYS } from "@/constants/storageKeys";
+import { IMAGES } from "@/constants/images";
+import { Colors } from "@/constants/Colors";
+import { useLogout } from "@/hooks/useLogout";
+import { getInitials } from "@/utils/initials";
+import { isAdminRole } from "@/utils/role";
 
 export default function ProfileScreen() {
   const router = useRouter();
-
-  // =========================
-  // STATES
-  // =========================
+  const { logout } = useLogout();
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [iniciais, setIniciais] = useState("US");
-
   const [userData, setUserData] = useState({
     nome: "",
     id: "",
     iniciais: "",
   });
 
-  // =========================
-  // LOAD USER
-  // =========================
   useEffect(() => {
     const loadUserData = async () => {
       try {
-        const nomeCompleto = await SecureStore.getItemAsync("userName");
-        const userId = await SecureStore.getItemAsync("userId");
-        const role = await SecureStore.getItemAsync("userRole");
+        const nomeCompleto = await SecureStore.getItemAsync(STORAGE_KEYS.USER_NAME);
+        const userId = await SecureStore.getItemAsync(STORAGE_KEYS.USER_ID);
+        const role = await SecureStore.getItemAsync(STORAGE_KEYS.USER_ROLE);
 
-        setIsAdmin(role === "admin" || role === "superadmin");
+        setIsAdmin(isAdminRole(role));
 
         if (nomeCompleto) {
-          const partes = nomeCompleto.trim().split(" ");
-
-          const init =
-            partes.length > 1
-              ? (partes[0][0] + partes[1][0]).toUpperCase()
-              : partes[0][0].toUpperCase();
-
+          const init = getInitials(nomeCompleto);
           setIniciais(init);
-
           setUserData({
             nome: nomeCompleto,
             id: userId ? userId.substring(0, 8) : "--------",
@@ -69,33 +59,6 @@ export default function ProfileScreen() {
     loadUserData();
   }, []);
 
-  // =========================
-  // LOGOUT
-  // =========================
-  const handleLogout = async () => {
-    Alert.alert("Sair", "Deseja encerrar a sessão?", [
-      { text: "Cancelar", style: "cancel" },
-      {
-        text: "Sair",
-        onPress: async () => {
-          try {
-            await SecureStore.deleteItemAsync("userToken");
-            await SecureStore.deleteItemAsync("userRole");
-            await SecureStore.deleteItemAsync("userName");
-            await SecureStore.deleteItemAsync("userEmail");
-            await SecureStore.deleteItemAsync("userId");
-
-            router.replace("/(auth)");
-          } catch (e) {
-          }
-        },
-      },
-    ]);
-  };
-
-  // =========================
-  // UI
-  // =========================
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={["top"]}>
@@ -135,7 +98,7 @@ export default function ProfileScreen() {
           {/* FOTO */}
           <View style={styles.imageContainer}>
             <Image
-              source="https://i.pravatar.cc/300"
+              source={IMAGES.placeholderAvatar}
               style={styles.profileImage}
             />
           </View>
@@ -166,7 +129,7 @@ export default function ProfileScreen() {
 
                 <TouchableOpacity
                   style={styles.menuItem}
-                  onPress={() => router.push("/(admin)/users")}
+                  onPress={() => router.push("/(admin)/(tabs)/users")}
                 >
                   <View
                     style={[
@@ -257,7 +220,7 @@ export default function ProfileScreen() {
             {/* LOGOUT */}
             <TouchableOpacity
               style={[styles.menuItem, { marginTop: 10 }]}
-              onPress={handleLogout}
+              onPress={logout}
             >
               <View
                 style={[

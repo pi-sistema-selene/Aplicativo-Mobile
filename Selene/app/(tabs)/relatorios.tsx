@@ -17,6 +17,7 @@ import * as FileSystem from "expo-file-system/legacy";
 // IMPORTANTE: Trocando os imports dinâmicos por imports estáticos no topo do arquivo
 import * as Sharing from "expo-sharing";
 import * as Print from "expo-print";
+import { API_V1 } from "@/constants/api";
 
 interface ExportHistoryItem {
   id: string;
@@ -33,7 +34,7 @@ export default function RelatoriosScreen() {
   const [loading, setLoading] = useState(false);
   const [exportHistory, setExportHistory] = useState<ExportHistoryItem[]>([]);
 
-  const API_BASE = "https://selene-mobile.onrender.com/api/v1";
+  const API_BASE = API_V1;
 
   const handleGoProfile = async () => {
     const role = await SecureStore.getItemAsync("userRole");

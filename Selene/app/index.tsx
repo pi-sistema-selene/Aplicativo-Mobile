@@ -13,5 +13,5 @@ export default function Index() {
   // Se existir -> Redirect para "/(tabs)/home"
   // Se não -> Redirect para "/(auth)/"
   
-  return <Redirect href="/(auth)/" />;
+  return <Redirect href="/(auth)" />;
 }

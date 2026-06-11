@@ -13,6 +13,7 @@ import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import * as SecureStore from "expo-secure-store";
+import { API_V1 } from "@/constants/api";
 
 type Sensor = {
   id: string;
@@ -73,7 +74,7 @@ export default function MonitoramentoAdmin() {
     try {
       isRefresh ? setRefreshing(true) : setLoading(true);
       const res = await fetch(
-        "https://selene-mobile.onrender.com/api/v1/dispositivos",
+        `${API_V1}/dispositivos`,
         {
           headers: { Authorization: `Bearer ${activeToken}` },
         },

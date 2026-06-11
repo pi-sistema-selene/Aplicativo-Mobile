@@ -12,18 +12,17 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { Feather, MaterialIcons, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-
-// Definição estrita das interfaces
-interface AlertaItem {
-  id: string;
-  titulo: string;
-  sub: string;
-  estufa: string;
-  tempo: string;
-  prioridade: "Alta" | "Média" | "Baixa";
-  corPrioridade: string;
-  tipo: "risco" | "aviso";
-}
+import { STORAGE_KEYS } from "@/constants/storageKeys";
+import { IMAGES } from "@/constants/images";
+import { useUserInitials } from "@/hooks/useUserInitials";
+import { getMeusDispositivos, getLeituras } from "@/services/dispositivoService";
+import {
+  hasSensorAnomaly,
+  buildAlertaScreenItem,
+  formatAlertaTimeRelative,
+} from "@/utils/anomaly";
+import { formatDateBR, formatTimeBR } from "@/utils/formatDate";
+import type { AlertaItem } from "@/types/alerta";
 
 interface AnaliseItem {
   id: string;
@@ -34,154 +33,75 @@ interface AnaliseItem {
 
 export default function AlertasScreen() {
   const router = useRouter();
-  const [iniciais, setIniciais] = useState("US");
+  const { iniciais } = useUserInitials();
   const [loading, setLoading] = useState(true);
   const [alertas, setAlertas] = useState<AlertaItem[]>([]);
   const [analises, setAnalises] = useState<AnaliseItem[]>([]);
   const [activeFilter, setActiveFilter] = useState<"Total" | "Alta" | "Média" | "Baixa">("Total");
 
-  const API_BASE = "https://selene-mobile.onrender.com/api/v1";
-
-  // Sincroniza iniciais do usuário no cabeçalho
-  useEffect(() => {
-    const carregarIniciais = async () => {
-      try {
-        const nomeSalvo = await SecureStore.getItemAsync("userName");
-        if (nomeSalvo) {
-          const partes = nomeSalvo.trim().split(" ");
-          const init =
-            partes.length > 1
-              ? (partes[0][0] + partes[1][0]).toUpperCase()
-              : partes[0][0].toUpperCase();
-          setIniciais(init);
-        }
-      } catch (e) {
-        console.log("Erro ao carregar iniciais:", e);
-      }
-    };
-    carregarIniciais();
-  }, []);
-
-  // Mesma lógica inteligente de varredura que você usa na Home
   useEffect(() => {
     const carregarEProcessarAlertas = async () => {
       setLoading(true);
       try {
-        const token = await SecureStore.getItemAsync("userToken");
+        const token = await SecureStore.getItemAsync(STORAGE_KEYS.USER_TOKEN);
         if (!token) return;
 
-        // 1. Busca os seus dispositivos ativos
-        const sensoresRes = await fetch(`${API_BASE}/dispositivos/meus`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-        const sensoresJson = await sensoresRes.json();
-        const meusDispositivos = sensoresJson.data || [];
+        const meusDispositivos = await getMeusDispositivos(token);
+        const listaAlertasGerados: AlertaItem[] = [];
+        const listaAnalisesGeradas: AnaliseItem[] = [];
 
-        let listaAlertasGerados: AlertaItem[] = [];
-        let listaAnalisesGeradas: AnaliseItem[] = [];
-
-        // 2. Percorre cada dispositivo varrendo o histórico total de leituras
         for (const dispositivo of meusDispositivos) {
-          const leituraRes = await fetch(
-            `${API_BASE}/dispositivos/${dispositivo._id}/leituras?limite=50`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
+          const listaLeituras = await getLeituras(dispositivo._id, token, 50);
+
+          listaLeituras.forEach((leitura, index) => {
+            if (leitura.tipo_leitura === "SENSORES" && leitura.dados && hasSensorAnomaly(leitura.dados)) {
+              const alerta = buildAlertaScreenItem(leitura.dados);
+              listaAlertasGerados.push({
+                id: leitura._id || `${dispositivo._id}_sensor_${index}`,
+                titulo: alerta.titulo,
+                sub: alerta.sub,
+                prioridade: alerta.prioridade,
+                corPrioridade: alerta.corPrioridade,
+                estufa: dispositivo.nome || "Principal",
+                tempo: formatAlertaTimeRelative(leitura.createdAt),
+                tipo: alerta.tipo,
+              });
             }
-          );
-          const leituraJson = await leituraRes.json();
-          const listaLeituras = leituraJson?.data || leituraJson || [];
 
-          if (Array.isArray(listaLeituras)) {
-            listaLeituras.forEach((leitura: any, index: number) => {
-
-              // --- SEÇÃO A: PROCESSAMENTO DE ALERTAS DE SENSORES ---
-              if (leitura.tipo_leitura === "SENSORES" && leitura.dados) {
-                const temp = leitura.dados.temperatura;
-                const umidade = leitura.dados.umidade;
-                const luz = leitura.dados.luminosidade;
-
-                const itemComAnomalia =
-                  temp > 24 || temp < 10 || umidade < 80 || umidade > 95 || luz === 0;
-
-                if (itemComAnomalia) {
-                  let mensagemAlerta = "Anomalia Detectada";
-                  const formattedTemp = temp != null ? Number(temp).toFixed(0) : "--";
-                  const formattedUmidade = umidade != null ? Number(umidade).toFixed(0) : "--";
-                  let submensagemAlerta = `Temperatura: ${formattedTemp}°C | Umidade: ${formattedUmidade}%`;
-
-                  let prioridade: "Alta" | "Média" | "Baixa" = "Média";
-                  let corPrioridade = "#7A7A7A"; // Cinza/Média padrão do print
-                  let tipo: "risco" | "aviso" = "aviso";
-
-                  if (temp > 24 || temp < 10) {
-                    mensagemAlerta = temp > 24 ? "Temperatura elevada detectada" : "Temperatura baixa detectada";
-                    prioridade = temp > 28 || temp < 10 ? "Alta" : "Média";
-                    corPrioridade = temp > 28 || temp < 10 ? "#D9534F" : "#7A7A7A";
-                    tipo = temp > 28 || temp < 10 ? "risco" : "aviso";
-                  } else if (umidade < 80 || umidade > 95) {
-                    mensagemAlerta = "Umidade acima do ideal";
-                    submensagemAlerta = `Umidade está em ${formattedUmidade}%, fora da meta recomendada.`;
-                    prioridade = umidade < 70 ? "Alta" : "Média";
-                    corPrioridade = umidade < 70 ? "#D9534F" : "#7A7A7A";
-                    tipo = umidade < 70 ? "risco" : "aviso";
-                  } else if (luz === 0) {
-                    mensagemAlerta = "Ausência de Luz Detectada";
-                  }
-
-                  const horaFormatada = leitura.createdAt
-                    ? new Date(leitura.createdAt).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })
-                    : "Agora";
-
-                  listaAlertasGerados.push({
-                    id: leitura._id || `${dispositivo._id}_sensor_${index}`,
-                    titulo: mensagemAlerta,
-                    sub: submensagemAlerta,
-                    prioridade,
-                    corPrioridade,
-                    estufa: dispositivo.nome || "Principal",
-                    tempo: `há ${horaFormatada}`,
-                    tipo
-                  });
-                }
-              }
-
-              // --- SEÇÃO B: PROCESSAMENTO DO CARROSSEL DE IMAGENS ---
-              if ((leitura.tipo_leitura === "CAMERA" || leitura.dados?.foto_path) && listaAnalisesGeradas.length < 10) {
-                listaAnalisesGeradas.push({
-                  id: leitura._id || `${dispositivo._id}_cam_${index}`,
-                  img: leitura.dados?.foto_path || leitura.dados?.foto || "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=400",
-                  data: leitura.createdAt
-                    ? new Date(leitura.createdAt).toLocaleDateString("pt-BR", { day: "2-digit", month: "long" }) + `, ${new Date(leitura.createdAt).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}`
-                    : "Data indisponível",
-                  local: `${dispositivo.nome || "Estufa"} - ${leitura.dados?.setor || "Setor B"}`,
-                });
-              }
-            });
-          }
+            if (
+              (leitura.tipo_leitura === "CAMERA" || leitura.dados?.foto_path) &&
+              listaAnalisesGeradas.length < 10
+            ) {
+              listaAnalisesGeradas.push({
+                id: leitura._id || `${dispositivo._id}_cam_${index}`,
+                img:
+                  leitura.dados?.foto_path ||
+                  leitura.dados?.foto ||
+                  IMAGES.placeholderGreenhouse,
+                data: leitura.createdAt
+                  ? `${formatDateBR(leitura.createdAt)}, ${formatTimeBR(leitura.createdAt)}`
+                  : "Data indisponível",
+                local: `${dispositivo.nome || "Estufa"} - ${leitura.dados?.setor || "Setor B"}`,
+              });
+            }
+          });
         }
 
-        // Caso a API de câmera não traga fotos, injeta mocks estruturados idênticos ao seu print para manter o visual perfeito
         if (listaAnalisesGeradas.length === 0) {
-          listaAnalisesGeradas = [
+          listaAnalisesGeradas.push(
             {
               id: "mock1",
-              img: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=400",
+              img: IMAGES.placeholderGreenhouse,
               data: "05 de outubro, 16:25",
               local: "Estufa 2 - Setor B",
             },
             {
               id: "mock2",
-              img: "https://images.unsplash.com/photo-1574316071802-0d684efa7bf5?w=400",
+              img: IMAGES.placeholderGreenhouse2,
               data: "05 de outubro, 12:15",
               local: "Estufa 5 - Setor A",
             },
-          ];
+          );
         }
 
         setAlertas(listaAlertasGerados);
@@ -196,7 +116,6 @@ export default function AlertasScreen() {
     carregarEProcessarAlertas();
   }, []);
 
-  // Filtros dinâmicos das Tabs
   const countTotal = alertas.length;
   const countAlta = alertas.filter((a) => a.prioridade === "Alta").length;
   const countMedia = alertas.filter((a) => a.prioridade === "Média").length;

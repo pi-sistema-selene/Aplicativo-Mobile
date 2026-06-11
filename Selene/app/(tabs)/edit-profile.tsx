@@ -14,6 +14,7 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
+import { API_V1 } from "@/constants/api";
 
 export default function EditProfileScreen() {
   const router = useRouter();
@@ -41,7 +42,7 @@ export default function EditProfileScreen() {
         // 🔥 tenta pegar do backend primeiro
         if (token) {
           const res = await fetch(
-            "https://selene-mobile.onrender.com/api/v1/auth/perfil",
+            `${API_V1}/auth/perfil`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -120,7 +121,7 @@ export default function EditProfileScreen() {
       }
 
       const res = await fetch(
-        "https://selene-mobile.onrender.com/api/v1/auth/perfil",
+        `${API_V1}/auth/perfil`,
         {
           method: "PUT",
           headers: {

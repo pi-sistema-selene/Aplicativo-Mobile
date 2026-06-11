@@ -1,64 +1,24 @@
-// app/_layout.tsx
-import { Stack } from 'expo-router';
-import { LogBox } from 'react-native';
-
-// ==========================================================
-// CONFIGURAÇÕES GLOBAIS DO AMBIENTE
-// ==========================================================
+import { Stack } from "expo-router";
 
 export default function RootLayout() {
   return (
-    <Stack 
-      // Opções globais de cabeçalho (desativado para manter o design customizado)
-      screenOptions={{ 
+    <Stack
+      screenOptions={{
         headerShown: false,
-        animation: 'slide_from_right' // Transição padrão para telas de fluxo
+        animation: "slide_from_right",
       }}
     >
-      
-      {/* ---------------------------------------------------------
-          FLUXO DE ENTRADA (INDEX / SPLASH / REDIRECT)
-      ---------------------------------------------------------- */}
-      <Stack.Screen name="index" /> 
-
-      {/* ---------------------------------------------------------
-          FLUXO DE AUTENTICAÇÃO (Login, Recuperar Senha)
-      ---------------------------------------------------------- */}
-      <Stack.Screen 
-        name="(auth)" 
+      <Stack.Screen name="index" />
+      <Stack.Screen name="(auth)" options={{ animation: "fade" }} />
+      <Stack.Screen name="(tabs)" options={{ animation: "simple_push" }} />
+      <Stack.Screen name="(admin)" options={{ animation: "simple_push" }} />
+      <Stack.Screen
+        name="nova-estufa"
         options={{
-          animation: 'fade', // Transição suave ao entrar no login
+          presentation: "modal",
+          animation: "slide_from_bottom",
         }}
       />
-
-      {/* ---------------------------------------------------------
-          FLUXO PRINCIPAL DO APP (Área Logada)
-      ---------------------------------------------------------- */}
-      <Stack.Screen 
-        name="(tabs)" 
-        options={{
-          animation: 'simple_push',
-        }}
-      />
-
-      <Stack.Screen 
-        name="(admin)" 
-        options={{
-          animation: 'simple_push',
-        }}
-      />
-
-      {/* ---------------------------------------------------------
-          TELAS MODAIS OU FLUXOS ESPECÍFICOS
-      ---------------------------------------------------------- */}
-      <Stack.Screen 
-        name="nova-estufa" 
-        options={{
-          presentation: 'modal', // Abre como uma folha subindo (padrão iOS)
-          animation: 'slide_from_bottom'
-        }}
-      />
-
     </Stack>
   );
 }

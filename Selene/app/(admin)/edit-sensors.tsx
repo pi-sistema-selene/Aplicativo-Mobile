@@ -18,6 +18,7 @@ import {
 } from "react-native-safe-area-context";
 
 import * as SecureStore from "expo-secure-store";
+import { API_V1 } from "@/constants/api";
 
 type Usuario = {
   _id: string;
@@ -86,7 +87,7 @@ export default function EditarSensor() {
       setLoadingUsers(true);
 
       const res = await fetch(
-        "https://selene-mobile.onrender.com/api/v1/users",
+        `${API_V1}/users`,
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -131,7 +132,7 @@ export default function EditarSensor() {
       const sensorId = Array.isArray(id) ? id[0] : id;
 
       const res = await fetch(
-        `https://selene-mobile.onrender.com/api/v1/dispositivos/${sensorId}`,
+        `${API_V1}/dispositivos/${sensorId}`,
         {
           method: "GET",
           headers: {
@@ -206,7 +207,7 @@ export default function EditarSensor() {
       };
 
       const res = await fetch(
-        `https://selene-mobile.onrender.com/api/v1/dispositivos/${sensorId}`,
+        `${API_V1}/dispositivos/${sensorId}`,
         {
           method: "PUT",
           headers: {

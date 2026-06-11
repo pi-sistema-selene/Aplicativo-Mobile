@@ -13,6 +13,7 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import axios from "axios";
+import { API_V1 } from "@/constants/api";
 
 export default function AdminHome() {
   const router = useRouter();
@@ -64,7 +65,7 @@ export default function AdminHome() {
         }
 
         const response = await axios.get(
-          "https://selene-mobile.onrender.com/api/v1/admin/dashboard/stats",
+          `${API_V1}/admin/dashboard/stats`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

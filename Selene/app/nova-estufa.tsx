@@ -14,6 +14,7 @@ import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
+import { API_V1 } from "@/constants/api";
 
 export default function CadastroEstufa() {
   const router = useRouter();
@@ -79,7 +80,7 @@ export default function CadastroEstufa() {
 
       // Envio para o backend no Render
       const response = await axios.post(
-        "https://selene-mobile.onrender.com/api/v1/estufas/cadastrar",
+        `${API_V1}/estufas/cadastrar`,
         payload,
         { headers: { Authorization: `Bearer ${token}` } },
       );

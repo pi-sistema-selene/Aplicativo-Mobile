@@ -1,3 +1,4 @@
+import { API_V1 } from "@/constants/api";
   import React, { useEffect, useState } from "react";
   import {
     View,
@@ -78,7 +79,7 @@
         setLoadingUsers(true);
 
         const res = await fetch(
-          "https://selene-mobile.onrender.com/api/v1/users",
+          `${API_V1}/users`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -142,7 +143,7 @@
         };
 
         const res = await fetch(
-          "https://selene-mobile.onrender.com/api/v1/dispositivos",
+          `${API_V1}/dispositivos`,
           {
             method: "POST",
             headers: {

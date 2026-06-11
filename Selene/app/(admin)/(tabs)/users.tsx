@@ -19,6 +19,7 @@ import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
+import { API_V1 } from "@/constants/api";
 
 interface Usuario {
   id: string;
@@ -105,13 +106,13 @@ export default function ControleAcessoScreen() {
       setLoading(true);
 
       const [resUsers, resAdmins] = await Promise.all([
-        fetch("https://selene-mobile.onrender.com/api/v1/users", {
+        fetch(`${API_V1}/users`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }),
 
-        fetch("https://selene-mobile.onrender.com/api/v1/admin/listar", {
+        fetch(`${API_V1}/admin/listar`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

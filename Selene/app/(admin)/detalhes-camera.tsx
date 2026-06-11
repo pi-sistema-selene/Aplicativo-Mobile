@@ -14,6 +14,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import * as SecureStore from "expo-secure-store";
+import { API_V1 } from "@/constants/api";
 
 export default function DetalhesCamera() {
   const router = useRouter();
@@ -28,7 +29,7 @@ export default function DetalhesCamera() {
     async (sensorId: string, adminToken: string) => {
       try {
         const response = await fetch(
-          `https://selene-mobile.onrender.com/api/v1/dispositivos/${sensorId}/leituras`,
+          `${API_V1}/dispositivos/${sensorId}/leituras`,
           {
             headers: {
               Authorization: `Bearer ${adminToken}`,
@@ -122,7 +123,7 @@ export default function DetalhesCamera() {
             const deviceId = Array.isArray(id) ? id[0] : id;
             if (!token) return;
             const response = await fetch(
-              `https://selene-mobile.onrender.com/api/v1/dispositivos/${deviceId}`,
+              `${API_V1}/dispositivos/${deviceId}`,
               {
                 method: "DELETE",
                 headers: {

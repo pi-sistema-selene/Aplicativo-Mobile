@@ -12,212 +12,94 @@ import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
+import { Colors } from "@/constants/Colors";
+import { useUserInitials } from "@/hooks/useUserInitials";
+import {
+  getMeusDispositivos,
+  getLeituras,
+  getResumo,
+} from "@/services/dispositivoService";
+import {
+  hasSensorAnomaly,
+  buildHomeAlerta,
+  formatAlertaTime,
+} from "@/utils/anomaly";
+import type { HomeAlerta } from "@/types/alerta";
+import type { Leitura } from "@/types/dispositivo";
 
 export default function HomeScreen() {
   const router = useRouter();
-
-  // ==========================================
-  // ESTADOS (STATES) DO USUÁRIO
-  // ==========================================
-  const [nomeUsuario, setNomeUsuario] = useState("Usuário");
-  const [iniciais, setIniciais] = useState("US");
+  const { iniciais, nomeUsuario, loading: loadingUser } = useUserInitials();
   const [loading, setLoading] = useState(true);
-  const [leituras, setLeituras] = useState<any[]>([]);
-  const [ultimaLeitura, setUltimaLeitura] = useState<any>(null);
-  const [totalDados, setTotalDados] = useState(0);
+  const [ultimaLeitura, setUltimaLeitura] = useState<Leitura | null>(null);
   const [totalAnomalias, setTotalAnomalias] = useState(0);
   const [totalImagens, setTotalImagens] = useState(0);
   const [totalDadosSensor, setTotalDadosSensor] = useState(0);
-  const [alertas, setAlertas] = useState<any[]>([]); // Estado alimentado dinamicamente pelas anomalias
+  const [alertas, setAlertas] = useState<HomeAlerta[]>([]);
 
-  // ==========================================
-  // LÓGICA DE CARREGAMENTO (STORAGE/API)
-  // ==========================================
   const carregarDados = async () => {
     try {
-      const [nomeSalvo, token] = await Promise.all([
-        SecureStore.getItemAsync("userName"),
-        SecureStore.getItemAsync("userToken"),
-      ]);
+      const token = await SecureStore.getItemAsync(STORAGE_KEYS.USER_TOKEN);
+      if (!token) return;
 
-      // =========================
-      // USUÁRIO
-      // =========================
-      if (nomeSalvo) {
-        const partes = nomeSalvo.trim().split(" ");
+      const sensores = await getMeusDispositivos(token);
+      const primeiroSensor = sensores[0];
 
-        const primeiroSegundo =
-          partes.length > 1 ? `${partes[0]} ${partes[1]}` : partes[0];
-
-        setNomeUsuario(primeiroSegundo);
-
-        const init =
-          partes.length > 1
-            ? (partes[0][0] + partes[1][0]).toUpperCase()
-            : partes[0][0].toUpperCase();
-
-        setIniciais(init);
-      }
-
-      if (token) {
-        // =========================
-        // DISPOSITIVOS
-        // =========================
-        const sensoresRes = await fetch(
-          "https://selene-mobile.onrender.com/api/v1/dispositivos/meus",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          },
+      if (sensores.length > 0) {
+        const resumos = await Promise.all(
+          sensores.map((dispositivo) => getResumo(dispositivo._id, token)),
         );
 
-        const sensoresJson = await sensoresRes.json();
-        const sensores = sensoresJson.data || [];
+        const totals = resumos.reduce<{ totalCapturas: number; totalGeral: number }>(
+          (acc, resumo) => {
+            const totalCapturas = Number(resumo.totalCapturas || 0);
+            const totalSensores = Number(resumo.totalSensores || 0);
+            const totalGeral = Number(
+              resumo.totalGeral || totalCapturas + totalSensores,
+            );
 
-        const primeiroSensor = sensores[0];
+            return {
+              totalCapturas: acc.totalCapturas + totalCapturas,
+              totalGeral: acc.totalGeral + totalGeral,
+            };
+          },
+          { totalCapturas: 0, totalGeral: 0 },
+        );
 
-        if (sensores.length > 0) {
-          // =========================
-          // RESUMO AGREGADO DE TODOS OS DISPOSITIVOS
-          // =========================
-          const resumos = await Promise.all(
-            sensores.map(async (dispositivo: any) => {
-              const resumoRes = await fetch(
-                `https://selene-mobile.onrender.com/api/v1/dispositivos/${dispositivo._id}/resumo`,
-                {
-                  headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                  },
-                },
-              );
-              const resumoJson = await resumoRes.json();
-              return resumoJson?.data || {};
-            }),
-          );
+        setTotalDadosSensor(totals.totalGeral);
+        setTotalImagens(totals.totalCapturas);
 
-          const totals = resumos.reduce(
-            (acc, resumo) => {
-              const totalCapturas = Number(resumo.totalCapturas || 0);
-              const totalSensores = Number(resumo.totalSensores || 0);
-              const totalGeral = Number(
-                resumo.totalGeral || totalCapturas + totalSensores,
-              );
+        const lista = await getLeituras(primeiroSensor._id, token, 999999);
+        const leiturasSensores = lista.filter(
+          (item) => item.tipo_leitura === "SENSORES",
+        );
+        setUltimaLeitura(leiturasSensores[0] || null);
 
-              return {
-                totalLeituras:
-                  acc.totalLeituras + Number(resumo.totalLeituras || 0),
-                totalCapturas: acc.totalCapturas + totalCapturas,
-                totalSensores: acc.totalSensores + totalSensores,
-                totalGeral: acc.totalGeral + totalGeral,
-              };
-            },
-            {
-              totalLeituras: 0,
-              totalCapturas: 0,
-              totalSensores: 0,
-              totalGeral: 0,
-            },
-          );
+        let contadorDeteccoesGeral = 0;
+        const listaAlertasGerados: HomeAlerta[] = [];
 
-          setTotalDadosSensor(totals.totalGeral); // Total de análises incluindo fotos e sensores
-          setTotalImagens(totals.totalCapturas); // Quantidade real de fotos
+        leiturasSensores.forEach((leitura, index) => {
+          if (leitura?.dados && hasSensorAnomaly(leitura.dados)) {
+            contadorDeteccoesGeral += 1;
 
-          // ====================================================================
-          // LOGICA CORRIGIDA: BUSCA O HISTÓRICO E COMPUTA DETECÇÕES FORA DA REGRA
-          // ====================================================================
-          const leituraRes = await fetch(
-            `https://selene-mobile.onrender.com/api/v1/dispositivos/${primeiroSensor._id}/leituras?limite=999999`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-            },
-          );
-
-          const leituraJson = await leituraRes.json();
-          let lista = [];
-
-          if (Array.isArray(leituraJson?.data)) {
-            lista = leituraJson.data;
-          } else if (Array.isArray(leituraJson)) {
-            lista = leituraJson;
-          }
-
-          setLeituras(lista);
-
-          // Filtra o histórico para garantir que pegamos registros reais de sensores
-          const leiturasSensores = lista.filter(
-            (item: any) => item.tipo_leitura === "SENSORES",
-          );
-          const ultima = leiturasSensores[0] || null;
-          setUltimaLeitura(ultima);
-
-          // Executa a varredura em todo o lote de dados retornado do sensor
-          let contadorDeteccoesGeral = 0;
-          const listaAlertasGerados: any[] = [];
-
-          leiturasSensores.forEach((leitura: any, index: number) => {
-            if (leitura?.dados) {
-              const temp = leitura.dados.temperatura;
-              const umidade = leitura.dados.umidade;
-              const luz = leitura.dados.luminosidade;
-
-              const itemComAnomalia =
-                temp > 24 ||
-                temp < 10 ||
-                umidade < 80 ||
-                umidade > 95 ||
-                luz === 0;
-
-              if (itemComAnomalia) {
-                contadorDeteccoesGeral += 1;
-
-                // Preenche a lista de alertas na interface apenas com os incidentes mais recentes (ex: top 4) para não travar a renderização do JSX
-                if (listaAlertasGerados.length < 4) {
-                  let mensagemAlerta = "Anomalia Detectada";
-                  const formattedTemp = temp != null ? Number(temp).toFixed(0) : "--";
-                  const formattedUmidade = umidade != null ? Number(umidade).toFixed(0) : "--";
-                  let submensagemAlerta = `T: ${formattedTemp}°C | U: ${formattedUmidade}%`;
-                  let gravidade = "Média";
-                  let tipo = "aviso";
-
-                  if (temp > 24 || temp < 10) {
-                    mensagemAlerta = temp > 24 ? "Temperatura Alta!" : "Temperatura Baixa!";
-                    gravidade = temp > 28 || temp < 10 ? "Alta" : "Média";
-                    tipo = temp > 28 || temp < 10 ? "risco" : "aviso";
-                  } else if (umidade < 80 || umidade > 95) {
-                    mensagemAlerta = "Umidade Fora do Ideal!";
-                    gravidade = umidade < 70 ? "Alta" : "Média";
-                    tipo = umidade < 70 ? "risco" : "aviso";
-                  } else if (luz === 0) {
-                    mensagemAlerta = "Ausência de Luz Detectada";
-                  }
-
-                  const horaFormatada = leitura.createdAt
-                    ? new Date(leitura.createdAt).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })
-                    : "Agora";
-
-                  listaAlertasGerados.push({
-                    id: leitura._id || index.toString(),
-                    mensagem: mensagemAlerta,
-                    submensagem: submensagemAlerta,
-                    gravidade: gravidade,
-                    estufa: primeiroSensor.nome || "Principal",
-                    tempo: horaFormatada,
-                    tipo: tipo
-                  });
-                }
-              }
+            if (listaAlertasGerados.length < 4) {
+              const alerta = buildHomeAlerta(leitura.dados);
+              listaAlertasGerados.push({
+                id: leitura._id || index.toString(),
+                mensagem: alerta.mensagem,
+                submensagem: alerta.submensagem,
+                gravidade: alerta.gravidade,
+                estufa: primeiroSensor.nome || "Principal",
+                tempo: formatAlertaTime(leitura.createdAt),
+                tipo: alerta.tipo,
+              });
             }
-          });
+          }
+        });
 
-          setTotalAnomalias(contadorDeteccoesGeral);
-          setAlertas(listaAlertasGerados);
-        }
+        setTotalAnomalias(contadorDeteccoesGeral);
+        setAlertas(listaAlertasGerados);
       }
     } catch (e) {
       console.error("Erro ao carregar dados", e);
@@ -238,18 +120,12 @@ export default function HomeScreen() {
     return () => clearInterval(intervalo);
   }, []);
 
-  // ==========================================
-  // PROCESSAMENTO DAS PORCENTAGENS
-  // ==========================================
   const porcentagem =
     totalDadosSensor > 0
       ? Math.round((totalAnomalias / totalDadosSensor) * 100)
       : 0;
 
-  // ==========================================
-  // FUNÇÕES DE RENDERIZAÇÃO AUXILIARES
-  // ==========================================
-  const renderCardGeral = (icon: any, label: string, value: string) => (
+  const renderCardGeral = (icon: React.ReactNode, label: string, value: string) => (
     <View style={styles.cardGeral}>
       <View style={styles.cardHeaderGeral}>
         <Text style={styles.cardLabelGeral}>{label}</Text>
@@ -277,7 +153,7 @@ export default function HomeScreen() {
           >
             <View style={styles.header}>
               <View>
-                {loading ? (
+                {loading || loadingUser ? (
                   <ActivityIndicator size="small" color="#2A3A56" />
                 ) : (
                   <>
@@ -463,14 +339,11 @@ export default function HomeScreen() {
   );
 }
 
-// ==========================================
-// ESTILIZAÇÃO (STYLES)
-// ==========================================
 const styles = StyleSheet.create({
-  mainContainer: { flex: 1, backgroundColor: "#F5F5F5" },
+  mainContainer: { flex: 1, backgroundColor: Colors.background },
   scrollContent: { flexGrow: 1 },
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
     paddingBottom: 40,
@@ -484,20 +357,20 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 40,
   },
-  welcomeText: { fontSize: 22, fontWeight: "bold", color: "#2A3A56" },
-  subwelcomeText: { fontSize: 14, color: "#2A3A56", opacity: 0.8 },
+  welcomeText: { fontSize: 22, fontWeight: "bold", color: Colors.text },
+  subwelcomeText: { fontSize: 14, color: Colors.text, opacity: 0.8 },
   headerIcons: { flexDirection: "row", alignItems: "center", gap: 15 },
   avatarCircle: {
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#E0E0E0",
+    borderColor: Colors.border,
   },
-  avatarText: { fontSize: 16, fontWeight: "bold", color: "#2A3A56" },
+  avatarText: { fontSize: 16, fontWeight: "bold", color: Colors.text },
   resumoContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -511,35 +384,35 @@ const styles = StyleSheet.create({
     gap: 8,
     marginBottom: 10,
   },
-  resumoLabel: { fontSize: 14, color: "#2A3A56", fontWeight: "bold" },
-  resumoValue: { fontSize: 48, fontWeight: "bold", color: "#F5F5F5" },
+  resumoLabel: { fontSize: 14, color: Colors.text, fontWeight: "bold" },
+  resumoValue: { fontSize: 48, fontWeight: "bold", color: Colors.background },
   verticalDivider: {
     width: 1.5,
     height: 60,
-    backgroundColor: "#2A3A56",
+    backgroundColor: Colors.text,
     opacity: 0.3,
   },
   progressContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     borderRadius: 15,
     height: 35,
     padding: 3,
     marginBottom: 10,
   },
   progressBar: {
-    backgroundColor: "#2A3A56",
+    backgroundColor: Colors.text,
     height: "100%",
     borderRadius: 12,
     justifyContent: "center",
     paddingHorizontal: 15,
   },
-  progressText: { color: "#FFF", fontSize: 14, fontWeight: "bold" },
+  progressText: { color: Colors.white, fontSize: 14, fontWeight: "bold" },
   progressValueText: {
     position: "absolute",
     right: 15,
-    color: "#A0A0A0",
+    color: Colors.progressText,
     fontSize: 14,
     fontWeight: "bold",
   },
@@ -551,7 +424,7 @@ const styles = StyleSheet.create({
   },
   progressDescriptionText: {
     fontSize: 14,
-    color: "#2A3A56",
+    color: Colors.text,
     fontWeight: "bold",
   },
   bottomContainer: { paddingHorizontal: 20, paddingTop: 30 },
@@ -561,14 +434,14 @@ const styles = StyleSheet.create({
     gap: 10,
     marginBottom: 20,
   },
-  sectionTitle: { fontSize: 18, fontWeight: "bold", color: "#2A3A56" },
+  sectionTitle: { fontSize: 18, fontWeight: "bold", color: Colors.text },
   cardsGeralContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
     marginBottom: 35,
   },
   cardGeral: {
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderRadius: 15,
     width: "28%",
     paddingVertical: 15,
@@ -582,16 +455,16 @@ const styles = StyleSheet.create({
     gap: 3,
     marginBottom: 10,
   },
-  cardLabelGeral: { fontSize: 9, color: "#2A3A56", fontWeight: "bold" },
+  cardLabelGeral: { fontSize: 9, color: Colors.text, fontWeight: "bold" },
   cardValueGeral: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#2A3A56",
+    color: Colors.text,
     marginBottom: 5,
   },
-  cardStatusGeral: { fontSize: 10, color: "#95C159", fontWeight: "bold" },
+  cardStatusGeral: { fontSize: 10, color: Colors.primary, fontWeight: "bold" },
   cardAlerta: {
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderRadius: 15,
     padding: 15,
     marginBottom: 15,
@@ -606,14 +479,14 @@ const styles = StyleSheet.create({
   cardAlertaContentRow: { flexDirection: "row", gap: 12, flex: 1 },
   alertaIconContainer: { width: 30, justifyContent: "center" },
   alertaTextContainer: { flex: 1 },
-  alertaTitle: { fontSize: 16, fontWeight: "bold", color: "#2A3A56" },
-  alertaSubtitle: { fontSize: 13, color: "#2A3A56", opacity: 0.8 },
+  alertaTitle: { fontSize: 16, fontWeight: "bold", color: Colors.text },
+  alertaSubtitle: { fontSize: 13, color: Colors.text, opacity: 0.8 },
   badgeGravidade: {
     borderRadius: 15,
     paddingHorizontal: 12,
     paddingVertical: 4,
   },
-  badgeText: { fontSize: 11, fontWeight: "bold", color: "#FFF" },
+  badgeText: { fontSize: 11, fontWeight: "bold", color: Colors.white },
   alertaFooter: { flexDirection: "row", gap: 20, marginLeft: 42, opacity: 0.6 },
-  alertaFooterText: { fontSize: 12, color: "#2A3A56" },
+  alertaFooterText: { fontSize: 12, color: Colors.text },
 });

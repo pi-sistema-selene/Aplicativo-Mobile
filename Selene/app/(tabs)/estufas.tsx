@@ -13,6 +13,7 @@ import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
+import { API_V1 } from "@/constants/api";
 
 interface Estufa {
   _id: string;
@@ -59,7 +60,7 @@ export default function EstufasScreen() {
       const token = await SecureStore.getItemAsync("userToken");
 
       const response = await axios.get(
-        "https://selene-mobile.onrender.com/api/v1/estufas/listar",
+        `${API_V1}/estufas/listar`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },

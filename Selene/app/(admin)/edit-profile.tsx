@@ -13,6 +13,7 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import * as SecureStore from "expo-secure-store";
+import { API_V1 } from "@/constants/api";
 
 export default function EditProfileScreen() {
   const router = useRouter();
@@ -65,7 +66,7 @@ export default function EditProfileScreen() {
         // ==========================================
 
         let response = await fetch(
-          `https://selene-mobile.onrender.com/api/v1/users/${id}`,
+          `${API_V1}/users/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -88,7 +89,7 @@ export default function EditProfileScreen() {
         // ==========================================
 
         const resLista = await fetch(
-          `https://selene-mobile.onrender.com/api/v1/users`,
+          `${API_V1}/users`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -117,7 +118,7 @@ export default function EditProfileScreen() {
         // ==========================================
 
         const resAdmins = await fetch(
-          `https://selene-mobile.onrender.com/api/v1/admin/listar`,
+          `${API_V1}/admin/listar`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -174,8 +175,8 @@ export default function EditProfileScreen() {
 
       // DEFINE ENDPOINT
       const endpoint = isAdmin
-        ? `https://selene-mobile.onrender.com/api/v1/admin/${id}`
-        : `https://selene-mobile.onrender.com/api/v1/users/${id}`;
+        ? `${API_V1}/admin/${id}`
+        : `${API_V1}/users/${id}`;
 
       const res = await fetch(endpoint, {
         method: "PUT",

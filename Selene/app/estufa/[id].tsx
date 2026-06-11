@@ -5,6 +5,7 @@ import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import { API_V1 } from "@/constants/api";
 
 export default function DetalheEstufa() {
   const { id } = useLocalSearchParams();
@@ -48,7 +49,7 @@ export default function DetalheEstufa() {
       const token = await SecureStore.getItemAsync('userToken');
 
       // Chamada para sua API no Render
-      const response = await axios.get(`https://selene-mobile.onrender.com/api/v1/estufas/detalhes/${id}`, {
+      const response = await axios.get(`${API_V1}/estufas/detalhes/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

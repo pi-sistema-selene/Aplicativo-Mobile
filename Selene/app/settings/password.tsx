@@ -13,6 +13,7 @@ import { Ionicons, Feather } from "@expo/vector-icons";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
+import { API_V1 } from "@/constants/api";
 
 export default function PasswordScreen() {
   const router = useRouter();
@@ -96,7 +97,7 @@ export default function PasswordScreen() {
       // 🔹 1ª tentativa: USER
       try {
         const response = await fetch(
-          "https://selene-mobile.onrender.com/api/v1/auth/alterar-senha",
+          `${API_V1}/auth/alterar-senha`,
           {
             method: "PUT",
             headers: {
@@ -120,7 +121,7 @@ export default function PasswordScreen() {
         // 🔹 2ª tentativa: ADMIN
         try {
           const responseAdmin = await fetch(
-            "https://selene-mobile.onrender.com/api/v1/admin/alterar-senha",
+            `${API_V1}/admin/alterar-senha`,
             {
               method: "PUT",
               headers: {

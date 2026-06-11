@@ -15,6 +15,7 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import * as SecureStore from "expo-secure-store";
+import { API_V1 } from "@/constants/api";
 
 export default function EditProfileScreen() {
   const router = useRouter();
@@ -52,8 +53,8 @@ export default function EditProfileScreen() {
 
         const endpoint =
           role === "admin" || role === "superadmin"
-            ? `https://selene-mobile.onrender.com/api/v1/admin/perfil`
-            : `https://selene-mobile.onrender.com/api/v1/users/${id}`;
+            ? `${API_V1}/admin/perfil`
+            : `${API_V1}/users/${id}`;
 
         const res = await fetch(endpoint, {
           headers: {
@@ -113,7 +114,7 @@ export default function EditProfileScreen() {
       }
 
       const res = await fetch(
-        `https://selene-mobile.onrender.com/api/v1/admin/perfil`,
+        `${API_V1}/admin/perfil`,
         {
           method: "PUT",
           headers: {

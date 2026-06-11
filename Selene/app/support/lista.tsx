@@ -14,93 +14,42 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 
 import * as SecureStore from "expo-secure-store";
 import { useFocusEffect } from "@react-navigation/native";
-
-type Chat = {
-  _id: string;
-  nome?: string;
-  status?: string;
-  updatedAt?: string;
-};
+import { API_V1 } from "@/constants/api";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
+import { useUserInitials } from "@/hooks/useUserInitials";
+import { useProfileNavigation } from "@/hooks/useProfileNavigation";
+import { listarChats } from "@/services/chatService";
+import { isAdminRole } from "@/utils/role";
+import type { Chat } from "@/types/chat";
 
 export default function ListaChats() {
   const router = useRouter();
-
-  const [iniciais, setIniciais] = useState("US");
+  const { iniciais } = useUserInitials();
+  const { goToProfile } = useProfileNavigation();
   const [chats, setChats] = useState<Chat[]>([]);
   const [role, setRole] = useState<string | null>(null);
 
-  // =========================
-  // PERFIL
-  // =========================
-  const handleGoProfile = async () => {
-    const role = await SecureStore.getItemAsync("userRole");
-    const isAdmin = role === "admin" || role === "superadmin";
-
-    router.push(isAdmin ? "/(admin)/profile-admin" : "/(tabs)/profile");
-  };
-
-  // =========================
-  // CARREGAR USER + ROLE
-  // =========================
   useEffect(() => {
     const init = async () => {
       try {
-        const nomeSalvo = await SecureStore.getItemAsync("userName");
-        const userRole = await SecureStore.getItemAsync("userRole");
-
+        const userRole = await SecureStore.getItemAsync(STORAGE_KEYS.USER_ROLE);
         setRole(userRole);
-
-        if (nomeSalvo) {
-          const partes = nomeSalvo.trim().split(" ");
-
-          const init =
-            partes.length > 1
-              ? (partes[0][0] + partes[1][0]).toUpperCase()
-              : partes[0][0].toUpperCase();
-
-          setIniciais(init);
-        }
-      } catch (err) {}
+      } catch (err) {
+        console.error(err);
+      }
     };
-
     init();
   }, []);
 
-  // =========================
-  // FETCH CHATS
-  // =========================
   const fetchChats = async () => {
     try {
-      const token = await SecureStore.getItemAsync("userToken");
+      const token = await SecureStore.getItemAsync(STORAGE_KEYS.USER_TOKEN);
 
       if (!token) {
         return;
       }
 
-      let url = "";
-
-      if (role === "admin" || role === "superadmin") {
-        url = "https://selene-mobile.onrender.com/api/v1/admin/chats";
-      } else {
-        url = "https://selene-mobile.onrender.com/api/v1/chats";
-      }
-
-      const res = await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await res.json();
-
-      let lista: Chat[] = [];
-
-      if (Array.isArray(data)) {
-        lista = data;
-      } else if (data.data && Array.isArray(data.data)) {
-        lista = data.data;
-      }
-
+      const lista = await listarChats(token, isAdminRole(role));
       setChats(lista);
     } catch (err) {}
   };
@@ -118,17 +67,17 @@ export default function ListaChats() {
   // NOVO CHAT
   // =========================
   const iniciarNovoChat = async () => {
-    if (role === "admin" || role === "superadmin") {
+    if (isAdminRole(role)) {
       return;
     }
 
     try {
-      const token = await SecureStore.getItemAsync("userToken");
+      const token = await SecureStore.getItemAsync(STORAGE_KEYS.USER_TOKEN);
 
       if (!token) return;
 
       const res = await fetch(
-        "https://selene-mobile.onrender.com/api/v1/chats",
+        `${API_V1}/chats`,
         {
           method: "POST",
           headers: {
@@ -173,7 +122,7 @@ export default function ListaChats() {
             <View style={styles.headerIcons}>
               <TouchableOpacity
                 style={styles.avatarCircle}
-                onPress={handleGoProfile}
+                onPress={goToProfile}
               >
                 <Text style={styles.avatarText}>{iniciais}</Text>
               </TouchableOpacity>

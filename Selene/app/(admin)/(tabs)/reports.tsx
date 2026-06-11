@@ -12,6 +12,7 @@ import { useRouter } from "expo-router";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import * as SecureStore from "expo-secure-store";
 import { useFocusEffect } from "@react-navigation/native";
+import { API_V1 } from "@/constants/api";
 
 type Chat = {
   _id: string;
@@ -72,7 +73,7 @@ export default function DashboardAdmin() {
       const token = await SecureStore.getItemAsync("userToken");
       if (!token) return;
 
-      const res = await fetch("https://selene-mobile.onrender.com/api/v1/admin/chats", {
+      const res = await fetch(`${API_V1}/admin/chats`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
