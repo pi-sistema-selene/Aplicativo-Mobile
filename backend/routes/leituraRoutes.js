@@ -16,6 +16,9 @@ router.post(
 // POST /api/v1/leituras/camera - Receber foto da câmera (ESP32-CAM) - PÚBLICA
 router.post("/camera", LeituraController.receberCameraPublico);
 
+// POST /api/v1/leituras/camera/test-url - Testar predição com URL do Cloudinary
+router.post("/camera/test-url", LeituraController.testarPredicaoPorUrl);
+
 // POST /api/v1/leituras/camera/auth - Receber foto com autenticação (App)
 router.post("/camera/auth", authMiddleware, LeituraController.receberCamera);
 

@@ -584,6 +584,86 @@ class LeituraController {
       });
     }
   }
+
+  // Teste: envia URL do Cloudinary direto para predição (sem upload)
+  static async testarPredicaoPorUrl(req, res) {
+    try {
+      const { url, mac, salvar } = req.body;
+
+      if (!url || !url.startsWith("http")) {
+        return res.status(400).json({
+          success: false,
+          message: 'Campo "url" é obrigatório e deve ser um link http(s)',
+        });
+      }
+
+      const predicao = await predictFromUrl(url);
+
+      if (!predicao) {
+        return res.status(502).json({
+          success: false,
+          message: "Falha ao obter predição da API de ML",
+          data: { url },
+        });
+      }
+
+      if (!salvar) {
+        return res.json({
+          success: true,
+          message: "Predição obtida (não salva no banco)",
+          data: { url, predicao },
+        });
+      }
+
+      const macNormalizado = mac?.toLowerCase().trim();
+      if (!macNormalizado) {
+        return res.status(400).json({
+          success: false,
+          message: 'Campo "mac" é obrigatório quando salvar=true',
+        });
+      }
+
+      const dispositivo = await Dispositivo.findOne({
+        mac_address: macNormalizado,
+      });
+
+      if (!dispositivo) {
+        return res.status(404).json({
+          success: false,
+          message: "Dispositivo não cadastrado",
+        });
+      }
+
+      const leitura = await Leitura.create({
+        dispositivo: dispositivo._id,
+        tipo_leitura: "CAMERA",
+        dados: {
+          foto_path: url,
+          predicao,
+        },
+        timestamp: new Date(),
+      });
+
+      res.status(201).json({
+        success: true,
+        message: "Predição salva com sucesso",
+        data: {
+          leitura: {
+            id: leitura._id,
+            foto_path: url,
+            predicao,
+            timestamp: leitura.timestamp,
+          },
+        },
+      });
+    } catch (error) {
+      console.error("Erro ao testar predição por URL:", error);
+      res.status(500).json({
+        success: false,
+        message: "Erro interno do servidor",
+      });
+    }
+  }
 }
 
 module.exports = LeituraController;
