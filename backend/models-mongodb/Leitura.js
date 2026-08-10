@@ -52,6 +52,20 @@ const leituraSchema = new mongoose.Schema({
     },
     foto_path: {
       type: String
+    },
+    tamanho_arquivo: {
+      type: Number
+    },
+    client_ip: {
+      type: String
+    },
+    predicao: {
+      classe: { type: String },
+      confianca: { type: Number, min: 0, max: 1 },
+      anomalia: { type: Boolean },
+      probabilidade_saudavel: { type: Number, min: 0, max: 1 },
+      threshold_usado: { type: Number },
+      processado_em: { type: Date }
     }
   },
   timestamp: {

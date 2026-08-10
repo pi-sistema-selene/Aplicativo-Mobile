@@ -229,9 +229,15 @@ export default function DetalhesCamera() {
                 const path = item.dados?.foto_path;
                 if (!path) return null;
 
+                const predicao = item.dados?.predicao;
                 const uriImagem = path.startsWith("http")
                   ? path
                   : `https://selene-mobile.onrender.com${path}`;
+
+                const isAnomalia = predicao?.anomalia === true;
+                const confiancaPct = predicao?.confianca
+                  ? `${(predicao.confianca * 100).toFixed(1)}%`
+                  : null;
 
                 return (
                   <View key={item._id} style={styles.imageCard}>
@@ -239,6 +245,26 @@ export default function DetalhesCamera() {
                       source={{ uri: uriImagem }}
                       style={styles.capturedImage}
                     />
+                    {predicao && (
+                      <View
+                        style={[
+                          styles.predicaoBadge,
+                          isAnomalia
+                            ? styles.predicaoAnomalia
+                            : styles.predicaoSaudavel,
+                        ]}
+                      >
+                        <Feather
+                          name={isAnomalia ? "alert-triangle" : "check-circle"}
+                          size={14}
+                          color="#FFF"
+                        />
+                        <Text style={styles.predicaoText}>
+                          {predicao.classe || "—"}
+                          {confiancaPct ? ` · ${confiancaPct}` : ""}
+                        </Text>
+                      </View>
+                    )}
                     <View style={styles.imageFooter}>
                       <Feather name="calendar" size={14} color="#2A3A56" />
                       <Text style={styles.imageDate}>
@@ -375,6 +401,25 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 280,
     backgroundColor: "#EEE",
+  },
+  predicaoBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  predicaoAnomalia: {
+    backgroundColor: "#E74C3C",
+  },
+  predicaoSaudavel: {
+    backgroundColor: "#27AE60",
+  },
+  predicaoText: {
+    color: "#FFF",
+    fontSize: 13,
+    fontWeight: "700",
+    textTransform: "capitalize",
   },
   imageFooter: {
     flexDirection: "row",

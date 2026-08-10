@@ -1,5 +1,14 @@
 export type TipoLeitura = "SENSORES" | "CAMERA";
 
+export interface PredicaoImagem {
+  classe?: string;
+  confianca?: number;
+  anomalia?: boolean;
+  probabilidade_saudavel?: number;
+  threshold_usado?: number;
+  processado_em?: string;
+}
+
 export interface DadosSensor {
   temperatura?: number;
   umidade?: number;
@@ -7,6 +16,7 @@ export interface DadosSensor {
   foto_path?: string;
   foto?: string;
   setor?: string;
+  predicao?: PredicaoImagem;
 }
 
 export interface Leitura {

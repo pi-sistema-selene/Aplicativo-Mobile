@@ -1,6 +1,7 @@
 const Dispositivo = require("../models-mongodb/Dispositivo");
 const Leitura = require("../models-mongodb/Leitura");
 const cloudinary = require("../config/cloudinary");
+const { predictFromUrl } = require("../services/predictService");
 
 class LeituraController {
   // Salvar imagem no servidor local
@@ -132,12 +133,18 @@ class LeituraController {
       }
 
       // Criar leitura da câmera
+      let predicao = null;
+      if (foto_path?.startsWith("http")) {
+        predicao = await predictFromUrl(foto_path);
+      }
+
       const leitura = await Leitura.create({
         dispositivo: dispositivo._id,
         tipo_leitura: "CAMERA",
         dados: {
           altura: altura,
           foto_path: foto_path,
+          ...(predicao && { predicao }),
         },
         timestamp: new Date(),
       });
@@ -155,6 +162,7 @@ class LeituraController {
             id: leitura._id,
             altura: leitura.dados.altura,
             foto_path: leitura.dados.foto_path,
+            predicao: leitura.dados.predicao || null,
             timestamp: leitura.timestamp,
           },
         },
@@ -528,15 +536,24 @@ class LeituraController {
         mac,
       );
 
+      if (!fotoPath) {
+        return res.status(500).json({
+          success: false,
+          message: "Falha ao enviar imagem para o Cloudinary",
+        });
+      }
+
+      const predicao = await predictFromUrl(fotoPath);
+
       const leitura = await Leitura.create({
         dispositivo: dispositivo._id,
         tipo_leitura: "CAMERA",
         dados: {
-          foto_base64: foto,
           foto_path: fotoPath,
           tamanho_arquivo: tamanho,
           client_ip: client_ip,
           altura: req.body.altura || null,
+          ...(predicao && { predicao }),
         },
         timestamp: timestamp ? new Date(timestamp * 1000) : new Date(),
       });
@@ -552,6 +569,8 @@ class LeituraController {
           },
           leitura: {
             id: leitura._id,
+            foto_path: leitura.dados.foto_path,
+            predicao: leitura.dados.predicao || null,
             tamanho: leitura.dados.tamanho_arquivo,
             timestamp: leitura.timestamp,
           },
