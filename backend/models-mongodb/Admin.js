@@ -55,7 +55,6 @@ const adminSchema = new mongoose.Schema(
       type: Date,
     },
 
-    // 🔥 NOVO (RESET DE SENHA)
     resetPasswordToken: {
       type: String,
       select: false,
@@ -74,25 +73,16 @@ const adminSchema = new mongoose.Schema(
   },
 );
 
-// ==========================================
-// HASH DA SENHA
-// ==========================================
 adminSchema.pre("save", async function () {
   if (!this.isModified("senha")) return;
 
   this.senha = await bcrypt.hash(this.senha, 12);
 });
 
-// ==========================================
-// VERIFICAR SENHA
-// ==========================================
 adminSchema.methods.verificarSenha = async function (senha) {
   return await bcrypt.compare(senha, this.senha);
 };
 
-// ==========================================
-// REMOVER SENHA DO OUTPUT
-// ==========================================
 adminSchema.methods.toJSON = function () {
   const admin = this.toObject();
   delete admin.senha;

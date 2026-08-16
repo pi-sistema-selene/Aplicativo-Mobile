@@ -23,7 +23,6 @@ const adminAuthMiddleware = async (req, res, next) => {
       });
     }
 
-    // 🔥 VERIFICA TOKEN
     const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET || "secret_fallback",
@@ -36,7 +35,6 @@ const adminAuthMiddleware = async (req, res, next) => {
       });
     }
 
-    // 🔥 CONVERTE PARA ObjectId
     if (!mongoose.Types.ObjectId.isValid(decoded.adminId)) {
       return res.status(401).json({
         success: false,
@@ -60,13 +58,11 @@ const adminAuthMiddleware = async (req, res, next) => {
       });
     }
 
-    // 🔥 IMPORTANTE
     req.adminId = admin._id;
     req.admin = admin;
 
     next();
   } catch (error) {
-
     if (error.name === "TokenExpiredError") {
       return res.status(401).json({
         success: false,

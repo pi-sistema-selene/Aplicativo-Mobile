@@ -4,7 +4,6 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-// Configuração do multer para upload de fotos
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const uploadPath = path.join(__dirname, "..", "..", "fotos_perfil");
@@ -38,12 +37,10 @@ const upload = multer({
 });
 
 class AuthController {
-  // Upload middleware para rotas que precisam de foto
   static uploadFoto() {
     return upload.single("foto_perfil");
   }
 
-  // Cadastro de usuário
   static async registrar(req, res) {
     try {
       const {
@@ -99,7 +96,6 @@ class AuthController {
     }
   }
 
-  // Login de usuário
   static async login(req, res) {
     try {
       const { email, senha } = req.body;
@@ -149,7 +145,6 @@ class AuthController {
     }
   }
 
-  // Obter Perfil
   static async perfil(req, res) {
     try {
       const usuario = await User.findById(req.userId).select("-senha");
@@ -169,7 +164,6 @@ class AuthController {
     }
   }
 
-  // Atualizar Perfil
   static async atualizarPerfil(req, res) {
     try {
       const { nome_completo, telefone, endereco, data_nascimento } = req.body;
@@ -204,11 +198,10 @@ class AuthController {
     }
   }
 
-  // NOVA FUNCIONALIDADE: Alterar Senha (Usuário Logado)
   static async alterarSenha(req, res) {
     try {
       const { senhaAtual, novaSenha } = req.body;
-      const userId = req.userId; // ID injetado pelo authMiddleware
+      const userId = req.userId;
 
       if (!senhaAtual || !novaSenha) {
         return res.status(400).json({
@@ -231,7 +224,7 @@ class AuthController {
           .json({ success: false, message: "A senha atual está incorreta" });
       }
 
-      usuario.senha = novaSenha; // O hook .pre('save') no seu model cuidará do hash
+      usuario.senha = novaSenha;
       await usuario.save();
 
       res.json({ success: true, message: "Senha alterada com sucesso" });
@@ -243,7 +236,6 @@ class AuthController {
     }
   }
 
-  // Recuperação de senha (Simulada)
   static async recuperarSenha(req, res) {
     try {
       const { email } = req.body;
@@ -272,7 +264,6 @@ class AuthController {
     }
   }
 
-  // Alterar Status (Admin)
   static async alterarStatusUsuario(req, res) {
     try {
       const { userId } = req.params;

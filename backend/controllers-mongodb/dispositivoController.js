@@ -4,9 +4,6 @@ const User = require("../models-mongodb/User");
 const Leitura = require("../models-mongodb/Leitura");
 
 class DispositivoController {
-  // ==========================================
-  // LISTAR DISPOSITIVOS
-  // ==========================================
   static async listar(req, res) {
     try {
       const usuarioId = req.userId;
@@ -50,9 +47,6 @@ class DispositivoController {
     }
   }
 
-  // ==========================================
-  // BUSCAR DISPOSITIVO
-  // ==========================================
   static async buscar(req, res) {
     try {
       const { id } = req.params;
@@ -82,9 +76,6 @@ class DispositivoController {
     }
   }
 
-  // ==========================================
-  // CRIAR DISPOSITIVO
-  // ==========================================
   static async criar(req, res) {
     try {
       const { mac_address, nome, tipo, localizacao, planta_id, usuario_id } =
@@ -151,9 +142,6 @@ class DispositivoController {
     }
   }
 
-  // ==========================================
-  // ATUALIZAR DISPOSITIVO
-  // ==========================================
   static async atualizar(req, res) {
     try {
       const { id } = req.params;
@@ -225,9 +213,6 @@ class DispositivoController {
     }
   }
 
-  // ==========================================
-  // ATUALIZAR STATUS ONLINE
-  // ==========================================
   static async atualizarStatus(req, res) {
     try {
       const { id } = req.params;
@@ -268,9 +253,6 @@ class DispositivoController {
     }
   }
 
-  // ==========================================
-  // ATIVAR / DESATIVAR
-  // ==========================================
   static async alterarStatusDispositivo(req, res) {
     try {
       const { id } = req.params;
@@ -314,9 +296,6 @@ class DispositivoController {
     }
   }
 
-  // ==========================================
-  // LISTAR TODOS (ADMIN)
-  // ==========================================
   static async listarTodos(req, res) {
     try {
       const dispositivos = await Dispositivo.find()
@@ -338,9 +317,6 @@ class DispositivoController {
     }
   }
 
-  // ==========================================
-  // DELETAR DISPOSITIVO
-  // ==========================================
   static async deletar(req, res) {
     try {
       const { id } = req.params;
@@ -368,14 +344,10 @@ class DispositivoController {
     }
   }
 
-  // ==========================================
-  // BUSCAR LEITURAS
-  // ==========================================
   static async buscarLeituras(req, res) {
     try {
       const { id } = req.params;
 
-      // quantidade vinda pela query
       const limite = parseInt(req.query.limite) || 40;
 
       const leituras = await Leitura.find({
@@ -416,7 +388,6 @@ class DispositivoController {
         }),
       ]);
 
-      // 🔥 NOVO CAMPO: TOTAL REAL (o que você quer)
       const totalGeral = totalCapturas + totalSensores;
 
       return res.status(200).json({
@@ -425,7 +396,7 @@ class DispositivoController {
           totalLeituras,
           totalCapturas,
           totalSensores,
-          totalGeral, // 👈 ISSO resolve seu problema
+          totalGeral,
         },
       });
     } catch (error) {

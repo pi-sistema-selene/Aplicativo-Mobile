@@ -6,7 +6,6 @@ const authMiddleware = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
 
-    // 1. Verifica header
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({
         success: false,
@@ -23,13 +22,11 @@ const authMiddleware = async (req, res, next) => {
       });
     }
 
-    // 2. Verifica token
     const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET || "secret_fallback",
     );
 
-    // 3. Extrai ID (tenta várias chaves comuns)
     const userId =
       decoded.userId || decoded.id || decoded._id || decoded.adminId;
 
@@ -45,7 +42,6 @@ const authMiddleware = async (req, res, next) => {
       });
     }
 
-    // 4. Buscar usuário OU admin
     let user = await User.findById(userId);
     let isAdmin = false;
 
@@ -64,7 +60,6 @@ const authMiddleware = async (req, res, next) => {
       });
     }
 
-    // 5. Verificar ativo
     if (user.ativo === false) {
       return res.status(401).json({
         success: false,
@@ -72,7 +67,6 @@ const authMiddleware = async (req, res, next) => {
       });
     }
 
-    // 6. Injetar dados
     req.userId = user._id;
     req.user = user;
 

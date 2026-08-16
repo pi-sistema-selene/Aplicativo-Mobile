@@ -12,10 +12,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const API_PREFIX = process.env.API_PREFIX || '/api/v1';
 
-// Configurações de segurança
 app.use(helmet());
 
-// Middleware CORS
 app.use(cors({
   origin: function(origin, callback) {
     if (!origin || process.env.NODE_ENV === 'development') {
@@ -39,35 +37,27 @@ app.use(cors({
   exposedHeaders: ['Content-Disposition']
 }));
 
-// Servir arquivos estáticos com CORS
 app.use('/fotos', cors(), express.static(path.join(__dirname, '..', 'fotos_plantas')));
 app.use('/fotos_perfil', cors(), express.static(path.join(__dirname, '..', 'fotos_perfil')));
 
-// Parser JSON com limite aumentado para fotos
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Logging de requisições
 app.use((req, res, next) => {
   console.log(`📡 ${new Date().toISOString()} - ${req.method} ${req.url}`);
   next();
 });
 
-// Registrar rotas principais com prefixo
 app.use(API_PREFIX, routes);
 
-// Handler de erros (deve ser o último middleware)
 app.use(errorHandler);
 
-// Inicializar servidor
 async function startServer() {
   try {
-    // Conectar ao MongoDB
     await connectDB();
     
     console.log('✅ Conectado ao MongoDB com sucesso');
-    
-    // Iniciar servidor
+
     app.listen(PORT, () => {
       console.log(`
 🚀 SERVIDOR INICIADO COM SUCESSO!
@@ -86,8 +76,6 @@ async function startServer() {
   }
 }
 
-// Iniciar servidor
 startServer();
 
-// Exportar app para testes
 module.exports = app;

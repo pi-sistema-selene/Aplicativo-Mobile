@@ -4,7 +4,6 @@ const cloudinary = require("../config/cloudinary");
 const { predictFromUrl } = require("../services/predictService");
 
 class LeituraController {
-  // Salvar imagem no servidor local
   static async salvarImagemCloudinary(
     equipamento,
     usuarioId,
@@ -28,7 +27,6 @@ class LeituraController {
     }
   }
 
-  // Receber leitura do ESP32 com sensores
   static async receberSensores(req, res) {
     try {
       const { mac, temp, umid, lux, ph, cond, nivel, bat, rssi } = req.body;
@@ -40,7 +38,6 @@ class LeituraController {
         });
       }
 
-      // Buscar ou criar dispositivo
       let dispositivo = await Dispositivo.findOneAndUpdate(
         { mac_address: mac },
         {
@@ -52,16 +49,13 @@ class LeituraController {
         { new: true, upsert: true },
       );
 
-      // Se foi criado novo dispositivo, atualizar com nome padrão
       if (dispositivo.__v === 0) {
-        // Novo documento
         dispositivo.nome = `ESP32_${mac.slice(-6)}`;
         dispositivo.tipo = "ESP32_SENSORES";
         dispositivo.usuario = req.userId || null;
         await dispositivo.save();
       }
 
-      // Criar leitura com estrutura flexível
       const leitura = await Leitura.create({
         dispositivo: dispositivo._id,
         tipo_leitura: "SENSORES",
@@ -99,7 +93,6 @@ class LeituraController {
     }
   }
 
-  // Receber foto da câmera
   static async receberCamera(req, res) {
     try {
       const { mac, altura, foto_path } = req.body;
@@ -111,7 +104,6 @@ class LeituraController {
         });
       }
 
-      // Buscar ou criar dispositivo
       let dispositivo = await Dispositivo.findOneAndUpdate(
         { mac_address: mac },
         {
@@ -123,16 +115,13 @@ class LeituraController {
         { new: true, upsert: true },
       );
 
-      // Se foi criado novo dispositivo, atualizar com nome padrão
       if (dispositivo.__v === 0) {
-        // Novo documento
         dispositivo.nome = `ESP32-CAM_${mac.slice(-6)}`;
         dispositivo.tipo = "ESP32_CAM";
         dispositivo.usuario = req.userId || null;
         await dispositivo.save();
       }
 
-      // Criar leitura da câmera
       let predicao = null;
       if (foto_path?.startsWith("http")) {
         predicao = await predictFromUrl(foto_path);
@@ -176,7 +165,6 @@ class LeituraController {
     }
   }
 
-  // Histórico de leituras
   static async historico(req, res) {
     try {
       const { dispositivo_id } = req.params;
@@ -211,7 +199,6 @@ class LeituraController {
         agrupamento = "auto",
       } = req.query;
 
-      // Sensores permitidos
       const sensoresPermitidos = [
         "temperatura",
         "umidade",
@@ -228,7 +215,6 @@ class LeituraController {
         });
       }
 
-      // Determinar intervalo em horas
       let horas;
       switch (periodo) {
         case "1h":
@@ -250,7 +236,6 @@ class LeituraController {
           horas = 24;
       }
 
-      // Determinar agrupamento
       let groupBy;
       if (agrupamento === "auto") {
         if (periodo === "1h") groupBy = "minute";
@@ -260,11 +245,9 @@ class LeituraController {
         groupBy = agrupamento.toLowerCase();
       }
 
-      // Calcular data limite
       const dataLimite = new Date();
       dataLimite.setHours(dataLimite.getHours() - horas);
 
-      // Pipeline de agregação para MongoDB
       const pipeline = [
         {
           $match: {
@@ -333,7 +316,6 @@ class LeituraController {
       const { dispositivo_id } = req.params;
       const { periodo = "24h" } = req.query;
 
-      // Determinar intervalo em horas
       let horas;
       switch (periodo) {
         case "1h":
@@ -355,11 +337,9 @@ class LeituraController {
           horas = 24;
       }
 
-      // Calcular data limite
       const dataLimite = new Date();
       dataLimite.setHours(dataLimite.getHours() - horas);
 
-      // Pipeline de agregação para métricas
       const pipeline = [
         {
           $match: {
@@ -432,7 +412,6 @@ class LeituraController {
     }
   }
 
-  // Receber leitura do ESP32 sem autenticação (pública)
   static async receberSensoresPublico(req, res) {
     try {
       const { mac, temp, umid, lux, ph, cond, nivel, bat, rssi } = req.body;
@@ -444,7 +423,6 @@ class LeituraController {
         });
       }
 
-      // Buscar dispositivo pelo MAC (sem criar novo se não existir)
       const dispositivo = await Dispositivo.findOne({ mac_address: mac });
 
       if (!dispositivo) {
@@ -454,12 +432,10 @@ class LeituraController {
         });
       }
 
-      // Atualizar status do dispositivo
       dispositivo.online = true;
       dispositivo.ultima_comunicacao = new Date();
       await dispositivo.save();
 
-      // Criar leitura com estrutura flexível
       const leitura = await Leitura.create({
         dispositivo: dispositivo._id,
         tipo_leitura: "SENSORES",
@@ -497,12 +473,10 @@ class LeituraController {
     }
   }
 
-  // Receber foto da câmera sem autenticação (pública)
   static async receberCameraPublico(req, res) {
     try {
       const { equipamento, foto, tamanho, timestamp, client_ip } = req.body;
 
-      // 🔥 CORREÇÃO PRINCIPAL (NORMALIZAÇÃO DO MAC)
       const mac = req.body.mac?.toLowerCase().trim();
 
       if (!equipamento || !foto || !mac) {
@@ -512,7 +486,6 @@ class LeituraController {
         });
       }
 
-      // 🔥 BUSCA COM MAC NORMALIZADO
       const dispositivo = await Dispositivo.findOne({
         mac_address: mac,
       });
@@ -585,7 +558,6 @@ class LeituraController {
     }
   }
 
-  // Teste: envia URL do Cloudinary direto para predição (sem upload)
   static async testarPredicaoPorUrl(req, res) {
     try {
       const { url, mac, salvar } = req.body;

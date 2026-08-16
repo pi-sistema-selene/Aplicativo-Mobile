@@ -4,12 +4,10 @@ require('dotenv').config();
 
 async function criarAdminPadrao() {
   try {
-    // Conectar ao MongoDB
     await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/selene');
     
     console.log('✅ Conectado ao MongoDB');
-    
-    // Verificar se já existe admin padrão
+
     const adminExistente = await Admin.findOne({ usuario: 'admin' });
     
     if (adminExistente) {
@@ -21,10 +19,9 @@ async function criarAdminPadrao() {
       return;
     }
     
-    // Criar admin padrão
     const admin = await Admin.create({
       usuario: 'admin',
-      senha: 'admin123', // Senha padrão - deve ser alterada após primeiro login
+      senha: 'admin123', 
       nome_completo: 'Administrador Padrão',
       email: 'admin@selene.com',
       nivel_acesso: 'superadmin'
@@ -47,7 +44,6 @@ async function criarAdminPadrao() {
   }
 }
 
-// Executar se chamado diretamente
 if (require.main === module) {
   criarAdminPadrao();
 }

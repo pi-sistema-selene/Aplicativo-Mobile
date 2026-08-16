@@ -1,29 +1,27 @@
-// Este arquivo É UM DICIONÁRIO de configurações
-// Ele diz: "Para cada ambiente (dev, test, prod), use estas configurações"
-require('dotenv').config();
+require("dotenv").config();
 
 module.exports = {
   development: {
-    username: process.env.DB_USER || 'root',
+    username: process.env.DB_USER || "root",
     password: process.env.DB_PASSWORD || null,
-    database: process.env.DB_NAME || 'fazenda_hidroponica',
-    host: process.env.DB_HOST || '127.0.0.1',
+    database: process.env.DB_NAME || "fazenda_hidroponica",
+    host: process.env.DB_HOST || "127.0.0.1",
     port: process.env.DB_PORT || 3306,
-    dialect: process.env.DB_DIALECT || 'sqlite',
-    storage: process.env.DB_STORAGE || './database.sqlite',
-    logging: process.env.LOG_LEVEL === 'debug' ? console.log : false,
+    dialect: process.env.DB_DIALECT || "sqlite",
+    storage: process.env.DB_STORAGE || "./database.sqlite",
+    logging: process.env.LOG_LEVEL === "debug" ? console.log : false,
     define: {
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      createdAt: 'criado_em',
-      updatedAt: 'atualizado_em'
-    }
+      createdAt: "criado_em",
+      updatedAt: "atualizado_em",
+    },
   },
   test: {
-    dialect: 'sqlite',
-    storage: ':memory:',
-    logging: false
+    dialect: "sqlite",
+    storage: ":memory:",
+    logging: false,
   },
   production: {
     username: process.env.DB_USER,
@@ -31,13 +29,13 @@ module.exports = {
     database: process.env.DB_NAME,
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
-    dialect: process.env.DB_DIALECT || 'mysql',
+    dialect: process.env.DB_DIALECT || "mysql",
     logging: false,
     pool: {
       max: 5,
       min: 0,
       acquire: 30000,
-      idle: 10000
-    }
-  }
+      idle: 10000,
+    },
+  },
 };

@@ -1,6 +1,3 @@
-//(script para testar API)
-
-// scripts/test-api.js
 const axios = require('axios');
 
 const API_BASE = 'http://localhost:3000/api/v1';
@@ -9,17 +6,14 @@ async function testAPI() {
   console.log('🧪 Testando API da Fazenda Hidropônica...\n');
   
   try {
-    // 1. Testar Health Check
     console.log('1. Testando Health Check...');
     const healthResponse = await axios.get(`${API_BASE}/health`);
     console.log(`   ✅ Status: ${healthResponse.data.message}\n`);
-    
-    // 2. Testar conexão com banco
+
     console.log('2. Testando conexão com banco de dados...');
     const dbResponse = await axios.get(`${API_BASE}/test-db`);
     console.log(`   ✅ Banco: ${dbResponse.data.database} (${dbResponse.data.dialect})\n`);
     
-    // 3. Testar criação de dispositivo
     console.log('3. Testando criação de dispositivo...');
     const dispositivoData = {
       mac_address: '00:11:22:33:44:55',
@@ -33,7 +27,6 @@ async function testAPI() {
     
     const dispositivoId = dispositivoResponse.data.data.id;
     
-    // 4. Testar envio de leitura (simulando ESP32)
     console.log('4. Testando envio de leitura dos sensores...');
     const leituraData = {
       mac: '00:11:22:33:44:55',
@@ -50,17 +43,14 @@ async function testAPI() {
     const leituraResponse = await axios.post(`${API_BASE}/leituras/sensores`, leituraData);
     console.log(`   ✅ Leitura recebida: ID ${leituraResponse.data.leitura_id}\n`);
     
-    // 5. Testar listagem de dispositivos
     console.log('5. Testando listagem de dispositivos...');
     const dispositivosResponse = await axios.get(`${API_BASE}/dispositivos`);
     console.log(`   ✅ Total de dispositivos: ${dispositivosResponse.data.total}\n`);
     
-    // 6. Testar dashboard
     console.log('6. Testando dashboard...');
     const dashboardResponse = await axios.get(`${API_BASE}/dashboard/principal`);
     console.log(`   ✅ Dashboard carregado: ${dashboardResponse.data.data.metricas.dispositivos_online} dispositivo(s) online\n`);
     
-    // 7. Testar dados para gráfico
     console.log('7. Testando dados para gráfico...');
     const graficoResponse = await axios.get(`${API_BASE}/leituras/${dispositivoId}/grafico?sensor=temperatura&periodo=24h`);
     console.log(`   ✅ Dados para gráfico: ${graficoResponse.data.total_pontos} ponto(s)\n`);
@@ -83,7 +73,6 @@ async function testAPI() {
   }
 }
 
-// Verificar se servidor está rodando
 async function checkServer() {
   try {
     await axios.get(`${API_BASE}/health`, { timeout: 2000 });
@@ -93,7 +82,6 @@ async function checkServer() {
   }
 }
 
-// Executar testes
 async function runTests() {
   const serverRunning = await checkServer();
   

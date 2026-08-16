@@ -1,9 +1,5 @@
 const express = require("express");
 const router = express.Router();
-
-// ==========================
-// IMPORT ROTAS
-// ==========================
 const dispositivoRoutes = require("./dispositivoRoutes");
 const leituraRoutes = require("./leituraRoutes");
 const plantaRoutes = require("./plantaRoutes");
@@ -16,11 +12,7 @@ const estufaRoutes = require("./estufaRoutes");
 const chatRoutes = require("./chatRoutes");
 const adminChatRoutes = require("./adminChatRoutes");
 const adminDashboardRoutes = require("./adminDashboardRoutes");
-const userController = require("../controllers-mongodb/userController");
 
-// ==========================
-// USER ROUTES
-// ==========================
 router.use("/auth", authRoutes);
 router.use("/dispositivos", dispositivoRoutes);
 router.use("/leituras", leituraRoutes);
@@ -31,23 +23,10 @@ router.use("/configuracoes-alerta", configuracaoAlertaRoutes);
 router.use("/estufas", estufaRoutes);
 router.use("/chats", chatRoutes);
 router.use("/users", require("./userRoutes"));
-
-// ==========================
-// ADMIN ROUTES
-// ==========================
-
-// 👇 admin base
 router.use("/admin", adminRoutes);
-
-// 👇 chat admin separado
 router.use("/admin", adminChatRoutes);
-
-// 👇 dashboard admin (CORRETO AQUI)
 router.use("/admin/dashboard", adminDashboardRoutes);
 
-// ==========================
-// HEALTH CHECK
-// ==========================
 router.get("/health", (req, res) => {
   res.json({
     success: true,
@@ -56,10 +35,6 @@ router.get("/health", (req, res) => {
     version: "1.0.0",
   });
 });
-
-// ==========================
-// TEST DB
-// ==========================
 router.get("/test-db", async (req, res) => {
   try {
     const { mongoose } = require("../config/mongodb");
@@ -88,10 +63,6 @@ router.get("/test-db", async (req, res) => {
     });
   }
 });
-
-// ==========================
-// 404 (SEMPRE POR ÚLTIMO)
-// ==========================
 router.use("*", (req, res) => {
   res.status(404).json({
     success: false,

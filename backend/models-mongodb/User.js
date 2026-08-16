@@ -23,7 +23,6 @@ const userSchema = new mongoose.Schema(
       select: false,
     },
 
-    // 🔥 NOVO
     tipo: {
       type: String,
       enum: ["user"],

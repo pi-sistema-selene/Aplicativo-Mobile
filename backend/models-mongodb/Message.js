@@ -19,7 +19,6 @@ const MessageSchema = new mongoose.Schema(
       required: true,
     },
 
-    // 🔥 IMPORTANTE
     tipo: {
       type: String,
       enum: ["user", "admin"],

@@ -4,10 +4,6 @@ const Chat = require("../models-mongodb/Chat");
 const Message = require("../models-mongodb/Message");
 
 class ChatController {
-  // =========================
-  // USER - LISTAR CHATS
-  // =========================
-
   static async listarChats(req, res) {
     try {
       const userId = req.user.id;
@@ -21,10 +17,6 @@ class ChatController {
       });
     }
   }
-
-  // =========================
-  // USER - CRIAR CHAT
-  // =========================
 
   static async criarChat(req, res) {
     try {
@@ -53,11 +45,6 @@ class ChatController {
     }
   }
 
-  // =========================
-  // ADMIN - LISTAR TODOS
-  // =========================
-
-  
   static async listarChatsAdmin(req, res) {
     try {
       const chats = await Chat.find().sort({ updatedAt: -1 });
@@ -72,11 +59,6 @@ class ChatController {
       });
     }
   }
-  
-
-  // =========================
-  // ADMIN - RESPONDER
-  // =========================
 
   static async responderMensagemAdmin(req, res) {
     try {
@@ -95,7 +77,6 @@ class ChatController {
         });
       }
 
-      // 🔥 VALIDA SE CHAT EXISTE
       const chat = await Chat.findById(chatId);
 
       if (!chat) {
@@ -104,18 +85,16 @@ class ChatController {
         });
       }
 
-      // 🔥 CRIA MENSAGEM ADMIN
       const mensagem = await Message.create({
         chatId,
 
         texto,
 
-        autor: req.adminId, // correto
+        autor: req.adminId,
 
         tipo: "admin",
       });
 
-      // 🔥 ATUALIZA CHAT
       chat.updatedAt = new Date();
       await chat.save();
 
@@ -126,10 +105,6 @@ class ChatController {
       });
     }
   }
-
-  // =========================
-  // USER - ENCERRAR CHAT
-  // =========================
 
   static async encerrarChat(req, res) {
     try {
@@ -161,10 +136,6 @@ class ChatController {
     }
   }
 
-  // =========================
-  // LISTAR MENSAGENS
-  // =========================
-
   static async listarMensagens(req, res) {
     try {
       const { chatId } = req.params;
@@ -186,10 +157,6 @@ class ChatController {
       });
     }
   }
-
-  // =========================
-  // USER - ENVIAR MENSAGEM
-  // =========================
 
   static async enviarMensagem(req, res) {
     try {

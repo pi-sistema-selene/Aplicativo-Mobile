@@ -2,7 +2,6 @@ const User = require("../models-mongodb/User");
 const bcrypt = require("bcryptjs");
 
 class userController {
-  // 👤 perfil do usuário logado
   static async perfil(req, res) {
     try {
       const user = await User.findById(req.userId).select("-senha");
@@ -26,7 +25,6 @@ class userController {
     }
   }
 
-  // 👥 LISTAR USUÁRIOS (somente tipo user)
   static async listar(req, res) {
     try {
       const usuarios = await User.find({ tipo: "user" }).select(
@@ -45,7 +43,6 @@ class userController {
     }
   }
 
-  // ✏️ atualizar perfil
   static async atualizarPerfil(req, res) {
     try {
       const { nome_completo, email } = req.body;
@@ -68,7 +65,6 @@ class userController {
     }
   }
 
-  // ➕ CRIAR USUÁRIO (CADASTRO)
   static async criar(req, res) {
     try {
       const { nome_completo, email, senha, telefone, data_nascimento, tipo } =
@@ -107,7 +103,6 @@ class userController {
     }
   }
 
-  // 📡 ping online
   static async ping(req, res) {
     return res.json({
       success: true,
@@ -116,7 +111,6 @@ class userController {
     });
   }
 
-  // 👤 buscar usuário por id
   static async buscarPorId(req, res) {
     try {
       const { id } = req.params;
@@ -141,7 +135,6 @@ class userController {
       });
     }
   }
-  // ✏️ atualizar usuário por id (ADMIN)
   static async atualizarPorId(req, res) {
     try {
       const { id } = req.params;

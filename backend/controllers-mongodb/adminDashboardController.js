@@ -3,34 +3,27 @@ const Planta = require("../models-mongodb/Planta");
 const User = require("../models-mongodb/User");
 
 class adminDashboardController {
-
-  // ==============================
-  // 📊 STATS GERAIS
-  // ==============================
   static async stats(req, res) {
     try {
-      // total de usuários
       const totalUsuarios = await User.countDocuments();
 
-      // dispositivos
       const dispositivos = await Dispositivo.aggregate([
         {
           $group: {
             _id: null,
             total_dispositivos: { $sum: 1 },
             dispositivos_online: {
-              $sum: { $cond: [{ $eq: ["$online", true] }, 1, 0] }
-            }
-          }
-        }
+              $sum: { $cond: [{ $eq: ["$online", true] }, 1, 0] },
+            },
+          },
+        },
       ]);
 
-      // plantas
       const plantasAtivas = await Planta.countDocuments({ ativo: true });
 
       const result = dispositivos[0] || {
         total_dispositivos: 0,
-        dispositivos_online: 0
+        dispositivos_online: 0,
       };
 
       return res.json({
@@ -39,22 +32,18 @@ class adminDashboardController {
           usuarios_total: totalUsuarios,
           sensores_operantes: result.total_dispositivos,
           sensores_online: result.dispositivos_online,
-          plantas_ativas: plantasAtivas
-        }
+          plantas_ativas: plantasAtivas,
+        },
       });
-
     } catch (error) {
       console.error("Erro admin stats:", error);
       return res.status(500).json({
         success: false,
-        message: "Erro ao buscar stats do admin"
+        message: "Erro ao buscar stats do admin",
       });
     }
   }
 
-  // ==============================
-  // 🏠 DASHBOARD PRINCIPAL
-  // ==============================
   static async home(req, res) {
     try {
       const ultimosUsuarios = await User.find()
@@ -71,15 +60,14 @@ class adminDashboardController {
         success: true,
         data: {
           ultimos_usuarios: ultimosUsuarios,
-          ultimos_dispositivos: ultimosDispositivos
-        }
+          ultimos_dispositivos: ultimosDispositivos,
+        },
       });
-
     } catch (error) {
       console.error("Erro admin home:", error);
       return res.status(500).json({
         success: false,
-        message: "Erro ao carregar dashboard admin"
+        message: "Erro ao carregar dashboard admin",
       });
     }
   }

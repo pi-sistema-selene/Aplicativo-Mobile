@@ -3,9 +3,6 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 
 class adminController {
-  // ==========================================
-  // LOGIN
-  // ==========================================
   static async login(req, res) {
     try {
       const { usuario, senha } = req.body;
@@ -67,9 +64,6 @@ class adminController {
     }
   }
 
-  // ==========================================
-  // RECUPERAR SENHA
-  // ==========================================
   static async recuperarSenha(req, res) {
     try {
       const { email, usuario } = req.body;
@@ -80,7 +74,6 @@ class adminController {
         $or: [{ email: login }, { usuario: login }],
       }).select("+senha");
 
-      // 🔒 não revela se existe ou não
       if (!admin) {
         return res.json({
           success: true,
@@ -88,7 +81,6 @@ class adminController {
         });
       }
 
-      // 🔥 gera senha temporária
       const novaSenha = Math.random().toString(36).slice(-8);
 
       admin.senha = novaSenha;
@@ -110,9 +102,6 @@ class adminController {
     }
   }
 
-  // ==========================================
-  // RESETAR SENHA
-  // ==========================================
   static async resetarSenha(req, res) {
     try {
       const { token, novaSenha } = req.body;
@@ -153,9 +142,6 @@ class adminController {
     }
   }
 
-  // ==========================================
-  // ALTERAR SENHA (LOGADO)
-  // ==========================================
   static async alterarSenha(req, res) {
     try {
       const { senhaAtual, novaSenha } = req.body;
@@ -187,9 +173,6 @@ class adminController {
     }
   }
 
-  // ==========================================
-  // CRIAR ADMIN
-  // ==========================================
   static async criarAdmin(req, res) {
     try {
       const { usuario, senha, nome_completo, email, nivel_acesso } = req.body;
@@ -227,9 +210,6 @@ class adminController {
     }
   }
 
-  // ==========================================
-  // LISTAR ADMINS
-  // ==========================================
   static async listarAdmins(req, res) {
     try {
       const admins = await Admin.find().select("-senha");
@@ -247,18 +227,12 @@ class adminController {
     }
   }
 
-  // ==========================================
-  // PERFIL
-  // ==========================================
   static async perfil(req, res) {
     res.json({
       data: req.admin,
     });
   }
 
-  // ==========================================
-  // ATUALIZAR PERFIL
-  // ==========================================
   static async atualizarPerfil(req, res) {
     try {
       const adminId = req.admin._id;
@@ -287,9 +261,6 @@ class adminController {
     }
   }
 
-  // ==========================================
-  // VERIFICAR TOKEN
-  // ==========================================
   static async verificarToken(req, res) {
     res.json({
       success: true,
@@ -297,9 +268,6 @@ class adminController {
     });
   }
 
-  // ==========================================
-  // EXCLUIR ADMIN
-  // ==========================================
   static async excluirAdmin(req, res) {
     try {
       const { id } = req.params;
@@ -329,9 +297,6 @@ class adminController {
     }
   }
 
-  // ==========================================
-  // EDITAR ADMIN
-  // ==========================================
   static async editarAdmin(req, res) {
     try {
       const { id } = req.params;
