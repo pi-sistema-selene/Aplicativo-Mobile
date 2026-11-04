@@ -120,7 +120,7 @@ export default function AdminHome() {
         </View>
 
         <View style={styles.statsRow}>
-          {/* PRODUTORES ONLINE */}
+
           <View style={styles.statItem}>
             <View style={styles.statHeader}>
               <Feather name="external-link" size={14} color="#2A3A56" />
@@ -130,10 +130,10 @@ export default function AdminHome() {
             <Text style={styles.statValue}>{stats.usuarios_total}</Text>
           </View>
 
-          {/* DIVISOR */}
+
           <View style={styles.divider} />
 
-          {/* SENSORES */}
+
           <View style={styles.statItem}>
             <View style={styles.statHeader}>
               <Feather name="cpu" size={14} color="#2A3A56" />
@@ -195,9 +195,6 @@ export default function AdminHome() {
   );
 }
 
-// -------------------
-// Main Container & Layout
-// -------------------
 
 const styles = StyleSheet.create({
   container: {
@@ -214,9 +211,6 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
 
-  // -------------------
-  // Header Section
-  // -------------------
 
   topContainer: {
     backgroundColor: "#95C159",
@@ -249,9 +243,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
 
-  // -------------------
-  // Typography & Greetings
-  // -------------------
 
   greeting: {
     fontSize: 22,
@@ -275,9 +266,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 
-  // -------------------
-  // Profile / Avatar Components
-  // -------------------
 
   avatarCircle: {
     width: 45,
@@ -308,9 +296,6 @@ const styles = StyleSheet.create({
     color: "#2A3A56"
   },
 
-  // -------------------
-  // Stats & Metrics
-  // -------------------
 
   statsRow: {
     flexDirection: "row",
@@ -347,9 +332,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
 
-  // -------------------
-  // Info Cards
-  // -------------------
 
   card: {
     backgroundColor: "#FFF",

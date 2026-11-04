@@ -61,9 +61,6 @@ export default function EditProfileScreen() {
 
         const buscaId = id.toString().trim().toLowerCase();
 
-        // ==========================================
-        // BUSCA DIRETA USERS
-        // ==========================================
 
         let response = await fetch(
           `${API_V1}/users/${id}`,
@@ -84,9 +81,6 @@ export default function EditProfileScreen() {
           return;
         }
 
-        // ==========================================
-        // BUSCA LISTA USERS
-        // ==========================================
 
         const resLista = await fetch(
           `${API_V1}/users`,
@@ -113,9 +107,6 @@ export default function EditProfileScreen() {
           return;
         }
 
-        // ==========================================
-        // BUSCA ADMINS
-        // ==========================================
 
         const resAdmins = await fetch(
           `${API_V1}/admin/listar`,
@@ -158,9 +149,6 @@ export default function EditProfileScreen() {
     carregarDadosParaEdicao();
   }, [id]);
 
-  // ==========================================
-  // SALVAR
-  // ==========================================
 
   const handleSalvar = async () => {
     try {
@@ -173,7 +161,6 @@ export default function EditProfileScreen() {
         return;
       }
 
-      // DEFINE ENDPOINT
       const endpoint = isAdmin
         ? `${API_V1}/admin/${id}`
         : `${API_V1}/users/${id}`;
@@ -211,9 +198,6 @@ export default function EditProfileScreen() {
     }
   };
 
-  // ==========================================
-  // LOADING
-  // ==========================================
 
   if (loading) {
     return (
@@ -354,7 +338,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 
-  // HEADER
 
   header: {
     flexDirection: "row",
@@ -376,7 +359,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
 
-  // FORM
 
   inputGroup: {
     marginBottom: 18,
@@ -404,7 +386,6 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
   },
 
-  // BUTTON
 
   btnSave: {
     backgroundColor: "#F4C542",

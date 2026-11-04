@@ -35,9 +35,6 @@ export default function EditProfileScreen() {
   const [idExibicao, setIdExibicao] = useState("00000000");
   const [iniciais, setIniciais] = useState("US");
 
-  // ==========================================
-  // CARREGAR DADOS DO USUÁRIO
-  // ==========================================
 
   useEffect(() => {
     const carregarDados = async () => {
@@ -98,9 +95,6 @@ export default function EditProfileScreen() {
     carregarDados();
   }, [id]);
 
-  // ==========================================
-  // SALVAR ALTERAÇÕES
-  // ==========================================
 
   const handleSalvar = async () => {
     try {
@@ -147,9 +141,6 @@ export default function EditProfileScreen() {
     }
   };
 
-  // ==========================================
-  // LOADING
-  // ==========================================
 
   if (loading) {
     return (
@@ -170,7 +161,7 @@ export default function EditProfileScreen() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={["top"]}>
-        {/* HEADER */}
+
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
@@ -189,7 +180,7 @@ export default function EditProfileScreen() {
           </View>
         </View>
 
-        {/* CONTEÚDO */}
+
         <View style={styles.content}>
           <View style={styles.imageContainer}>
             <Image
@@ -210,7 +201,7 @@ export default function EditProfileScreen() {
             <View style={{ paddingBottom: 150 }}>
               <Text style={styles.sectionTitle}>Configurações Usuário</Text>
 
-              {/* NOME */}
+
               <Text style={styles.label}>Nome:</Text>
 
               <TextInput
@@ -220,7 +211,7 @@ export default function EditProfileScreen() {
                 placeholder="Nome completo"
               />
 
-              {/* TELEFONE */}
+
               <Text style={styles.label}>Telefone:</Text>
 
               <TextInput
@@ -231,7 +222,7 @@ export default function EditProfileScreen() {
                 placeholder="(00) 00000-0000"
               />
 
-              {/* EMAIL */}
+
               <Text style={styles.label}>Email:</Text>
 
               <TextInput
@@ -243,7 +234,7 @@ export default function EditProfileScreen() {
                 placeholder="email@email.com"
               />
 
-              {/* ENDEREÇO */}
+
               <Text style={styles.label}>Endereço:</Text>
 
               <TextInput
@@ -254,7 +245,7 @@ export default function EditProfileScreen() {
                 placeholder="Endereço"
               />
 
-              {/* SWITCHES */}
+
               <View style={styles.switchRow}>
                 <Text style={styles.label}>Ativar Notificações</Text>
 
@@ -281,7 +272,7 @@ export default function EditProfileScreen() {
                 />
               </View>
 
-              {/* BOTÃO */}
+
               <TouchableOpacity
                 style={[styles.saveBtn, saving && { opacity: 0.7 }]}
                 onPress={handleSalvar}
@@ -301,9 +292,6 @@ export default function EditProfileScreen() {
   );
 }
 
-// ==========================================
-// STYLES
-// ==========================================
 
 const styles = StyleSheet.create({
   container: {

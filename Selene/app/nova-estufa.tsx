@@ -19,9 +19,6 @@ import { API_V1 } from "@/constants/api";
 export default function CadastroEstufa() {
   const router = useRouter();
 
-  // ==========================================
-  // ESTADOS (STATES)
-  // ==========================================
   const [loading, setLoading] = useState(false);
   const [nome, setNome] = useState("");
   const [quantidade, setQuantidade] = useState("");
@@ -30,7 +27,6 @@ export default function CadastroEstufa() {
   const [data] = useState(new Date().toLocaleDateString("pt-BR"));
   const [iniciais, setIniciais] = useState("US");
 
-  // ================= USER =================
   useEffect(() => {
     const carregarDadosUsuario = async () => {
       try {
@@ -53,11 +49,7 @@ export default function CadastroEstufa() {
     carregarDadosUsuario();
   }, []);
 
-  // ==========================================
-  // LÓGICA DE CADASTRO
-  // ==========================================
   const handleSalvar = async () => {
-    // Validação básica
     if (!nome || !quantidade) {
       Alert.alert("Erro", "Por favor, preencha o nome e a quantidade.");
       return;
@@ -66,7 +58,6 @@ export default function CadastroEstufa() {
     setLoading(true);
 
     try {
-      // Recupera o token salvo no login para autenticar a requisição
       const token = await SecureStore.getItemAsync("userToken");
 
       const payload = {
@@ -78,7 +69,6 @@ export default function CadastroEstufa() {
         status: "Baixo", // Status inicial padrão para novas estufas
       };
 
-      // Envio para o backend no Render
       const response = await axios.post(
         `${API_V1}/estufas/cadastrar`,
         payload,
@@ -102,7 +92,7 @@ export default function CadastroEstufa() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={["top"]}>
-        {/* ================= HEADER ================= */}
+
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
@@ -133,16 +123,14 @@ export default function CadastroEstufa() {
           </View>
         </View>
 
-        {/* ---------------------------------------------------------
-            FORMULÁRIO (CONTEÚDO BRANCO)
-        ---------------------------------------------------------- */}
+
         <View style={styles.content}>
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 40 }}
             keyboardShouldPersistTaps="handled"
           >
-            {/* DATA DE CRIAÇÃO (SOMENTE LEITURA) */}
+
             <Text style={styles.label}>Data Criação</Text>
             <View style={styles.inputContainer}>
               <TextInput style={styles.input} value={data} editable={false} />
@@ -151,7 +139,7 @@ export default function CadastroEstufa() {
               </TouchableOpacity>
             </View>
 
-            {/* NOME DA ESTUFA */}
+
             <Text style={styles.label}>Nome</Text>
             <TextInput
               style={styles.input}
@@ -161,7 +149,7 @@ export default function CadastroEstufa() {
               placeholderTextColor="#A0A0A0"
             />
 
-            {/* QUANTIDADE DE COMPOSTOS */}
+
             <Text style={styles.label}>Quantidade Compostos</Text>
             <TextInput
               style={styles.input}
@@ -172,7 +160,7 @@ export default function CadastroEstufa() {
               placeholderTextColor="#A0A0A0"
             />
 
-            {/* URL DA CÂMERA */}
+
             <Text style={styles.label}>Endereço Câmera (URL)</Text>
             <TextInput
               style={styles.input}
@@ -183,7 +171,7 @@ export default function CadastroEstufa() {
               autoCapitalize="none"
             />
 
-            {/* OBSERVAÇÕES (TEXTAREA) */}
+
             <Text style={[styles.label, { color: "#00D2B1" }]}>
               Observações
             </Text>
@@ -198,7 +186,7 @@ export default function CadastroEstufa() {
               placeholderTextColor="#A0A0A0"
             />
 
-            {/* BOTÃO SALVAR */}
+
             <TouchableOpacity
               style={[styles.btnSalvar, loading && { opacity: 0.7 }]}
               onPress={handleSalvar}
@@ -217,14 +205,9 @@ export default function CadastroEstufa() {
   );
 }
 
-// ==========================================
-// ESTILIZAÇÃO (STYLES)
-// ==========================================
 const styles = StyleSheet.create({
-  // Estrutura Principal
   container: { flex: 1, backgroundColor: "#95C159" },
 
-  // Header Superior
   topContainer: {
     backgroundColor: "#95C159",
     borderBottomLeftRadius: 40,
@@ -264,7 +247,6 @@ const styles = StyleSheet.create({
 
   avatarText: { fontSize: 16, fontWeight: "bold", color: "#2A3A56" },
 
-  // Painel Branco Arredondado
   content: {
     flex: 1,
     backgroundColor: "#FFF",

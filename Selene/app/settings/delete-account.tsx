@@ -21,7 +21,6 @@ export default function DeleteAccountScreen() {
   const [iniciais, setIniciais] = useState("US");
   const [loading, setLoading] = useState(true);
 
-  // ================= USER =================
   useEffect(() => {
     const carregarDadosUsuario = async () => {
       try {
@@ -44,7 +43,6 @@ export default function DeleteAccountScreen() {
     carregarDadosUsuario();
   }, []);
 
-  // Função para lidar com a deleção (lógica futura de API)
   const handleDelete = () => {
     if (!password) {
       Alert.alert("Erro", "Por favor, insira sua senha para confirmar.");
@@ -68,9 +66,7 @@ export default function DeleteAccountScreen() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={["top"]}>
-        {/* ---------------------------------------------------------
-              INÍCIO DO HEADER (VERDE SELENE)
-          ---------------------------------------------------------- */}
+
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
@@ -100,10 +96,8 @@ export default function DeleteAccountScreen() {
             </View>
           </View>
         </View>
-        {/* ---------------------------------------------------------
-              FIM DO HEADER
-          ---------------------------------------------------------- */}
-        {/* CARD DE CONTEÚDO (BRANCO) */}
+
+
         <ScrollView
           style={styles.content}
           contentContainerStyle={{ paddingBottom: 30 }}
@@ -113,7 +107,7 @@ export default function DeleteAccountScreen() {
             Você Tem Certeza Que Deseja Deletar Sua Conta?
           </Text>
 
-          {/* INFO BOX - ALERTAS */}
+
           <View style={styles.infoBox}>
             <Text style={styles.infoText}>
               Esta ação excluirá permanentemente todos os seus dados e você não
@@ -136,7 +130,7 @@ export default function DeleteAccountScreen() {
             Por Favor Insira Sua Senha Para Confirmar:
           </Text>
 
-          {/* INPUT DE SENHA COM TOGGLE DE VISIBILIDADE */}
+
           <View style={styles.inputWrapper}>
             <TextInput
               secureTextEntry={!showPassword}
@@ -155,7 +149,7 @@ export default function DeleteAccountScreen() {
             </TouchableOpacity>
           </View>
 
-          {/* BOTÕES DE AÇÃO */}
+
           <TouchableOpacity style={styles.confirmButton} onPress={handleDelete}>
             <Text style={styles.btnText}>Confirmar</Text>
           </TouchableOpacity>
@@ -173,10 +167,8 @@ export default function DeleteAccountScreen() {
 }
 
 const styles = StyleSheet.create({
-  // Estrutura Principal
   container: { flex: 1, backgroundColor: "#95C159" },
 
-  // Header Superior
   topContainer: {
     backgroundColor: "#95C159",
     borderBottomLeftRadius: 40,
@@ -216,7 +208,6 @@ const styles = StyleSheet.create({
 
   avatarText: { fontSize: 16, fontWeight: "bold", color: "#2A3A56" },
 
-  // Painel Branco Arredondado
   content: {
     flex: 1,
     backgroundColor: "#FFF",

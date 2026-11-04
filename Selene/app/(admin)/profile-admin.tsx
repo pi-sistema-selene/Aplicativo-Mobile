@@ -10,9 +10,8 @@ import {
 import { Image } from "expo-image";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
 
 import { StyleSheet } from "react-native";
@@ -96,9 +95,7 @@ export default function ProfileScreen() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={["top"]}>
-        {/* ---------------------------------------------------------
-                INÍCIO DO HEADER (VERDE SELENE)
-            ---------------------------------------------------------- */}
+
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
@@ -115,13 +112,11 @@ export default function ProfileScreen() {
             </View>
           </View>
         </View>
-        {/* ---------------------------------------------------------
-                FIM DO HEADER
-            ---------------------------------------------------------- */}
 
-        {/* CONTEÚDO */}
+
+
         <View style={styles.content}>
-          {/* FOTO */}
+
           <View style={styles.imageContainer}>
             <Image
               source="https://i.pravatar.cc/300"
@@ -129,7 +124,7 @@ export default function ProfileScreen() {
             />
           </View>
 
-          {/* DADOS */}
+
           {loading ? (
             <ActivityIndicator
               size="large"
@@ -143,12 +138,12 @@ export default function ProfileScreen() {
             </>
           )}
 
-          {/* MENU */}
+
           <ScrollView
             style={styles.menuList}
             showsVerticalScrollIndicator={false}
           >
-            {/* EDITAR PERFIL */}
+
             <TouchableOpacity
               style={styles.menuItem}
               onPress={async () => {
@@ -171,7 +166,7 @@ export default function ProfileScreen() {
               <Text style={styles.menuText}>Editar Perfil</Text>
             </TouchableOpacity>
 
-            {/* SEGURANÇA */}
+
             <TouchableOpacity
               style={styles.menuItem}
               onPress={() => router.push("/settings/password")}
@@ -191,7 +186,7 @@ export default function ProfileScreen() {
               <Text style={styles.menuText}>Segurança</Text>
             </TouchableOpacity>
 
-            {/* SUPORTE */}
+
             <TouchableOpacity
               style={styles.menuItem}
               onPress={() => router.push("/(admin)/(tabs)/reports")}
@@ -207,7 +202,7 @@ export default function ProfileScreen() {
               <Text style={styles.menuText}>Suporte</Text>
             </TouchableOpacity>
 
-            {/* LOGOUT */}
+
             <TouchableOpacity
               style={[styles.menuItem, { marginTop: 10 }]}
               onPress={handleLogout}
@@ -231,9 +226,6 @@ export default function ProfileScreen() {
   );
 }
 
-// -------------------
-// Main Container & Layout
-// -------------------
 
 const styles = StyleSheet.create({
   container: {
@@ -249,9 +241,6 @@ const styles = StyleSheet.create({
     paddingTop: 80,
   },
 
-  // -------------------
-  // Header Section
-  // -------------------
 
   topContainer: {
     backgroundColor: "#95C159",
@@ -289,9 +278,6 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
 
-  // -------------------
-  // Avatar Components
-  // -------------------
 
   avatarCircle: {
     width: 45,
@@ -309,9 +295,6 @@ const styles = StyleSheet.create({
     color: "#2A3A56",
   },
 
-  // -------------------
-  // Profile Card & Image
-  // -------------------
 
   profileCard: {
     flex: 1,
@@ -350,9 +333,6 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
 
-  // -------------------
-  // Menu List Section
-  // -------------------
 
   menuList: {
     paddingHorizontal: 25,

@@ -70,7 +70,6 @@ export default function PerfilUsuarioScreen() {
 
         const buscaId = id.toString().replace(/"/g, "").trim();
 
-        // BUSCA USER
         let response = await fetch(
           `${API_V1}/users/${buscaId}`,
           {
@@ -89,7 +88,6 @@ export default function PerfilUsuarioScreen() {
           return;
         }
 
-        // BUSCA EM LISTA USERS
         const resUsers = await fetch(
           `${API_V1}/users`,
           {
@@ -112,7 +110,6 @@ export default function PerfilUsuarioScreen() {
           return;
         }
 
-        // BUSCA ADMINS
         const resAdmin = await fetch(
           `${API_V1}/admin/listar`,
           {
@@ -168,13 +165,11 @@ export default function PerfilUsuarioScreen() {
 
             const buscaId = id?.toString().replace(/"/g, "").trim();
 
-            // VERIFICA SE É ADMIN
             const isAdmin =
               userData?.nivel_acesso === "admin" ||
               userData?.nivel_acesso === "superadmin" ||
               userData?.cargo;
 
-            // DEFINE A ROTA CORRETA
             const endpoint = isAdmin
               ? `${API_V1}/admin/${buscaId}`
               : `${API_V1}/users/${buscaId}`;
@@ -378,9 +373,6 @@ export default function PerfilUsuarioScreen() {
   );
 }
 
-// -------------------
-// Main Container & Layout
-// -------------------
 
 const styles = StyleSheet.create({
   container: {
@@ -396,9 +388,6 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
 
-  // -------------------
-  // Header Section
-  // -------------------
 
   topContainer: {
     backgroundColor: "#95C159",
@@ -429,9 +418,6 @@ const styles = StyleSheet.create({
     color: "#2A3A56",
   },
 
-  // -------------------
-  // Avatar Components
-  // -------------------
 
   avatarCircle: {
     width: 45,
@@ -447,9 +433,6 @@ const styles = StyleSheet.create({
     color: "#2A3A56",
   },
 
-  // -------------------
-  // Profile / Detail Card
-  // -------------------
 
   topCard: {
     flexDirection: "row",
@@ -476,9 +459,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 
-  // -------------------
-  // Info List Section
-  // -------------------
 
   sectionTitle: {
     marginTop: 20,
@@ -510,9 +490,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 
-  // -------------------
-  // Action Buttons
-  // -------------------
 
   btnEdit: {
     backgroundColor: "#F4C542",

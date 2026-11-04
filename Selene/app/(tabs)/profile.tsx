@@ -62,9 +62,7 @@ export default function ProfileScreen() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={["top"]}>
-        {/* ---------------------------------------------------------
-                       INÍCIO DO HEADER (VERDE SELENE)
-                   ---------------------------------------------------------- */}
+
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
@@ -89,13 +87,11 @@ export default function ProfileScreen() {
             </View>
           </View>
         </View>
-        {/* ---------------------------------------------------------
-                       FIM DO HEADER
-                   ---------------------------------------------------------- */}
 
-        {/* CONTEÚDO */}
+
+
         <View style={styles.content}>
-          {/* FOTO */}
+
           <View style={styles.imageContainer}>
             <Image
               source={IMAGES.placeholderAvatar}
@@ -103,7 +99,7 @@ export default function ProfileScreen() {
             />
           </View>
 
-          {/* DADOS */}
+
           {loading ? (
             <ActivityIndicator
               size="large"
@@ -117,12 +113,12 @@ export default function ProfileScreen() {
             </>
           )}
 
-          {/* MENU */}
+
           <ScrollView
             style={styles.menuList}
             showsVerticalScrollIndicator={false}
           >
-            {/* ADMIN */}
+
             {isAdmin && (
               <View style={styles.adminSection}>
                 <Text style={styles.sectionLabel}>Administração</Text>
@@ -165,7 +161,7 @@ export default function ProfileScreen() {
               </View>
             )}
 
-            {/* EDITAR PERFIL */}
+
             <TouchableOpacity
               style={styles.menuItem}
               onPress={() => router.push("/(tabs)/edit-profile")}
@@ -181,7 +177,7 @@ export default function ProfileScreen() {
               <Text style={styles.menuText}>Editar Perfil</Text>
             </TouchableOpacity>
 
-            {/* SEGURANÇA */}
+
             <TouchableOpacity
               style={styles.menuItem}
               onPress={() => router.push("/settings/password")}
@@ -201,7 +197,7 @@ export default function ProfileScreen() {
               <Text style={styles.menuText}>Segurança</Text>
             </TouchableOpacity>
 
-            {/* SUPORTE */}
+
             <TouchableOpacity
               style={styles.menuItem}
               onPress={() => router.push("/support")}
@@ -217,7 +213,7 @@ export default function ProfileScreen() {
               <Text style={styles.menuText}>Suporte</Text>
             </TouchableOpacity>
 
-            {/* LOGOUT */}
+
             <TouchableOpacity
               style={[styles.menuItem, { marginTop: 10 }]}
               onPress={logout}
@@ -241,13 +237,7 @@ export default function ProfileScreen() {
   );
 }
 
-// ==========================================
-// ESTILOS (STYLESHEET)
-// ==========================================
 const styles = StyleSheet.create({
-  // ==========================================
-  // ESTRUTURA PRINCIPAL
-  // ==========================================
   container: { flex: 1, backgroundColor: "#95C159" },
   topContainer: {
     backgroundColor: "#95C159",
@@ -285,9 +275,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
-  // ==========================================
-  // CARD DE PERFIL (BRANCO FLUTUANTE)
-  // ==========================================
   profileCard: {
     flex: 1,
     backgroundColor: "#FFF",
@@ -329,9 +316,6 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
 
-  // ==========================================
-  // MENU / LISTA
-  // ==========================================
   menuList: {
     paddingHorizontal: 25,
   },
@@ -366,9 +350,6 @@ const styles = StyleSheet.create({
     color: "#2A3A56",
   },
 
-  // ==========================================
-  // SEÇÃO ADMIN
-  // ==========================================
   adminSection: {
     marginBottom: 10,
   },
@@ -379,9 +360,6 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
 
-  // ==========================================
-  // ESTILOS COMPARTILHADOS (PODERIAM SER EXTERNOS)
-  // ==========================================
   content: {
     flex: 1,
     backgroundColor: "#FFF",

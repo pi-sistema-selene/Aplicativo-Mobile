@@ -20,7 +20,6 @@ export default function RelatoriosScreen() {
   const [iniciais, setIniciais] = useState("US");
   const [loading, setLoading] = useState(true);
 
-  // ================= USER =================
   useEffect(() => {
     const carregarDadosUsuario = async () => {
       try {
@@ -43,9 +42,6 @@ export default function RelatoriosScreen() {
     carregarDadosUsuario();
   }, []);
 
-  // ==========================================
-  // ESTADO DAS CONFIGURAÇÕES
-  // ==========================================
   const [settings, setSettings] = useState({
     geral: true,
     som: true,
@@ -61,15 +57,11 @@ export default function RelatoriosScreen() {
       [key]: !prev[key],
     }));
 
-    // Vibração quando ativar
     if (key === "vibrar") {
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     }
   };
 
-  // ==========================================
-  // SUB-COMPONENTE DE LINHA (ROW)
-  // ==========================================
   const Row = ({ label, value, onToggle }: any) => (
     <View style={styles.row}>
       <Text style={styles.rowText}>{label}</Text>
@@ -78,7 +70,6 @@ export default function RelatoriosScreen() {
         onValueChange={onToggle}
         trackColor={{ false: "#D1D1D1", true: "#00D1A0" }}
         thumbColor="#FFF"
-        // No Android, o thumbColor pode precisar de ajuste dependendo da versão
         ios_backgroundColor="#D1D1D1"
       />
     </View>
@@ -87,9 +78,7 @@ export default function RelatoriosScreen() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={["top"]}>
-        {/* ---------------------------------------------------------
-        INÍCIO DO HEADER (VERDE SELENE)
-    ---------------------------------------------------------- */}
+
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
@@ -119,11 +108,9 @@ export default function RelatoriosScreen() {
             </View>
           </View>
         </View>
-        {/* ---------------------------------------------------------
-        FIM DO HEADER
-    ---------------------------------------------------------- */}
 
-        {/* CARD DE OPÇÕES */}
+
+
         <View style={styles.content}>
           <ScrollView showsVerticalScrollIndicator={false}>
             <Row
@@ -163,14 +150,9 @@ export default function RelatoriosScreen() {
   );
 }
 
-// ==========================================
-// ESTILIZAÇÃO
-// ==========================================
 const styles = StyleSheet.create({
-  // Estrutura Principal
   container: { flex: 1, backgroundColor: "#95C159" },
 
-  // Header Superior
   topContainer: {
     backgroundColor: "#95C159",
     borderBottomLeftRadius: 40,
@@ -233,7 +215,6 @@ const styles = StyleSheet.create({
   },
   rowText: { fontSize: 15, color: "#2A3A56", fontWeight: "500" },
 
-  // Painel Branco Arredondado
   content: {
     flex: 1,
     backgroundColor: "#FFF",

@@ -14,7 +14,6 @@ import { Feather, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import * as SecureStore from "expo-secure-store";
 import * as FileSystem from "expo-file-system/legacy";
 
-// IMPORTANTE: Trocando os imports dinâmicos por imports estáticos no topo do arquivo
 import * as Sharing from "expo-sharing";
 import * as Print from "expo-print";
 import { API_V1 } from "@/constants/api";
@@ -109,7 +108,6 @@ export default function RelatoriosScreen() {
     return Array.isArray(json?.data) ? json.data : Array.isArray(json) ? json : [];
   };
 
-  // EXPORTAR SENSORES (CSV)
   const exportSensorsCSV = async () => {
     setLoading(true);
     try {
@@ -163,7 +161,6 @@ export default function RelatoriosScreen() {
       const fileUri = `${(FileSystem as any).cacheDirectory}relatorios_sensores.csv`;
       await FileSystem.writeAsStringAsync(fileUri, csv);
 
-      // Verificação simplificada usando o import estático
       if (Sharing.isAvailableAsync && !(await Sharing.isAvailableAsync())) {
         return Alert.alert("Exportar", "Compartilhamento não disponível.");
       }
@@ -177,7 +174,6 @@ export default function RelatoriosScreen() {
     }
   };
 
-  // EXPORTAR IMAGENS (CSV)
   const exportImagesCSV = async () => {
     setLoading(true);
     try {
@@ -217,7 +213,6 @@ export default function RelatoriosScreen() {
     }
   };
 
-  // EXPORTAR SENSORES (PDF)
   const exportSensorsPDF = async () => {
     setLoading(true);
     try {
@@ -252,7 +247,6 @@ export default function RelatoriosScreen() {
     }
   };
 
-  // EXPORTAR IMAGENS (PDF)
   const exportImagesPDF = async () => {
     setLoading(true);
     try {
@@ -355,7 +349,7 @@ export default function RelatoriosScreen() {
         </View>
 
         <View style={styles.content}>
-          {/* SEÇÃO NOVA: BOTÕES DE EXPORTAÇÃO SE COUBEREM ABAIXO EM DESIGN CLEAN */}
+
           <Text style={[styles.sectionTitle, { marginBottom: 12 }]}>Gerar Novo Relatório</Text>
           <View style={styles.exportActionsContainer}>
             <TouchableOpacity style={styles.exportActionCard} onPress={() => {

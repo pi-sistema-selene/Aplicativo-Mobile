@@ -11,14 +11,10 @@ export default function DetalheEstufa() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
 
-  // ==========================================
-  // ESTADOS (STATES)
-  // ==========================================
   const [loading, setLoading] = useState(true);
   const [estufa, setEstufa] = useState<any>(null);
   const [iniciais, setIniciais] = useState("US");
 
-  // ================= USER =================
   useEffect(() => {
     const carregarDadosUsuario = async () => {
       try {
@@ -41,14 +37,10 @@ export default function DetalheEstufa() {
     carregarDadosUsuario();
   }, []);
 
-  // ==========================================
-  // BUSCA DE DADOS (API)
-  // ==========================================
   const fetchDetalhes = async () => {
     try {
       const token = await SecureStore.getItemAsync('userToken');
 
-      // Chamada para sua API no Render
       const response = await axios.get(`${API_V1}/estufas/detalhes/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -68,7 +60,6 @@ export default function DetalheEstufa() {
     fetchDetalhes();
   }, [id]);
 
-  // Tela de carregamento enquanto a API responde
   if (loading) {
     return (
       <View style={styles.loadingCenter}>
@@ -82,7 +73,7 @@ export default function DetalheEstufa() {
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={['top']}>
 
-        {/* ================= HEADER ================= */}
+
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
@@ -112,13 +103,11 @@ export default function DetalheEstufa() {
           </View>
         </View>
 
-        {/* ---------------------------------------------------------
-            CONTEÚDO PRINCIPAL
-        ---------------------------------------------------------- */}
+
         <View style={styles.content}>
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 30 }}>
 
-            {/* RESUMO DE ESTATÍSTICAS E CÂMERA */}
+
             <View style={styles.topInfoRow}>
               <View style={styles.statsContainer}>
                 <View style={styles.statBox}>
@@ -138,7 +127,7 @@ export default function DetalheEstufa() {
                 </View>
               </View>
 
-              {/* FEED DA CÂMERA / IMAGEM */}
+
               <View style={styles.imageWrapper}>
                 <Image
                   source={{ uri: estufa?.endereco_camera || 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=400' }}
@@ -147,7 +136,7 @@ export default function DetalheEstufa() {
               </View>
             </View>
 
-            {/* BARRA DE PROGRESSO DE ANÁLISE */}
+
             <View style={styles.progressSection}>
               <View style={styles.progressBarBg}>
                 <View style={[styles.progressBarFill, { width: '100%' }]} />
@@ -161,7 +150,7 @@ export default function DetalheEstufa() {
 
             <Text style={styles.monthLabel}>Dados de Julho</Text>
 
-            {/* LISTAGEM DE SENSORES DINÂMICOS */}
+
             <SensorCard
               icon="alert-triangle"
               label="Risco de Pragas"
@@ -191,9 +180,6 @@ export default function DetalheEstufa() {
   );
 }
 
-// ==========================================================
-// SUB-COMPONENTE: CARD DE SENSOR
-// ==========================================================
 function SensorCard({ icon, label, value, color, date }: any) {
   return (
     <View style={styles.sensorCard}>
@@ -212,9 +198,6 @@ function SensorCard({ icon, label, value, color, date }: any) {
   );
 }
 
-// ==========================================================
-// ESTILIZAÇÃO
-// ==========================================================
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#95C159' },
   loadingCenter: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FFF' },
@@ -227,7 +210,6 @@ const styles = StyleSheet.create({
   profileText: { color: '#2A3A56', fontWeight: 'bold', fontSize: 13 },
 
 
-  // Header Superior
   topContainer: {
     backgroundColor: "#95C159",
     borderBottomLeftRadius: 40,
@@ -267,7 +249,6 @@ const styles = StyleSheet.create({
 
   avatarText: { fontSize: 16, fontWeight: "bold", color: "#2A3A56" },
 
-  // Painel Branco Arredondado
   content: {
     flex: 1,
     backgroundColor: "#FFF",

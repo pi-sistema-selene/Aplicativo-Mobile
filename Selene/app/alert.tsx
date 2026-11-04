@@ -129,7 +129,7 @@ export default function AlertasScreen() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={["top"]}>
-        {/* CABEÇALHO SUPERIOR */}
+
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
@@ -152,7 +152,7 @@ export default function AlertasScreen() {
           </View>
         </View>
 
-        {/* CONTAINER BRANCO DO CONTEÚDO */}
+
         <View style={styles.content}>
           {loading ? (
             <View style={styles.loadingCenter}>
@@ -162,7 +162,7 @@ export default function AlertasScreen() {
           ) : (
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
 
-              {/* COMPONENTE DE FILTRO (PÍLULA) */}
+
               <View style={styles.filterContainer}>
                 <TouchableOpacity
                   style={[styles.filterTab, activeFilter === "Total" && styles.filterActive]}
@@ -201,7 +201,7 @@ export default function AlertasScreen() {
                 </TouchableOpacity>
               </View>
 
-              {/* ITERAÇÃO DOS CARDS DE ANOMALIAS */}
+
               {alertasFiltrados.length === 0 ? (
                 <View style={styles.emptyContainer}>
                   <MaterialIcons name="check-circle-outline" size={48} color="#94C11F" />
@@ -222,7 +222,7 @@ export default function AlertasScreen() {
                 ))
               )}
 
-              {/* SEÇÃO DO CARROSSEL DE ANÁLISES VISUAIS */}
+
               {analises.length > 0 && (
                 <View style={{ marginTop: 15 }}>
                   <Text style={styles.panelTitle}>Últimas Análises</Text>

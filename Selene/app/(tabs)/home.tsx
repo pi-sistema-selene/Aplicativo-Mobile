@@ -145,7 +145,7 @@ export default function HomeScreen() {
         bounces={false}
         showsVerticalScrollIndicator={false}
       >
-        {/* HEADER (VERDE) */}
+
         <View style={styles.topContainer}>
           <SafeAreaView
             edges={["top", "left", "right"]}
@@ -228,7 +228,7 @@ export default function HomeScreen() {
           </SafeAreaView>
         </View>
 
-        {/* CONTEÚDO (ÁREA BRANCA) */}
+
         <View style={styles.bottomContainer}>
           <View style={styles.sectionHeaderGeral}>
             <MaterialCommunityIcons

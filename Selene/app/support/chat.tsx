@@ -46,7 +46,6 @@ export default function ChatScreen() {
     router.push(isAdmin ? "/(admin)/profile-admin" : "/(tabs)/profile");
   };
 
-  // ================= USER =================
   useEffect(() => {
     const carregarDadosUsuario = async () => {
       const nome = await SecureStore.getItemAsync("userName");
@@ -63,7 +62,6 @@ export default function ChatScreen() {
     carregarDadosUsuario();
   }, []);
 
-  // ================= LOAD USER =================
   const loadUserData = async () => {
     const userId = await SecureStore.getItemAsync("userId");
     const userRole = await SecureStore.getItemAsync("userRole");
@@ -72,7 +70,6 @@ export default function ChatScreen() {
     setRole(userRole);
   };
 
-  // ================= FORMATAR HORA =================
   const formatTime = (date: string) => {
     return new Date(date).toLocaleTimeString("pt-BR", {
       hour: "2-digit",
@@ -80,7 +77,6 @@ export default function ChatScreen() {
     });
   };
 
-  // ================= AGRUPAR DATA =================
   const getDateLabel = (date: string) => {
     const today = new Date();
     const msgDate = new Date(date);
@@ -98,7 +94,6 @@ export default function ChatScreen() {
     return msgDate.toLocaleDateString("pt-BR");
   };
 
-  // ================= FETCH =================
   const fetchMessages = async () => {
     try {
       const token = await SecureStore.getItemAsync("userToken");
@@ -118,7 +113,6 @@ export default function ChatScreen() {
     }
   };
 
-  // ================= SEND =================
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
 
@@ -149,7 +143,6 @@ export default function ChatScreen() {
     }
   };
 
-  // ================= EFFECTS =================
   useEffect(() => {
     loadUserData();
   }, []);
@@ -160,13 +153,12 @@ export default function ChatScreen() {
     scrollViewRef.current?.scrollToEnd({ animated: true });
   }, [messages]);
 
-  // ================= RENDER =================
   let lastDate = "";
 
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={["top"]}>
-        {/* ================= HEADER ================= */}
+
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
@@ -188,7 +180,7 @@ export default function ChatScreen() {
           </View>
         </View>
 
-        {/* ================= CHAT ================= */}
+
         <View style={styles.content}>
           <ScrollView ref={scrollViewRef}>
             {messages.map((msg) => {
@@ -203,7 +195,7 @@ export default function ChatScreen() {
 
               return (
                 <View key={msg._id}>
-                  {/* DATA (Hoje / Ontem) */}
+
                   {showDate && (
                     <Text style={styles.dateLabel}>{dateLabel}</Text>
                   )}
@@ -218,7 +210,7 @@ export default function ChatScreen() {
                       {msg.texto}
                     </Text>
 
-                    {/* HORA */}
+
                     <Text style={styles.timeText}>
                       {formatTime(msg.createdAt)}
                     </Text>
@@ -227,11 +219,11 @@ export default function ChatScreen() {
               );
             })}
 
-            {/* DIGITANDO */}
+
             {isTyping && <Text style={styles.typingText}>digitando...</Text>}
           </ScrollView>
 
-          {/* ================= INPUT ================= */}
+
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
@@ -258,7 +250,6 @@ export default function ChatScreen() {
 }
 
 const styles = StyleSheet.create({
-  // ================= CONTAINER =================
   container: { flex: 1, backgroundColor: "#95C159" },
 
   content: {
@@ -269,9 +260,6 @@ const styles = StyleSheet.create({
     padding: 25,
   },
 
-  /// =========================
-  // HEADER (TOPO VERDE)
-  // =========================
 
   topContainer: {
     backgroundColor: "#95C159",
@@ -307,9 +295,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 15,
   },
-  // =========================
-  // AVATAR
-  // =========================
   avatarCircle: {
     width: 45,
     height: 45,
@@ -336,7 +321,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  // ================= CHAT =================
   bubble: {
     padding: 10,
     borderRadius: 15,
@@ -377,7 +361,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 
-  // ================= INPUT =================
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",

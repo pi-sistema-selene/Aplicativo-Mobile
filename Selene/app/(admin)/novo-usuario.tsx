@@ -26,9 +26,6 @@ export default function NovoUsuario() {
 
   const [loading, setLoading] = useState(false);
 
-  // ==========================================
-  // CARREGAR INICIAIS
-  // ==========================================
 
   useEffect(() => {
     const carregarDadosUsuario = async () => {
@@ -52,17 +49,11 @@ export default function NovoUsuario() {
     carregarDadosUsuario();
   }, []);
 
-  // ==========================================
-  // PERFIL
-  // ==========================================
 
   const handleGoProfile = () => {
     router.push("/(admin)/profile-admin");
   };
 
-  // ==========================================
-  // CRIAR USUÁRIO / ADMIN
-  // ==========================================
 
   const handleSubmit = async () => {
     if (!nome || !email || !senha) {
@@ -85,18 +76,12 @@ export default function NovoUsuario() {
         return;
       }
 
-      // ==========================================
-      // DEFINIR ENDPOINT
-      // ==========================================
 
       const endpoint =
         nivel === "superadmin"
           ? `${API_V1}/admin/criar`
           : `${API_V1}/users`;
 
-      // ==========================================
-      // BODY ADMIN
-      // ==========================================
 
       const body =
         nivel === "superadmin"
@@ -127,9 +112,6 @@ export default function NovoUsuario() {
             tipo: "user",
           };
 
-      // ==========================================
-      // REQUEST
-      // ==========================================
 
       const res = await fetch(endpoint, {
         method: "POST",
@@ -167,7 +149,7 @@ export default function NovoUsuario() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={["top"]}>
-        {/* HEADER */}
+
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.replace("/(admin)/(tabs)/users")}>
@@ -189,7 +171,7 @@ export default function NovoUsuario() {
           </View>
         </View>
 
-        {/* FORM */}
+
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
           <Text style={styles.label}>Nome Completo *</Text>
 
@@ -240,7 +222,7 @@ export default function NovoUsuario() {
             placeholder="********"
           />
 
-          {/* FOTO */}
+
           <View style={styles.photoBox}>
             <Feather name="user" size={40} color="#fff" />
 
@@ -249,7 +231,7 @@ export default function NovoUsuario() {
             </View>
           </View>
 
-          {/* NIVEL */}
+
           <Text style={styles.label}>Nível de Acesso</Text>
 
           <View style={styles.row}>
@@ -271,7 +253,7 @@ export default function NovoUsuario() {
             </TouchableOpacity>
           </View>
 
-          {/* BOTÃO */}
+
           <TouchableOpacity
             style={[
               styles.btn,
@@ -292,9 +274,6 @@ export default function NovoUsuario() {
   );
 }
 
-// -------------------
-// Main Container & Layout
-// -------------------
 
 const styles = StyleSheet.create({
   container: {
@@ -310,9 +289,6 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
 
-  // -------------------
-  // Header Section
-  // -------------------
 
   topContainer: {
     backgroundColor: "#95C159",
@@ -342,9 +318,6 @@ const styles = StyleSheet.create({
     color: "#2A3A56",
   },
 
-  // -------------------
-  // Avatar Components
-  // -------------------
 
   avatarCircle: {
     width: 45,
@@ -360,9 +333,6 @@ const styles = StyleSheet.create({
     color: "#2A3A56",
   },
 
-  // -------------------
-  // Media / Photo Selection
-  // -------------------
 
   photoBox: {
     width: 80,
@@ -383,9 +353,6 @@ const styles = StyleSheet.create({
     padding: 3,
   },
 
-  // -------------------
-  // Form & Inputs
-  // -------------------
 
   label: {
     fontWeight: "bold",
@@ -404,9 +371,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 
-  // -------------------
-  // Custom Radio Selectors
-  // -------------------
 
   radio: {
     flex: 1,
@@ -420,9 +384,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#95C159",
   },
 
-  // -------------------
-  // Action Buttons
-  // -------------------
 
   btn: {
     backgroundColor: "#00D2B1",

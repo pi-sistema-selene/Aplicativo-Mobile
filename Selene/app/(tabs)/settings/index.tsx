@@ -12,9 +12,6 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 
-// ==========================================
-// DEFINIÇÃO DOS ITENS DO MENU (MAP)
-// ==========================================
 const menuItems = [
   {
     id: "1",
@@ -49,7 +46,6 @@ export default function SettingsMenu() {
   const [loading, setLoading] = useState(true);
   const [loadingEstufas, setLoadingEstufas] = useState(true);
 
-  // ================= USER =================
   useEffect(() => {
     const carregarDadosUsuario = async () => {
       try {
@@ -74,9 +70,7 @@ export default function SettingsMenu() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={["top"]}>
-        {/* ---------------------------------------------------------
-        INÍCIO DO HEADER (VERDE SELENE)
-    ---------------------------------------------------------- */}
+
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <View>
@@ -103,13 +97,9 @@ export default function SettingsMenu() {
             </View>
           </View>
         </View>
-        {/* ---------------------------------------------------------
-        FIM DO HEADER
-    ---------------------------------------------------------- */}
 
-        {/* ---------------------------------------------------------
-        LISTA DE OPÇÕES (MENU)
-    ---------------------------------------------------------- */}
+
+
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
           {menuItems.map((item) => (
             <TouchableOpacity
@@ -119,34 +109,27 @@ export default function SettingsMenu() {
               activeOpacity={0.7}
             >
               <View style={styles.menuLeft}>
-                {/* ÍCONE DENTRO DO CÍRCULO */}
+
                 <View style={styles.iconBox}>
                   <Ionicons name={item.icon as any} size={20} color="#FFF" />
                 </View>
                 <Text style={styles.menuText}>{item.label}</Text>
               </View>
 
-              {/* SETA PARA A DIREITA (CHEVRON) */}
+
               <Ionicons name="chevron-forward" size={20} color="#2A3A56" />
             </TouchableOpacity>
           ))}
         </ScrollView>
-        {/* ---------------------------------------------------------
-        FIM DA LISTA
-    ---------------------------------------------------------- */}
+
       </SafeAreaView>
     </SafeAreaProvider>
   );
 }
 
-// ==========================================
-// ESTILIZAÇÃO (STYLES)
-// ==========================================
 const styles = StyleSheet.create({
-  // Estrutura Principal
   container: { flex: 1, backgroundColor: "#95C159" },
 
-  // Header Superior
   topContainer: {
     backgroundColor: "#95C159",
     borderBottomLeftRadius: 40,
@@ -186,7 +169,6 @@ const styles = StyleSheet.create({
 
   avatarText: { fontSize: 16, fontWeight: "bold", color: "#2A3A56" },
 
-  // Itens Individuais do Menu
   menuItem: {
     flexDirection: "row",
     alignItems: "center",
@@ -212,7 +194,6 @@ const styles = StyleSheet.create({
   },
   menuText: { fontSize: 15, color: "#2A3A56", fontWeight: "600" },
 
-  // Painel Branco Arredondado
   content: {
     flex: 1,
     backgroundColor: "#FFF",

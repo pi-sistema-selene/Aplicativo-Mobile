@@ -199,7 +199,7 @@ export default function MonitoramentoAdmin() {
           </View>
         </View>
 
-        {/* CONTEÚDO BRANCO */}
+
         <View style={styles.content}>
           <View style={{ flex: 1 }}>
             {loading ? (
@@ -225,7 +225,7 @@ export default function MonitoramentoAdmin() {
             )}
           </View>
 
-          {/* BOTÃO FORA DO SCROLL PARA FICAR FIXO */}
+
           <View style={styles.buttonWrapper}>
             <TouchableOpacity
               style={styles.floatingAddBtn}
@@ -241,9 +241,6 @@ export default function MonitoramentoAdmin() {
   );
 }
 
-// -------------------
-// Main Container & Layout
-// -------------------
 
 const styles = StyleSheet.create({
   container: {
@@ -262,9 +259,6 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
 
-  // -------------------
-  // Header Section
-  // -------------------
 
   topContainer: {
     backgroundColor: "#95C159",
@@ -300,9 +294,6 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
 
-  // -------------------
-  // Avatar Components
-  // -------------------
 
   avatarCircle: {
     width: 45,
@@ -318,9 +309,6 @@ const styles = StyleSheet.create({
     color: "#2A3A56",
   },
 
-  // -------------------
-  // Sensor Card Items
-  // -------------------
 
   sensorCard: {
     flexDirection: "row",
@@ -368,9 +356,6 @@ const styles = StyleSheet.create({
     color: "#2A3A56",
   },
 
-  // -------------------
-  // Floating Actions
-  // -------------------
 
   buttonWrapper: {
     position: "absolute",

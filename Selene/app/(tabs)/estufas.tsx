@@ -30,7 +30,6 @@ export default function EstufasScreen() {
 
   const [iniciais, setIniciais] = useState("US");
 
-  // ================= USER =================
   useEffect(() => {
     const carregarDadosUsuario = async () => {
       try {
@@ -52,7 +51,6 @@ export default function EstufasScreen() {
     carregarDadosUsuario();
   }, []);
 
-  // ================= API =================
   const fetchEstufas = async () => {
     try {
       setLoadingEstufas(true);
@@ -83,7 +81,6 @@ export default function EstufasScreen() {
     fetchEstufas();
   }, []);
 
-  // ================= CARD =================
   const renderItem = ({ item }: { item: Estufa }) => (
     <TouchableOpacity
       activeOpacity={0.7}
@@ -114,7 +111,7 @@ export default function EstufasScreen() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={["top"]}>
-        {/* ================= HEADER ================= */}
+
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <View>
@@ -142,7 +139,7 @@ export default function EstufasScreen() {
           </View>
         </View>
 
-        {/* ================= CONTENT ================= */}
+
         <View style={styles.content}>
           {loadingEstufas ? (
             <View style={styles.center}>
@@ -203,7 +200,6 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#95C159" },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
 
-  // ✅ HEADER CORRIGIDO
   topContainer: {
     backgroundColor: "#95C159",
     borderBottomLeftRadius: 40,
@@ -243,7 +239,6 @@ const styles = StyleSheet.create({
 
   avatarText: { fontSize: 16, fontWeight: "bold", color: "#2A3A56" },
 
-  // CONTENT
   content: {
     flex: 1,
     backgroundColor: "#FFF",

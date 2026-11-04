@@ -8,10 +8,9 @@ import {
   Alert,
 } from "react-native";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import * as SecureStore from "expo-secure-store";
-import { useFocusEffect } from "@react-navigation/native";
+import { useRouter, useFocusEffect } from "expo-router";
 import { API_V1 } from "@/constants/api";
 
 type Chat = {
@@ -92,7 +91,7 @@ export default function DashboardAdmin() {
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={["top"]}>
 
-        {/* HEADER */}
+
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity
@@ -116,11 +115,11 @@ export default function DashboardAdmin() {
           </View>
         </View>
 
-        {/* CONTEÚDO BRANCO ARREDONDADO */}
+
         <View style={styles.content}>
           <Text style={styles.sectionTitle}>Solicitações</Text>
 
-          {/* CARDS DE STATUS */}
+
           <View style={styles.statsRow}>
             <View style={styles.statCard}>
               <MaterialCommunityIcons name="export" size={24} color="#FFF" />
@@ -141,7 +140,7 @@ export default function DashboardAdmin() {
             </View>
           </View>
 
-          {/* LISTA DE MENSAGENS RECENTES */}
+
           <View style={styles.recentHeader}>
             <Text style={styles.sectionTitle}>Mensagens Recentes</Text>
             <TouchableOpacity style={styles.verMaisBtn}>
@@ -187,7 +186,7 @@ export default function DashboardAdmin() {
           />
         </View>
 
-        {/* TAB BAR (Fixa embaixo) */}
+
         <View style={styles.tabBar}>
           <Feather name="file-text" size={24} color="#95C159" />
           <Feather name="target" size={24} color="#CCC" />

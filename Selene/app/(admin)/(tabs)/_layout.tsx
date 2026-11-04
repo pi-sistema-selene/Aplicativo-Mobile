@@ -7,7 +7,6 @@ import {
   FontAwesome5,
 } from "@expo/vector-icons";
 
-// Cores centralizadas para facilitar manutenção
 const COLORS = {
   active: "#8bc34a",
   inactive: "#9E9E9E",
@@ -109,7 +108,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    // Sombra mais suave
     shadowColor: "#000",
     shadowOffset: { width: 0, height: -4 },
     shadowOpacity: 0.08,
@@ -138,7 +136,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 4,
     borderColor: "#FFFFFF",
-    // Sombra do botão
     shadowColor: COLORS.fabActive,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,

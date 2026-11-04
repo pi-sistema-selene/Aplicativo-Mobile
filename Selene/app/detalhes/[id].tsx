@@ -18,9 +18,6 @@ export default function DetalhesEstufaScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams(); 
 
-  // ==========================================
-  // DADOS FICTÍCIOS (MOCK DATA)
-  // ==========================================
   const dadosBarras = [
     { dia: 'Seg', valor: 40 },
     { dia: 'Ter', valor: 15 },
@@ -31,9 +28,6 @@ export default function DetalhesEstufaScreen() {
     { dia: 'Dom', valor: 35 },
   ];
 
-  // ==========================================
-  // RENDERIZAÇÃO DE COMPONENTES INTERNOS
-  // ==========================================
   const renderCardSensor = (label: string, value: string, icon: any) => (
     <View style={styles.cardSensor}>
       <View style={styles.iconCircle}>{icon}</View>
@@ -48,9 +42,7 @@ export default function DetalhesEstufaScreen() {
       
       <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
         
-        {/* ---------------------------------------------------------
-            SEÇÃO SUPERIOR (VERDE - HEADER E RESUMO)
-        ---------------------------------------------------------- */}
+
         <View style={styles.topSection}>
           <SafeAreaView edges={['top']} style={styles.headerRow}>
             <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
@@ -67,12 +59,12 @@ export default function DetalhesEstufaScreen() {
             </View>
           </SafeAreaView>
 
-          {/* CARD DE TÍTULO DA ESTUFA */}
+
           <View style={styles.estufaTitleCard}>
             <Text style={styles.estufaTitle}>Estufa #{id || '2'}</Text>
           </View>
 
-          {/* RESUMO RÁPIDO (ANÁLISES E DETECÇÃO) */}
+
           <View style={styles.summaryRow}>
             <View style={styles.summaryCard}>
               <Feather name="trending-up" size={20} color="#00D2B1" />
@@ -87,13 +79,11 @@ export default function DetalhesEstufaScreen() {
           </View>
         </View>
 
-        {/* ---------------------------------------------------------
-            SEÇÃO DE CONTEÚDO (BRANCO - GRÁFICOS E SENSORES)
-        ---------------------------------------------------------- */}
+
         <View style={styles.contentContainer}>
           <Text style={styles.sectionTitle}>Relatório Monitoramento</Text>
           
-          {/* FILTRO TEMPORAL */}
+
           <View style={styles.timeFilter}>
             <TouchableOpacity style={[styles.timeBtn, styles.timeBtnActive]}>
               <Text style={styles.timeTextActive}>Dia</Text>
@@ -103,7 +93,7 @@ export default function DetalhesEstufaScreen() {
             <TouchableOpacity style={styles.timeBtn}><Text style={styles.timeText}>Ano</Text></TouchableOpacity>
           </View>
 
-          {/* GRÁFICO DE BARRAS CUSTOMIZADO */}
+
           <View style={styles.chartContainer}>
             <View style={styles.chartHeader}>
               <Text style={styles.chartTitle}>Relatório Estufa #{id || '2'}</Text>
@@ -129,13 +119,13 @@ export default function DetalhesEstufaScreen() {
             </View>
           </View>
 
-          {/* INDICADOR DE SAÚDE (DONUT) */}
+
           <View style={styles.pieContainer}>
              <MaterialCommunityIcons name="chart-donut" size={100} color="#00D2B1" />
              <Text style={styles.pieText}>79% Saudável</Text>
           </View>
 
-          {/* GRID DE SENSORES EM TEMPO REAL */}
+
           <View style={styles.sensorGrid}>
             {renderCardSensor('Temp.', '21° C', <MaterialCommunityIcons name="thermometer" size={18} color="#FFF" />)}
             {renderCardSensor('Umid.', '50%', <MaterialCommunityIcons name="water-percent" size={18} color="#FFF" />)}
@@ -150,13 +140,9 @@ export default function DetalhesEstufaScreen() {
   );
 }
 
-// ==========================================
-// ESTILIZAÇÃO (STYLES)
-// ==========================================
 const styles = StyleSheet.create({
   mainContainer: { flex: 1, backgroundColor: '#FFF' },
   
-  // Header e Top Section
   topSection: { 
     backgroundColor: '#95C159', 
     paddingBottom: 60, 
@@ -176,7 +162,6 @@ const styles = StyleSheet.create({
   profileBadge: { backgroundColor: '#FFF', borderRadius: 15, paddingHorizontal: 8, paddingVertical: 4 },
   profileText: { color: '#2A3A56', fontWeight: 'bold', fontSize: 12 },
 
-  // Cards de Resumo
   estufaTitleCard: { 
     backgroundColor: '#FFF', 
     marginHorizontal: 40, 
@@ -199,7 +184,6 @@ const styles = StyleSheet.create({
   summaryLabel: { fontSize: 12, color: '#999', marginTop: 5 },
   summaryValue: { fontSize: 22, fontWeight: 'bold', color: '#2A3A56' },
 
-  // Content Area
   contentContainer: { 
     flex: 1, 
     marginTop: -30, 
@@ -211,7 +195,6 @@ const styles = StyleSheet.create({
   },
   sectionTitle: { fontSize: 16, fontWeight: 'bold', color: '#2A3A56', marginBottom: 15 },
 
-  // Filtro Dia/Semana/Mês
   timeFilter: { 
     flexDirection: 'row', 
     backgroundColor: '#F0F9F0', 
@@ -224,7 +207,6 @@ const styles = StyleSheet.create({
   timeTextActive: { color: '#FFF', fontWeight: 'bold' },
   timeText: { color: '#999' },
 
-  // Área do Gráfico de Barras
   chartContainer: { backgroundColor: '#F0F9F0', borderRadius: 25, padding: 20, marginBottom: 20 },
   chartHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
   chartTitle: { fontWeight: 'bold', color: '#2A3A56' },
@@ -234,7 +216,6 @@ const styles = StyleSheet.create({
   barInner: { width: 12, borderRadius: 6, marginBottom: 5 },
   barLabel: { fontSize: 10, color: '#999' },
 
-  // Donut e Sensores
   pieContainer: { alignItems: 'center', marginVertical: 15 },
   pieText: { fontWeight: 'bold', color: '#2A3A56', marginTop: 5 },
   sensorGrid: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 },

@@ -46,9 +46,6 @@ export default function EditarSensor() {
 
   const [token, setToken] = useState<string | null>(null);
 
-  // ==========================================
-  // CARREGAR TOKEN
-  // ==========================================
   useEffect(() => {
     const loadToken = async () => {
       try {
@@ -69,9 +66,6 @@ export default function EditarSensor() {
     loadToken();
   }, []);
 
-  // ==========================================
-  // CARREGAR DADOS
-  // ==========================================
   useEffect(() => {
     if (token) {
       fetchUsuarios(token);
@@ -79,9 +73,6 @@ export default function EditarSensor() {
     }
   }, [token]);
 
-  // ==========================================
-  // BUSCAR USUÁRIOS
-  // ==========================================
   const fetchUsuarios = async (authToken: string) => {
     try {
       setLoadingUsers(true);
@@ -122,9 +113,6 @@ export default function EditarSensor() {
     }
   };
 
-  // ==========================================
-  // BUSCAR DISPOSITIVO
-  // ==========================================
   const buscarDispositivo = async (authToken: string) => {
     try {
       setLoadingDevice(true);
@@ -162,8 +150,6 @@ export default function EditarSensor() {
 
       setLocalizacao(dispositivo?.localizacao || "");
 
-      // 🔥 IMPORTANTE
-      // backend retorna usuario e NÃO usuario_id
       setUsuarioId(
         String(
           dispositivo?.usuario?._id ||
@@ -184,9 +170,6 @@ export default function EditarSensor() {
     }
   };
 
-  // ==========================================
-  // EDITAR DISPOSITIVO
-  // ==========================================
   const editarDispositivo = async () => {
     if (!nome || !mac || !usuarioId) {
       Alert.alert("Erro", "Preencha todos os campos");
@@ -235,9 +218,6 @@ export default function EditarSensor() {
     }
   };
 
-  // ==========================================
-  // LOADING
-  // ==========================================
   if (loadingDevice) {
     return (
       <View
@@ -252,9 +232,6 @@ export default function EditarSensor() {
     );
   }
 
-  // ==========================================
-  // RENDER
-  // ==========================================
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={["top"]}>

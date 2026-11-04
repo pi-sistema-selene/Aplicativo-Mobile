@@ -14,10 +14,9 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 
-import { Feather, MaterialIcons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-import { useFocusEffect } from "@react-navigation/native";
+import { Feather, MaterialIcons } from "@expo/vector-icons";
+import { useRouter, useFocusEffect } from "expo-router";
 import { useCallback } from "react";
 import { API_V1 } from "@/constants/api";
 
@@ -193,7 +192,7 @@ export default function ControleAcessoScreen() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={["top"]}>
-        {/* HEADER */}
+
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
@@ -289,9 +288,6 @@ export default function ControleAcessoScreen() {
   );
 }
 
-// -------------------
-// Main Container & Layout
-// -------------------
 
 const styles = StyleSheet.create({
   container: {
@@ -307,9 +303,6 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
 
-  // -------------------
-  // Header Section
-  // -------------------
 
   topContainer: {
     backgroundColor: "#95C159",
@@ -345,9 +338,6 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
 
-  // -------------------
-  // Avatar Components
-  // -------------------
 
   avatarCircle: {
     width: 45,
@@ -363,9 +353,6 @@ const styles = StyleSheet.create({
     color: "#2A3A56",
   },
 
-  // -------------------
-  // Statistics Cards (Header Stats)
-  // -------------------
 
   statsContainer: {
     paddingHorizontal: 25,
@@ -419,9 +406,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
 
-  // -------------------
-  // Time Filters & Section Header
-  // -------------------
 
   timeFilterContainer: {
     flexDirection: "row",
@@ -464,9 +448,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
 
-  // -------------------
-  // User Cards & List Items
-  // -------------------
 
   userCard: {
     flexDirection: "row",
@@ -520,9 +501,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
   },
 
-  // -------------------
-  // Floating Action Buttons
-  // -------------------
 
   buttonWrapper: {
     position: "absolute",

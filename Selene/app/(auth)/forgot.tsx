@@ -19,15 +19,9 @@ import { API_V1 } from "@/constants/api";
 export default function ForgotPassword() {
   const router = useRouter();
 
-  // ==========================================
-  // ESTADOS (STATES)
-  // ==========================================
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // ==========================================
-  // LÓGICA DE RECUPERAÇÃO
-  // ==========================================
   const handleRequestReset = async () => {
     if (!email) {
       Alert.alert("Erro", "Por favor, informe seu e-mail.");
@@ -39,7 +33,6 @@ export default function ForgotPassword() {
     const emailFormatado = email.trim().toLowerCase();
 
     try {
-      // 🔹 1ª tentativa: usuário comum
       const response = await axios.post(
         `${API_V1}/auth/recuperar-senha`,
         { email: emailFormatado },
@@ -48,7 +41,6 @@ export default function ForgotPassword() {
       handleSuccess(response);
     } catch (errorUser: any) {
       try {
-        // 🔹 2ª tentativa: admin (fallback)
         const responseAdmin = await axios.post(
           `${API_V1}/admin/recuperar-senha`,
           { email: emailFormatado },
@@ -68,13 +60,11 @@ export default function ForgotPassword() {
     }
   };
 
-  // 🔹 Função separada só pra não duplicar código
   const handleSuccess = async (response: any) => {
     if (response.data.success || response.status === 200) {
       const senhaTemporaria = response?.data?.data?.nova_senha;
       const token = response?.data?.token;
 
-      // 🔹 Caso USER (tem senha)
       if (senhaTemporaria) {
         Alert.alert(
           "Senha Gerada com Sucesso! 🛡️",
@@ -97,7 +87,6 @@ export default function ForgotPassword() {
         return;
       }
 
-      // 🔹 Caso ADMIN (tem token)
       if (token) {
         Alert.alert(
           "Recuperação de Admin 🔐",
@@ -118,7 +107,6 @@ export default function ForgotPassword() {
         return;
       }
 
-      // 🔹 fallback
       Alert.alert("Erro", "Formato de resposta desconhecido.");
     }
   };
@@ -132,16 +120,12 @@ export default function ForgotPassword() {
         bounces={false}
         keyboardShouldPersistTaps="handled"
       >
-        {/* ---------------------------------------------------------
-            TOPO: TÍTULO DA PÁGINA (FUNDO CLARO)
-        ---------------------------------------------------------- */}
+
         <View style={styles.topContainer}>
           <Text style={styles.mainTitle}>Esqueceu Sua Senha?</Text>
         </View>
 
-        {/* ---------------------------------------------------------
-            CORPO: FORMULÁRIO DE RESET (FUNDO VERDE)
-        ---------------------------------------------------------- */}
+
         <View style={styles.bottomContainer}>
           <Text style={styles.resetTitle}>Nova Senha Temporária</Text>
           <Text style={styles.resetDescription}>
@@ -149,7 +133,7 @@ export default function ForgotPassword() {
             caracteres para você acessar o Selene imediatamente.
           </Text>
 
-          {/* CAMPO DE E-MAIL */}
+
           <Text style={styles.label}>Endereço Email:</Text>
           <View style={styles.inputContainer}>
             <TextInput
@@ -163,7 +147,7 @@ export default function ForgotPassword() {
             />
           </View>
 
-          {/* BOTÕES DE AÇÃO */}
+
           <View style={styles.buttonActionContainer}>
             <TouchableOpacity
               style={[styles.buttonPrimary, loading && { opacity: 0.7 }]}
@@ -186,7 +170,7 @@ export default function ForgotPassword() {
             </TouchableOpacity>
           </View>
 
-          {/* SOCIAL LOGIN FOOTER */}
+
           <View style={styles.socialContainer}>
             <Text style={styles.socialText}>Acessar com:</Text>
             <View style={styles.socialIconsRow}>
@@ -204,13 +188,9 @@ export default function ForgotPassword() {
   );
 }
 
-// ==========================================
-// ESTILIZAÇÃO (STYLES)
-// ==========================================
 const styles = StyleSheet.create({
   mainContainer: { flex: 1, backgroundColor: "#F5F5F5" },
 
-  // Header fixo no topo
   topContainer: {
     flex: 0.3,
     justifyContent: "center",
@@ -226,7 +206,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 
-  // Painel Verde Arredondado
   bottomContainer: {
     flex: 1,
     backgroundColor: "#95C159",
@@ -256,7 +235,6 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
 
-  // Input de e-mail
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -268,7 +246,6 @@ const styles = StyleSheet.create({
   },
   input: { flex: 1, color: "#333", fontSize: 16 },
 
-  // Área dos Botões
   buttonActionContainer: { alignItems: "center", marginBottom: 40 },
   buttonPrimary: {
     backgroundColor: "#2A3A56",
@@ -290,7 +267,6 @@ const styles = StyleSheet.create({
   },
   buttonTextSecondary: { color: "#2A3A56", fontWeight: "bold", fontSize: 16 },
 
-  // Social Footer
   socialContainer: { alignItems: "center", marginTop: "auto" },
   socialText: { color: "#2A3A56", fontSize: 14, marginBottom: 15 },
   socialIconsRow: { flexDirection: "row" },

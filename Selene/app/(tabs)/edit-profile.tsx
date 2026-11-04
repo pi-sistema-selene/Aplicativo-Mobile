@@ -14,15 +14,13 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
+import * as ImagePicker from "expo-image-picker";
 import { API_V1 } from "@/constants/api";
 
 export default function EditProfileScreen() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
-  // ==========================================
-  // STATES
-  // ==========================================
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
   const [email, setEmail] = useState("");
@@ -30,16 +28,13 @@ export default function EditProfileScreen() {
   const [salvarLogin, setSalvarLogin] = useState(true);
   const [idExibicao, setIdExibicao] = useState("00000000");
   const [iniciais, setIniciais] = useState("US");
+  const [fotoUri, setFotoUri] = useState<string | null>(null);
 
-  // ==========================================
-  // LOAD DADOS (LOCAL + BACKEND)
-  // ==========================================
   useEffect(() => {
     const carregarDados = async () => {
       try {
         const token = await SecureStore.getItemAsync("userToken");
 
-        // 🔥 tenta pegar do backend primeiro
         if (token) {
           const res = await fetch(
             `${API_V1}/auth/perfil`,
@@ -77,7 +72,6 @@ export default function EditProfileScreen() {
           }
         }
 
-        // 🔁 fallback SecureStore
         const nomeSalvo = await SecureStore.getItemAsync("userName");
         const emailSalvo = await SecureStore.getItemAsync("userEmail");
         const idSalvo = await SecureStore.getItemAsync("userId");
@@ -103,9 +97,35 @@ export default function EditProfileScreen() {
     carregarDados();
   }, []);
 
-  // ==========================================
-  // SALVAR (BACKEND)
-  // ==========================================
+  const escolherFoto = async () => {
+    try {
+      const permissao =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (!permissao.granted) {
+        Alert.alert(
+          "Permissão necessária",
+          "Permita o acesso à galeria para escolher uma foto.",
+        );
+        return;
+      }
+
+      const resultado = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ["images"],
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+      });
+
+      if (!resultado.canceled && resultado.assets[0]) {
+        setFotoUri(resultado.assets[0].uri);
+      }
+    } catch (error) {
+      console.error("Erro ao escolher foto:", error);
+      Alert.alert("Erro", "Não foi possível abrir a galeria.");
+    }
+  };
+
   const handleSalvar = async () => {
     try {
       const token = await SecureStore.getItemAsync("userToken");
@@ -142,7 +162,6 @@ export default function EditProfileScreen() {
         throw new Error(data.message || "Erro ao atualizar perfil");
       }
 
-      // 🔥 Atualiza local
       await SecureStore.setItemAsync("userName", nome);
       await SecureStore.setItemAsync("userEmail", email);
 
@@ -156,7 +175,7 @@ export default function EditProfileScreen() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={["top"]}>
-        {/* HEADER */}
+
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
@@ -183,14 +202,19 @@ export default function EditProfileScreen() {
           </View>
         </View>
 
-        {/* CONTEÚDO */}
+
         <View style={styles.content}>
           <View style={styles.imageContainer}>
             <Image
-              source="https://i.pravatar.cc/300"
+              source={fotoUri ? { uri: fotoUri } : "https://i.pravatar.cc/300"}
               style={styles.profileImage}
             />
-            <TouchableOpacity style={styles.cameraBtn}>
+            <TouchableOpacity
+              style={styles.cameraBtn}
+              onPress={escolherFoto}
+              accessibilityRole="button"
+              accessibilityLabel="Escolher foto da galeria"
+            >
               <Ionicons name="camera" size={20} color="#FFF" />
             </TouchableOpacity>
           </View>
@@ -244,7 +268,6 @@ export default function EditProfileScreen() {
   );
 }
 
-// ⚠️ ESTILOS NÃO ALTERADOS
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#95C159" },
   topContainer: {

@@ -292,9 +292,6 @@ import { API_V1 } from "@/constants/api";
     );
   }
 
-  // -------------------
-  // Main Container & Layout
-  // -------------------
 
   const styles = StyleSheet.create({
     container: {
@@ -310,9 +307,6 @@ import { API_V1 } from "@/constants/api";
       paddingTop: 40,
     },
 
-    // -------------------
-    // Header Section
-    // -------------------
 
     topContainer: {
       backgroundColor: "#95C159",
@@ -348,9 +342,6 @@ import { API_V1 } from "@/constants/api";
       opacity: 0.8
     },
 
-    // -------------------
-    // Avatar Components
-    // -------------------
 
     avatarCircle: {
       width: 45,
@@ -366,9 +357,6 @@ import { API_V1 } from "@/constants/api";
       color: "#2A3A56"
     },
 
-    // -------------------
-    // Form & Inputs
-    // -------------------
 
     label: {
       fontWeight: "bold",
@@ -393,9 +381,6 @@ import { API_V1 } from "@/constants/api";
       marginBottom: 15
     },
 
-    // -------------------
-    // Selection Buttons (Radio Style)
-    // -------------------
 
     typeButton: {
       flex: 1,
@@ -409,9 +394,6 @@ import { API_V1 } from "@/constants/api";
       backgroundColor: "#95C159",
     },
 
-    // -------------------
-    // Action Buttons
-    // -------------------
 
     button: {
       backgroundColor: "#2A3A56",

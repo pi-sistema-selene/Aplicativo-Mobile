@@ -43,7 +43,6 @@ export default function DetalhesSensor() {
           throw new Error(data.message || "Erro ao buscar leituras");
         }
 
-        // 🔥 GARANTE ARRAY
         let lista = [];
 
         if (Array.isArray(data)) {
@@ -296,9 +295,6 @@ export default function DetalhesSensor() {
   );
 }
 
-// -------------------
-// Main Container & Layout
-// -------------------
 
 const styles = StyleSheet.create({
   container: {
@@ -314,9 +310,6 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
 
-  // -------------------
-  // Header Section
-  // -------------------
 
   topContainer: {
     backgroundColor: "#95C159",
@@ -347,9 +340,6 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
 
-  // -------------------
-  // Avatar Components
-  // -------------------
 
   avatarCircle: {
     width: 45,
@@ -365,9 +355,6 @@ const styles = StyleSheet.create({
     color: "#2A3A56",
   },
 
-  // -------------------
-  // Dashboard / Section Cards
-  // -------------------
 
   panelTitle: {
     fontSize: 18,
@@ -395,9 +382,6 @@ const styles = StyleSheet.create({
     color: "#2A3A56",
   },
 
-  // -------------------
-  // Alertas & List Items
-  // -------------------
 
   alertRow: {
     flexDirection: "row",
@@ -413,9 +397,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  // -------------------
-  // Progress Bar
-  // -------------------
 
   progressBarBg: {
     height: 35,
@@ -435,9 +416,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 
-  // -------------------
-  // Buttons & Actions
-  // -------------------
 
   deleteBtn: {
     flexDirection: "row",

@@ -57,13 +57,13 @@ export default function MenuAtualizacoes() {
 
   const carregarCommits = async () => {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000); // 10s
+    const timeout = setTimeout(() => controller.abort(), 10000);
 
     try {
       setLoading(true);
 
       const response = await fetch(
-        "https://api.github.com/repos/Andreilna/Selene-Mobile/commits?per_page=10",
+        "https://api.github.com/repos/pi-sistema-selene/Aplicativo-Mobile/commits?per_page=10",
         {
           method: "GET",
           headers: {
@@ -135,7 +135,7 @@ export default function MenuAtualizacoes() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={["top"]}>
-        {/* HEADER */}
+
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity
@@ -159,7 +159,7 @@ export default function MenuAtualizacoes() {
           </View>
         </View>
 
-        {/* CONTEÚDO */}
+
         <View style={styles.content}>
           <View style={styles.tabContainer}>
             <TouchableOpacity
@@ -214,9 +214,6 @@ export default function MenuAtualizacoes() {
   );
 }
 
-// -------------------
-// Main Container & Layout
-// -------------------
 
 const styles = StyleSheet.create({
   container: {
@@ -233,9 +230,6 @@ const styles = StyleSheet.create({
     paddingBottom: 80,
   },
 
-  // -------------------
-  // Header Section
-  // -------------------
 
   topContainer: {
     backgroundColor: "#95C159",
@@ -272,9 +266,6 @@ const styles = StyleSheet.create({
     opacity: 0.8
   },
 
-  // -------------------
-  // Avatar Components
-  // -------------------
 
   avatarCircle: {
     width: 45,
@@ -290,9 +281,6 @@ const styles = StyleSheet.create({
     color: "#2A3A56"
   },
 
-  // -------------------
-  // Tabs Navigation
-  // -------------------
 
   tabContainer: {
     flexDirection: "row",
@@ -319,9 +307,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
 
-  // -------------------
-  // List & Item Cards
-  // -------------------
 
   listHeader: {
     flexDirection: "row",

@@ -44,7 +44,6 @@ export default function DetalhesCamera() {
           throw new Error(data.message || "Erro ao buscar leituras");
         }
 
-        // 🔥 GARANTE ARRAY
         let lista = [];
 
         if (Array.isArray(data)) {
@@ -305,9 +304,6 @@ export default function DetalhesCamera() {
   );
 }
 
-// -------------------
-// Main Container & Layout
-// -------------------
 
 const styles = StyleSheet.create({
   container: {
@@ -323,9 +319,6 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
 
-  // -------------------
-  // Header Section
-  // -------------------
 
   topContainer: {
     backgroundColor: "#95C159",
@@ -356,9 +349,6 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
 
-  // -------------------
-  // Avatar Components
-  // -------------------
 
   avatarCircle: {
     width: 45,
@@ -374,9 +364,6 @@ const styles = StyleSheet.create({
     color: "#2A3A56",
   },
 
-  // -------------------
-  // Image Gallery / Cards
-  // -------------------
 
   panelTitle: {
     fontSize: 18,
@@ -439,9 +426,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 
-  // -------------------
-  // Buttons & Actions
-  // -------------------
 
   deleteBtn: {
     flexDirection: "row",

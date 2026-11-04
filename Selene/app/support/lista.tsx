@@ -54,18 +54,12 @@ export default function ListaChats() {
     } catch (err) {}
   };
 
-  // =========================
-  // DISPARA SEMPRE QUE ENTRA NA TELA
-  // =========================
   useFocusEffect(
     useCallback(() => {
       fetchChats();
     }, [role]),
   );
 
-  // =========================
-  // NOVO CHAT
-  // =========================
   const iniciarNovoChat = async () => {
     if (isAdminRole(role)) {
       return;
@@ -102,9 +96,6 @@ export default function ListaChats() {
     } catch (err) {}
   };
 
-  // =========================
-  // RENDER
-  // =========================
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={["top"]}>
@@ -193,14 +184,8 @@ export default function ListaChats() {
   );
 }
 
-// =========================
-// ESTILOS
-// =========================
 
 const styles = StyleSheet.create({
-  // =========================
-  // CONTAINERS PRINCIPAIS
-  // =========================
   container: {
     flex: 1,
     backgroundColor: "#95C159",
@@ -214,9 +199,6 @@ const styles = StyleSheet.create({
     padding: 25,
   },
 
-  /// =========================
-  // HEADER (TOPO VERDE)
-  // =========================
 
   topContainer: {
     backgroundColor: "#95C159",
@@ -252,9 +234,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 15,
   },
-  // =========================
-  // AVATAR
-  // =========================
   avatarCircle: {
     width: 45,
     height: 45,
@@ -281,9 +260,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  // =========================
-  // TEXTOS / SEÇÕES
-  // =========================
   sectionTitle: {
     fontSize: 14,
     fontWeight: "bold",
@@ -291,9 +267,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 
-  // =========================
-  // BOTÃO NOVO CHAT
-  // =========================
   newChatButton: {
     flexDirection: "row",
     alignItems: "center",
@@ -311,9 +284,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 
-  // =========================
-  // CARD DE CHAT
-  // =========================
   chatCard: {
     flexDirection: "row",
     alignItems: "center",

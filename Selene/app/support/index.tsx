@@ -21,12 +21,10 @@ export default function FAQScreen() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState("Geral");
 
-  // 🔥 NOVO: controla FAQ ou Contato
   const [activeTab, setActiveTab] = useState("faq");
 
   const categories = ["Geral", "Sistema", "Plantio"];
 
-  // ================= USER =================
   useEffect(() => {
     const carregarDadosUsuario = async () => {
       try {
@@ -50,7 +48,6 @@ export default function FAQScreen() {
     carregarDadosUsuario();
   }, []);
 
-  // ================= FAQ =================
 
   const faqs = [
     {
@@ -88,7 +85,6 @@ export default function FAQScreen() {
     setExpandedId(expandedId === id ? null : id);
   };
 
-  // ================= CONTATO =================
 
   const socialOptions = [
     {
@@ -116,9 +112,7 @@ export default function FAQScreen() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={["top"]}>
-        {/* ---------------------------------------------------------
-               INÍCIO DO HEADER (VERDE SELENE)
-           ---------------------------------------------------------- */}
+
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
@@ -148,14 +142,12 @@ export default function FAQScreen() {
             </View>
           </View>
         </View>
-        {/* ---------------------------------------------------------
-               FIM DO HEADER
-           ---------------------------------------------------------- */}
-        {/* CONTEÚDO */}
+
+
 
         <View style={styles.content}>
           <ScrollView showsVerticalScrollIndicator={false}>
-            {/* TOGGLE */}
+
 
             <View style={styles.topToggle}>
               <TouchableOpacity
@@ -195,11 +187,11 @@ export default function FAQScreen() {
               </TouchableOpacity>
             </View>
 
-            {/* ================= FAQ ================= */}
+
 
             {activeTab === "faq" && (
               <>
-                {/* CATEGORIAS */}
+
 
                 <View style={styles.categoryRow}>
                   {categories.map((cat) => (
@@ -223,7 +215,7 @@ export default function FAQScreen() {
                   ))}
                 </View>
 
-                {/* SEARCH */}
+
 
                 <View style={styles.searchBar}>
                   <TextInput
@@ -233,7 +225,7 @@ export default function FAQScreen() {
                   />
                 </View>
 
-                {/* FAQ LIST */}
+
 
                 <View style={styles.accordionList}>
                   {faqs.map((item) => (
@@ -268,7 +260,7 @@ export default function FAQScreen() {
               </>
             )}
 
-            {/* ================= CONTATO ================= */}
+
 
             {activeTab === "contato" && (
               <>
@@ -313,9 +305,6 @@ export default function FAQScreen() {
 }
 
 const styles = StyleSheet.create({
-  // =============================
-  // CONTAINER PRINCIPAL
-  // =============================
 
   container: {
     flex: 1,
@@ -330,9 +319,6 @@ const styles = StyleSheet.create({
     padding: 25,
   },
 
-  // =============================
-  // HEADER SUPERIOR
-  // =============================
 
   topContainer: {
     backgroundColor: "#95C159",
@@ -373,9 +359,6 @@ const styles = StyleSheet.create({
 
   avatarText: { fontSize: 16, fontWeight: "bold", color: "#2A3A56" },
 
-  // =============================
-  // TOGGLE FAQ / CONTATO
-  // =============================
 
   topToggle: {
     flexDirection: "row",
@@ -405,9 +388,6 @@ const styles = StyleSheet.create({
     color: "#2A3A56",
   },
 
-  // =============================
-  // CATEGORIAS FAQ
-  // =============================
 
   categoryRow: {
     flexDirection: "row",
@@ -440,9 +420,6 @@ const styles = StyleSheet.create({
     color: "#4CAF50",
   },
 
-  // =============================
-  // BARRA DE PESQUISA FAQ
-  // =============================
 
   searchBar: {
     backgroundColor: "#F0FFF4",
@@ -460,9 +437,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 
-  // =============================
-  // FAQ (PERGUNTAS)
-  // =============================
 
   accordionList: {
     paddingBottom: 20,
@@ -498,9 +472,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#F0F0F0",
   },
 
-  // =============================
-  // CONTATO (REDES SOCIAIS)
-  // =============================
 
   socialList: {
     flex: 1,
@@ -530,9 +501,6 @@ const styles = StyleSheet.create({
     color: "#2A3A56",
   },
 
-  // =============================
-  // BOTÃO SUPORTE
-  // =============================
 
   btnChat: {
     backgroundColor: "#00D2B1",

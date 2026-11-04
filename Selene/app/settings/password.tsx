@@ -18,16 +18,12 @@ import { API_V1 } from "@/constants/api";
 export default function PasswordScreen() {
   const router = useRouter();
 
-  // ==========================================
-  // ESTADOS (STATES)
-  // ==========================================
   const [senhaAtual, setSenhaAtual] = useState("");
   const [novaSenha, setNovaSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const [loading, setLoading] = useState(false);
   const [iniciais, setIniciais] = useState("AL");
 
-  // Visibilidade das senhas independente
   const [showSenhaAtual, setShowSenhaAtual] = useState(false);
   const [showNovaSenha, setShowNovaSenha] = useState(false);
   const [showConfirmarSenha, setShowConfirmarSenha] = useState(false);
@@ -39,9 +35,6 @@ export default function PasswordScreen() {
     router.push(isAdmin ? "/(admin)/profile-admin" : "/(tabs)/profile");
   };
 
-  // ==========================================
-  // LOGICA DE INICIAIS
-  // ==========================================
   useEffect(() => {
     const carregarIniciais = async () => {
       const nome = await SecureStore.getItemAsync("userName");
@@ -57,9 +50,6 @@ export default function PasswordScreen() {
     carregarIniciais();
   }, []);
 
-  // ==========================================
-  // CHAMADA API
-  // ==========================================
   const handleUpdatePassword = async () => {
     if (!senhaAtual || !novaSenha || !confirmarSenha) {
       Alert.alert("Atenção", "Preencha todos os campos obrigatórios.");
@@ -94,7 +84,6 @@ export default function PasswordScreen() {
         novaSenha,
       });
 
-      // 🔹 1ª tentativa: USER
       try {
         const response = await fetch(
           `${API_V1}/auth/alterar-senha`,
@@ -118,7 +107,6 @@ export default function PasswordScreen() {
 
         throw new Error(data.message);
       } catch (errorUser: any) {
-        // 🔹 2ª tentativa: ADMIN
         try {
           const responseAdmin = await fetch(
             `${API_V1}/admin/alterar-senha`,
@@ -161,9 +149,7 @@ export default function PasswordScreen() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={["top"]}>
-        {/* ---------------------------------------------------------
-            INÍCIO DO HEADER (VERDE SELENE)
-        ---------------------------------------------------------- */}
+
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
@@ -193,10 +179,8 @@ export default function PasswordScreen() {
             </View>
           </View>
         </View>
-        {/* ---------------------------------------------------------
-            FIM DO HEADER
-        ---------------------------------------------------------- */}
-        {/* FORMULÁRIO EM CARD */}
+
+
         <View style={styles.content}>
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -206,7 +190,7 @@ export default function PasswordScreen() {
               Mantenha sua conta segura atualizando sua senha regularmente.
             </Text>
 
-            {/* Senha Atual */}
+
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Senha Atual:</Text>
               <View style={styles.inputWrapper}>
@@ -232,7 +216,7 @@ export default function PasswordScreen() {
               </View>
             </View>
 
-            {/* Nova Senha */}
+
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Nova Senha:</Text>
               <View style={styles.inputWrapper}>
@@ -258,7 +242,7 @@ export default function PasswordScreen() {
               </View>
             </View>
 
-            {/* Confirmar Nova Senha */}
+
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Confirmar Nova Senha:</Text>
               <View style={styles.inputWrapper}>
@@ -303,17 +287,11 @@ export default function PasswordScreen() {
 }
 
 const styles = StyleSheet.create({
-  // =========================
-  // CONTAINER PRINCIPAL
-  // =========================
   container: {
     flex: 1,
     backgroundColor: "#95C159",
   },
 
-  // =========================
-  // HEADER (TOPO VERDE)
-  // =========================
   topContainer: {
     backgroundColor: "#95C159",
     borderBottomLeftRadius: 40,
@@ -349,9 +327,6 @@ const styles = StyleSheet.create({
     gap: 15,
   },
 
-  // =========================
-  // AVATAR
-  // =========================
   avatarCircle: {
     width: 45,
     height: 45,
@@ -369,9 +344,6 @@ const styles = StyleSheet.create({
     color: "#2A3A56",
   },
 
-  // =========================
-  // CONTEÚDO (PAINEL BRANCO)
-  // =========================
   content: {
     flex: 1,
     backgroundColor: "#FFF",
@@ -395,9 +367,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 
-  // =========================
-  // INPUTS / FORMULÁRIO
-  // =========================
   inputGroup: {
     marginBottom: 20,
   },
@@ -430,9 +399,6 @@ const styles = StyleSheet.create({
     padding: 5,
   },
 
-  // =========================
-  // BOTÕES
-  // =========================
   mainButton: {
     backgroundColor: "#2A3A56",
     height: 55,
