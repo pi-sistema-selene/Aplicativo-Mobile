@@ -1,6 +1,12 @@
 export const API_BASE_URL = "https://selene-mobile.onrender.com";
 export const API_V1 = `${API_BASE_URL}/api/v1`;
 
+export function getApiAssetUrl(path: string): string {
+  return /^https?:\/\//i.test(path)
+    ? path
+    : `${API_BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
+}
+
 export const ENDPOINTS = {
   auth: {
     login: "/auth/login",

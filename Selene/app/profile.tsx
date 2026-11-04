@@ -15,6 +15,7 @@ import * as SecureStore from "expo-secure-store";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { IMAGES } from "@/constants/images";
 import { Colors } from "@/constants/Colors";
+import { API_V1, getApiAssetUrl } from "@/constants/api";
 import { useLogout } from "@/hooks/useLogout";
 import { getInitials } from "@/utils/initials";
 import { isAdminRole } from "@/utils/role";
@@ -25,6 +26,7 @@ export default function ProfileScreen() {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [iniciais, setIniciais] = useState("US");
+  const [fotoUri, setFotoUri] = useState<string | null>(null);
   const [userData, setUserData] = useState({
     nome: "",
     id: "",
@@ -37,8 +39,22 @@ export default function ProfileScreen() {
         const nomeCompleto = await SecureStore.getItemAsync(STORAGE_KEYS.USER_NAME);
         const userId = await SecureStore.getItemAsync(STORAGE_KEYS.USER_ID);
         const role = await SecureStore.getItemAsync(STORAGE_KEYS.USER_ROLE);
+        const token = await SecureStore.getItemAsync(STORAGE_KEYS.USER_TOKEN);
 
         setIsAdmin(isAdminRole(role));
+
+        if (token) {
+          const response = await fetch(`${API_V1}/auth/perfil`, {
+            headers: { Authorization: "Bearer " + token },
+          });
+
+          if (response.ok) {
+            const profile = await response.json();
+            if (profile.data?.foto_perfil) {
+              setFotoUri(getApiAssetUrl(profile.data.foto_perfil));
+            }
+          }
+        }
 
         if (nomeCompleto) {
           const init = getInitials(nomeCompleto);
@@ -94,7 +110,7 @@ export default function ProfileScreen() {
 
           <View style={styles.imageContainer}>
             <Image
-              source={IMAGES.placeholderAvatar}
+              source={fotoUri || IMAGES.placeholderAvatar}
               style={styles.profileImage}
             />
           </View>
@@ -164,7 +180,7 @@ export default function ProfileScreen() {
 
             <TouchableOpacity
               style={styles.menuItem}
-              onPress={() => router.push("/(tabs)/edit-profile")}
+              onPress={() => router.push("/edit-profile")}
             >
               <View
                 style={[

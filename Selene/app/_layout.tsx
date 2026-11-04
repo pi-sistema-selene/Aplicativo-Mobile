@@ -12,6 +12,8 @@ export default function RootLayout() {
       <Stack.Screen name="(auth)" options={{ animation: "fade" }} />
       <Stack.Screen name="(tabs)" options={{ animation: "simple_push" }} />
       <Stack.Screen name="(admin)" options={{ animation: "simple_push" }} />
+      <Stack.Screen name="profile" options={{ animation: "simple_push" }} />
+      <Stack.Screen name="edit-profile" options={{ animation: "simple_push" }} />
       <Stack.Screen
         name="nova-estufa"
         options={{

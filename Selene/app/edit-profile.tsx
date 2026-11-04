@@ -15,7 +15,8 @@ import { Ionicons, Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import * as ImagePicker from "expo-image-picker";
-import { API_V1 } from "@/constants/api";
+import { File as ExpoFile } from "expo-file-system";
+import { API_V1, getApiAssetUrl } from "@/constants/api";
 
 export default function EditProfileScreen() {
   const router = useRouter();
@@ -29,6 +30,9 @@ export default function EditProfileScreen() {
   const [idExibicao, setIdExibicao] = useState("00000000");
   const [iniciais, setIniciais] = useState("US");
   const [fotoUri, setFotoUri] = useState<string | null>(null);
+  const [fotoSelecionada, setFotoSelecionada] =
+    useState<ImagePicker.ImagePickerAsset | null>(null);
+  const [salvando, setSalvando] = useState(false);
 
   useEffect(() => {
     const carregarDados = async () => {
@@ -53,6 +57,9 @@ export default function EditProfileScreen() {
             setNome(user.nome_completo || "");
             setEmail(user.email || "");
             setTelefone(user.telefone || "");
+            if (user.foto_perfil) {
+              setFotoUri(getApiAssetUrl(user.foto_perfil));
+            }
 
             if (user.nome_completo) {
               const partes = user.nome_completo.trim().split(" ");
@@ -118,7 +125,9 @@ export default function EditProfileScreen() {
       });
 
       if (!resultado.canceled && resultado.assets[0]) {
-        setFotoUri(resultado.assets[0].uri);
+        const foto = resultado.assets[0];
+        setFotoSelecionada(foto);
+        setFotoUri(foto.uri);
       }
     } catch (error) {
       console.error("Erro ao escolher foto:", error);
@@ -128,6 +137,7 @@ export default function EditProfileScreen() {
 
   const handleSalvar = async () => {
     try {
+      setSalvando(true);
       const token = await SecureStore.getItemAsync("userToken");
 
       if (!token) {
@@ -140,35 +150,84 @@ export default function EditProfileScreen() {
         return;
       }
 
+      const formData = new FormData();
+      formData.append("nome_completo", nome);
+      formData.append("email", email);
+      formData.append("telefone", telefone);
+
+      if (fotoSelecionada) {
+        if (fotoSelecionada.file) {
+          formData.append("foto_perfil", fotoSelecionada.file);
+        } else {
+          const foto = new ExpoFile(fotoSelecionada.uri);
+          const filename =
+            fotoSelecionada.fileName || foto.name || "perfil.jpg";
+          formData.append("foto_perfil", foto, filename);
+        }
+      }
+
       const res = await fetch(
         `${API_V1}/auth/perfil`,
         {
           method: "PUT",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            nome_completo: nome,
-            email: email,
-            telefone: telefone,
-          }),
+          body: formData,
         },
       );
 
-      const data = await res.json();
+      const responseText = await res.text();
+      let data: { message?: string; data?: { foto_perfil?: string } } | null =
+        null;
+
+      if (responseText.trim()) {
+        try {
+          data = JSON.parse(responseText);
+        } catch {
+          if (res.ok) {
+            throw new Error(
+              `O servidor retornou uma resposta inválida (HTTP ${res.status}).`,
+            );
+          }
+        }
+      }
 
       if (!res.ok) {
-        throw new Error(data.message || "Erro ao atualizar perfil");
+        const responseDetails = responseText
+          .replace(/<[^>]*>/g, " ")
+          .replace(/\s+/g, " ")
+          .trim()
+          .slice(0, 240);
+        throw new Error(
+          data?.message ||
+            (responseDetails
+              ? `Erro ao atualizar perfil (HTTP ${res.status}): ${responseDetails}`
+              : `Erro ao atualizar perfil (HTTP ${res.status}).`),
+        );
+      }
+
+      if (!data) {
+        throw new Error(
+          `O servidor não confirmou a atualização (resposta vazia, HTTP ${res.status}).`,
+        );
       }
 
       await SecureStore.setItemAsync("userName", nome);
       await SecureStore.setItemAsync("userEmail", email);
 
+      const fotoSalva = data.data?.foto_perfil;
+      if (fotoSalva) {
+        setFotoUri(getApiAssetUrl(fotoSalva));
+        setFotoSelecionada(null);
+      }
+
       Alert.alert("Sucesso", "Perfil atualizado!");
       router.back();
     } catch (error: any) {
       Alert.alert("Erro", error.message);
+    } finally {
+      setSalvando(false);
     }
   };
 
@@ -258,8 +317,14 @@ export default function EditProfileScreen() {
               <Switch value={salvarLogin} onValueChange={setSalvarLogin} />
             </View>
 
-            <TouchableOpacity style={styles.saveBtn} onPress={handleSalvar}>
-              <Text style={styles.saveBtnText}>Salvar Alterações</Text>
+            <TouchableOpacity
+              style={[styles.saveBtn, salvando && { opacity: 0.7 }]}
+              onPress={handleSalvar}
+              disabled={salvando}
+            >
+              <Text style={styles.saveBtnText}>
+                {salvando ? "Salvando..." : "Salvar Alterações"}
+              </Text>
             </TouchableOpacity>
           </ScrollView>
         </View>
