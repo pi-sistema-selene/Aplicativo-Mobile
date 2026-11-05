@@ -439,7 +439,11 @@ const styles = StyleSheet.create({
   },
   welcomeText: { fontSize: Typography.pageTitle, fontWeight: FontWeight.bold, color: Colors.text },
   subwelcomeText: { fontSize: Typography.body, color: Colors.text, opacity: 0.8 },
-  headerIcons: { flexDirection: "row", alignItems: "center", gap: 15 },
+  headerIcons: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 27,
+  },
   avatarCircle: {
     width: 45,
     height: 45,

@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   ScrollView,
   LayoutAnimation,
-  Platform,
+  Linking,
+  Alert,
 } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { Feather, FontAwesome5 } from "@expo/vector-icons";
@@ -86,27 +87,35 @@ export default function FAQScreen() {
     setExpandedId(expandedId === id ? null : id);
   };
 
+  const abrirContato = async (url: string) => {
+    try {
+      await Linking.openURL(url);
+    } catch {
+      Alert.alert(
+        "Não foi possível abrir",
+        "Verifique se há um aplicativo compatível instalado e tente novamente.",
+      );
+    }
+  };
 
   const socialOptions = [
     {
       name: "Instagram",
       icon: "instagram",
       color: "#E1306C",
-    },
-    {
-      name: "Twitter",
-      icon: "twitter",
-      color: "#1DA1F2",
+      url: "https://www.instagram.com/ceresagro.team/",
     },
     {
       name: "Facebook",
       icon: "facebook",
       color: "#4267B2",
+      url: "https://www.facebook.com/share/1KZE9Tf3nA/",
     },
     {
       name: "E-mail",
       icon: "envelope",
       color: Colors.accent,
+      url: "mailto:ceresagro.team@gmail.com",
     },
   ];
 
@@ -267,7 +276,13 @@ export default function FAQScreen() {
               <>
                 <View style={styles.socialList}>
                   {socialOptions.map((item, index) => (
-                    <TouchableOpacity key={index} style={styles.socialItem}>
+                    <TouchableOpacity
+                      key={item.name}
+                      style={styles.socialItem}
+                      onPress={() => abrirContato(item.url)}
+                      accessibilityRole="button"
+                      accessibilityLabel={`Abrir ${item.name}`}
+                    >
                       <View
                         style={[
                           styles.socialIcon,
