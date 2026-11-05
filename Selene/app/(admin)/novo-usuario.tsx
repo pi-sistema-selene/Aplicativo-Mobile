@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -153,7 +154,7 @@ export default function NovoUsuario() {
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.replace("/(admin)/(tabs)/users")}>
-              <Feather name="arrow-left" size={28} color="#2A3A56" />
+              <Feather name="arrow-left" size={28} color={Colors.text} />
             </TouchableOpacity>
 
             <View style={styles.textContainer}>
@@ -224,10 +225,10 @@ export default function NovoUsuario() {
 
 
           <View style={styles.photoBox}>
-            <Feather name="user" size={40} color="#fff" />
+            <Feather name="user" size={40} color={Colors.white} />
 
             <View style={styles.cameraIcon}>
-              <Feather name="camera" size={14} color="#fff" />
+              <Feather name="camera" size={14} color={Colors.white} />
             </View>
           </View>
 
@@ -278,25 +279,25 @@ export default function NovoUsuario() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#95C159"
+    backgroundColor: Colors.primary
   },
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    paddingHorizontal: 25,
-    paddingTop: 40,
+    paddingHorizontal: Spacing.screen,
+    paddingTop: Spacing.section,
   },
 
 
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 30,
+    paddingBottom: Spacing.xxl,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
   header: {
     flexDirection: "row",
@@ -310,12 +311,12 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    marginLeft: 20,
+    marginLeft: Spacing.lg,
   },
   welcomeText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.pageTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
 
 
@@ -323,14 +324,14 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 22,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
   },
   avatarText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.subtitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
 
 
@@ -338,30 +339,30 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: "#00D2B1",
+    backgroundColor: Colors.accent,
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
-    marginVertical: 20,
+    marginVertical: Spacing.lg,
   },
   cameraIcon: {
     position: "absolute",
     bottom: 0,
     right: 0,
-    backgroundColor: "#2A3A56",
-    borderRadius: 10,
+    backgroundColor: Colors.text,
+    borderRadius: Radius.sm,
     padding: 3,
   },
 
 
   label: {
-    fontWeight: "bold",
+    fontWeight: FontWeight.bold,
     marginTop: 10,
-    color: "#2A3A56",
+    color: Colors.text,
   },
   input: {
     backgroundColor: "#E9F9EA",
-    borderRadius: 15,
+    borderRadius: Radius.lg,
     padding: 10,
     marginTop: 5,
   },
@@ -376,24 +377,24 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     borderWidth: 1,
-    borderColor: "#95C159",
-    borderRadius: 10,
+    borderColor: Colors.primary,
+    borderRadius: Radius.sm,
     alignItems: "center",
   },
   radioActive: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
   },
 
 
   btn: {
-    backgroundColor: "#00D2B1",
+    backgroundColor: Colors.accent,
     padding: 15,
-    borderRadius: 25,
-    marginTop: 20,
+    borderRadius: Radius.xxl,
+    marginTop: Spacing.lg,
     alignItems: "center",
   },
   btnText: {
-    color: "#fff",
-    fontWeight: "bold",
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
   },
 });

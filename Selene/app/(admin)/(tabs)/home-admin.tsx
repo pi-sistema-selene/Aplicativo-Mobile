@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -97,7 +98,7 @@ export default function AdminHome() {
           <View style={styles.header}>
             <View>
               {loading ? (
-                <ActivityIndicator size="small" color="#2A3A56" />
+                <ActivityIndicator size="small" color={Colors.text} />
               ) : (
                 <>
                   <Text style={styles.welcomeText}>Olá, {nomeUsuario}</Text>
@@ -123,7 +124,7 @@ export default function AdminHome() {
 
           <View style={styles.statItem}>
             <View style={styles.statHeader}>
-              <Feather name="external-link" size={14} color="#2A3A56" />
+              <Feather name="external-link" size={14} color={Colors.text} />
               <Text style={styles.statLabel}>Produtores Online</Text>
             </View>
 
@@ -136,7 +137,7 @@ export default function AdminHome() {
 
           <View style={styles.statItem}>
             <View style={styles.statHeader}>
-              <Feather name="cpu" size={14} color="#2A3A56" />
+              <Feather name="cpu" size={14} color={Colors.text} />
               <Text style={styles.statLabel}>Sensores Operantes</Text>
             </View>
 
@@ -147,7 +148,7 @@ export default function AdminHome() {
         <View style={styles.content}>
           <ScrollView
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 30 }}
+            contentContainerStyle={{ paddingBottom: Spacing.xxl }}
           >
             <MenuButton
               title="Controle de Acessos"
@@ -156,7 +157,7 @@ export default function AdminHome() {
                 <MaterialCommunityIcons
                   name="account-cog-outline"
                   size={24}
-                  color="#FFF"
+                  color={Colors.white}
                 />
               }
               onPress={() => router.push("/(admin)/(tabs)/users")}
@@ -165,7 +166,7 @@ export default function AdminHome() {
             <MenuButton
               title="Controle Sensores"
               subtitle="Medir o controle dos sensores em campo."
-              icon={<Feather name="cpu" size={24} color="#FFF" />}
+              icon={<Feather name="cpu" size={24} color={Colors.white} />}
               onPress={() => router.push("/(admin)/(tabs)/monitoring")}
             />
 
@@ -176,7 +177,7 @@ export default function AdminHome() {
                 <Ionicons
                   name="chatbox-ellipses-outline"
                   size={24}
-                  color="#FFF"
+                  color={Colors.white}
                 />
               }
               onPress={() => router.push("/support/lista")}
@@ -185,7 +186,7 @@ export default function AdminHome() {
             <MenuButton
               title="Notas de Atualização"
               subtitle="Acompanhe as atualizações recentes da aplicação."
-              icon={<Feather name="gift" size={24} color="#FFF" />}
+              icon={<Feather name="gift" size={24} color={Colors.white} />}
               onPress={() => router.push("/(admin)/(tabs)/statistics")}
             />
           </ScrollView>
@@ -199,26 +200,26 @@ export default function AdminHome() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#95C159"
+    backgroundColor: Colors.primary
   },
   content: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    paddingHorizontal: 25,
-    paddingTop: 40,
-    marginTop: 30,
+    paddingHorizontal: Spacing.screen,
+    paddingTop: Spacing.section,
+    marginTop: Spacing.xxl,
   },
 
 
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 30,
+    paddingBottom: Spacing.xxl,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
   header: {
     flexDirection: "row",
@@ -230,7 +231,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 30,
+    marginBottom: Spacing.xxl,
   },
   headerIcons: {
     flexDirection: "row",
@@ -238,32 +239,32 @@ const styles = StyleSheet.create({
     gap: 15,
   },
   notificationBtn: {
-    backgroundColor: "#FFF",
-    padding: 8,
-    borderRadius: 20,
+    backgroundColor: Colors.white,
+    padding: Spacing.xs,
+    borderRadius: Radius.xl,
   },
 
 
   greeting: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#2A3A56"
+    fontSize: Typography.title,
+    fontWeight: FontWeight.bold,
+    color: Colors.text
   },
   welcomeText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#2A3A56"
+    fontSize: Typography.pageTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text
   },
   subwelcomeText: {
-    fontSize: 14,
-    color: "#2A3A56",
+    fontSize: Typography.body,
+    color: Colors.text,
     opacity: 0.8
   },
   sectionTitle: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 20,
-    fontWeight: "600",
+    fontSize: Typography.sectionTitle,
+    color: Colors.muted,
+    marginBottom: Spacing.lg,
+    fontWeight: FontWeight.semibold,
   },
 
 
@@ -271,29 +272,29 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#E0E0E0",
+    borderColor: Colors.border,
   },
   avatarText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#2A3A56"
+    fontSize: Typography.subtitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text
   },
   profileCircle: {
     width: 40,
     height: 40,
-    borderRadius: 20,
-    backgroundColor: "#FFF",
+    borderRadius: Radius.xl,
+    backgroundColor: Colors.white,
     justifyContent: "center",
     alignItems: "center",
     marginRight: 10,
   },
   profileInitials: {
-    fontWeight: "bold",
-    color: "#2A3A56"
+    fontWeight: FontWeight.bold,
+    color: Colors.text
   },
 
 
@@ -312,36 +313,36 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   statLabel: {
-    color: "#2A3A56",
-    fontSize: 13,
+    color: Colors.text,
+    fontSize: Typography.small,
   },
   statValue: {
-    color: "#FFF",
-    fontSize: 32,
-    fontWeight: "bold",
+    color: Colors.white,
+    fontSize: Typography.hero,
+    fontWeight: FontWeight.bold,
   },
   statValueSensor: {
-    color: "#0068FF",
-    fontSize: 32,
-    fontWeight: "bold",
+    color: Colors.info,
+    fontSize: Typography.hero,
+    fontWeight: FontWeight.bold,
   },
   divider: {
     width: 1,
     height: 40,
     backgroundColor: "rgba(255,255,255,0.5)",
-    marginHorizontal: 20,
+    marginHorizontal: Spacing.lg,
   },
 
 
   card: {
-    backgroundColor: "#FFF",
+    padding: Spacing.card,
+    backgroundColor: Colors.white,
     flexDirection: "row",
-    padding: 18,
-    borderRadius: 20,
-    marginBottom: 15,
+    borderRadius: Radius.card,
+    marginBottom: Spacing.cardGap,
     alignItems: "center",
     elevation: 3,
-    shadowColor: "#000",
+    shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -349,8 +350,8 @@ const styles = StyleSheet.create({
   iconContainer: {
     width: 45,
     height: 45,
-    borderRadius: 12,
-    backgroundColor: "#2A3A56",
+    borderRadius: Radius.md,
+    backgroundColor: Colors.text,
     justifyContent: "center",
     alignItems: "center",
     marginRight: 15,
@@ -359,14 +360,14 @@ const styles = StyleSheet.create({
     flex: 1
   },
   cardTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.cardTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
     marginBottom: 2,
   },
   cardSubtitle: {
-    fontSize: 12,
-    color: "#777",
+    fontSize: Typography.caption,
+    color: Colors.mutedLight,
     lineHeight: 16,
   },
 });

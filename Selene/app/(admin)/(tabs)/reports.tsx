@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
@@ -97,7 +98,7 @@ export default function DashboardAdmin() {
             <TouchableOpacity
               onPress={() => router.push("/(admin)/(tabs)/home-admin")}
             >
-              <Feather name="arrow-left" size={28} color="#2A3A56" />
+              <Feather name="arrow-left" size={28} color={Colors.text} />
             </TouchableOpacity>
 
             <View style={styles.textContainer}>
@@ -122,19 +123,19 @@ export default function DashboardAdmin() {
 
           <View style={styles.statsRow}>
             <View style={styles.statCard}>
-              <MaterialCommunityIcons name="export" size={24} color="#FFF" />
+              <MaterialCommunityIcons name="export" size={24} color={Colors.white} />
               <Text style={styles.statNumber}>{stats.abertas}</Text>
               <Text style={styles.statLabel}>Abertas</Text>
             </View>
 
             <View style={styles.statCard}>
-              <Feather name="clock" size={24} color="#FFF" />
+              <Feather name="clock" size={24} color={Colors.white} />
               <Text style={styles.statNumber}>{stats.andamento}</Text>
               <Text style={styles.statLabel}>Em andamento</Text>
             </View>
 
             <View style={styles.statCard}>
-              <Feather name="check-circle" size={24} color="#FFF" />
+              <Feather name="check-circle" size={24} color={Colors.white} />
               <Text style={styles.statNumber}>{stats.resolvidas}</Text>
               <Text style={styles.statLabel}>Resolvidas</Text>
             </View>
@@ -145,7 +146,7 @@ export default function DashboardAdmin() {
             <Text style={styles.sectionTitle}>Mensagens Recentes</Text>
             <TouchableOpacity style={styles.verMaisBtn}>
               <Text style={styles.verMaisText}>Ver mais</Text>
-              <Feather name="arrow-right-circle" size={20} color="#00D2B1" />
+              <Feather name="arrow-right-circle" size={20} color={Colors.accent} />
             </TouchableOpacity>
           </View>
 
@@ -167,7 +168,7 @@ export default function DashboardAdmin() {
                 }
               >
                 <View style={styles.iconBox}>
-                  <Feather name="user" size={24} color="#666" />
+                  <Feather name="user" size={24} color={Colors.muted} />
                 </View>
                 <View style={styles.infoBox}>
                   <Text style={styles.itemTitle}>{item.nome || "Usuário"}</Text>
@@ -188,13 +189,13 @@ export default function DashboardAdmin() {
 
 
         <View style={styles.tabBar}>
-          <Feather name="file-text" size={24} color="#95C159" />
-          <Feather name="target" size={24} color="#CCC" />
+          <Feather name="file-text" size={24} color={Colors.primary} />
+          <Feather name="target" size={24} color={Colors.border} />
           <View style={styles.centerTab}>
-            <MaterialCommunityIcons name="chart-donut" size={30} color="#FFF" />
+            <MaterialCommunityIcons name="chart-donut" size={30} color={Colors.white} />
           </View>
-          <Feather name="bar-chart-2" size={24} color="#CCC" />
-          <Feather name="user" size={24} color="#CCC" />
+          <Feather name="bar-chart-2" size={24} color={Colors.border} />
+          <Feather name="user" size={24} color={Colors.border} />
         </View>
 
       </SafeAreaView>
@@ -204,19 +205,19 @@ export default function DashboardAdmin() {
 
 const styles = StyleSheet.create({
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 30,
+    paddingBottom: Spacing.xxl,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     marginTop: 10,
-    marginBottom: 4,
+    marginBottom: Spacing.xxs,
   },
   headerIcons: {
     flexDirection: "row",
@@ -225,89 +226,89 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    marginLeft: 20
+    marginLeft: Spacing.lg
   },
   container: {
     flex: 1,
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
   },
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    paddingHorizontal: 25,
+    paddingHorizontal: Spacing.screen,
     paddingTop: 35,
   },
 
   headerTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.pageTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
   avatarMini: {
     width: 40,
     height: 40,
-    borderRadius: 20,
-    backgroundColor: "#EDFCED",
+    borderRadius: Radius.xl,
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#E0E0E0",
+    borderColor: Colors.border,
   },
 
   avatarCircle: {
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
   },
   avatarText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#2A3A56"
+    fontSize: Typography.subtitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text
   },
 
   welcomeText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#2A3A56"
+    fontSize: Typography.pageTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text
   },
   avatarMiniText: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.body,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.sectionTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
     marginBottom: 15,
   },
   statsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 30,
+    marginBottom: Spacing.xxl,
   },
   statCard: {
+    padding: Spacing.cardCompact,
     width: "31%",
-    paddingVertical: 18,
-    borderRadius: 18,
+    borderRadius: Radius.card,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#00D2B1",
+    backgroundColor: Colors.accent,
   },
   statNumber: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#FFF",
+    fontSize: Typography.title,
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
     marginTop: 5,
   },
   statLabel: {
-    fontSize: 10,
-    color: "#FFF",
+    fontSize: Typography.tiny,
+    color: Colors.white,
     opacity: 0.9,
   },
   recentHeader: {
@@ -322,25 +323,25 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   verMaisText: {
-    color: "#2A3A56",
-    fontSize: 13,
-    fontWeight: "500",
+    color: Colors.text,
+    fontSize: Typography.small,
+    fontWeight: FontWeight.medium,
   },
   monthLabel: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.body,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
     marginBottom: 10,
   },
   itemCard: {
+    padding: Spacing.card,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFF",
-    padding: 15,
-    borderRadius: 18,
-    marginBottom: 12,
+    backgroundColor: Colors.white,
+    borderRadius: Radius.card,
+    marginBottom: Spacing.cardGap,
     elevation: 3,
-    shadowColor: "#000",
+    shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -348,7 +349,7 @@ const styles = StyleSheet.create({
   iconBox: {
     width: 55,
     height: 55,
-    borderRadius: 12,
+    borderRadius: Radius.md,
     backgroundColor: "#F8F8F8",
     justifyContent: "center",
     alignItems: "center",
@@ -358,24 +359,24 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   itemTitle: {
-    fontSize: 15,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.medium,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
   itemSub: {
-    fontSize: 12,
+    fontSize: Typography.caption,
     color: "#AAA",
     marginTop: 2,
   },
   itemDate: {
-    fontSize: 12,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.caption,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
   tabBar: {
     flexDirection: "row",
     height: 70,
-    backgroundColor: "#F9F9F9",
+    backgroundColor: Colors.surfaceSubtle,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     justifyContent: "space-around",
@@ -390,11 +391,11 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: "#2A3A56",
+    backgroundColor: Colors.text,
     justifyContent: "center",
     alignItems: "center",
     marginTop: -40,
     borderWidth: 5,
-    borderColor: "#FFF",
+    borderColor: Colors.white,
   }
 });

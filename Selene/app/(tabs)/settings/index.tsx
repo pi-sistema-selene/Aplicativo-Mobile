@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -90,8 +91,8 @@ export default function SettingsMenu() {
                 <Feather
                   name="bell"
                   size={24}
-                  color="#2A3A56"
-                  style={{ marginLeft: 12 }}
+                  color={Colors.text}
+                  style={{ marginLeft: Spacing.sm }}
                 />
               </TouchableOpacity>
             </View>
@@ -111,13 +112,13 @@ export default function SettingsMenu() {
               <View style={styles.menuLeft}>
 
                 <View style={styles.iconBox}>
-                  <Ionicons name={item.icon as any} size={20} color="#FFF" />
+                  <Ionicons name={item.icon as any} size={20} color={Colors.white} />
                 </View>
                 <Text style={styles.menuText}>{item.label}</Text>
               </View>
 
 
-              <Ionicons name="chevron-forward" size={20} color="#2A3A56" />
+              <Ionicons name="chevron-forward" size={20} color={Colors.text} />
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -128,15 +129,15 @@ export default function SettingsMenu() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#95C159" },
+  container: { flex: 1, backgroundColor: Colors.primary },
 
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 30,
+    paddingBottom: Spacing.xxl,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
 
   header: {
@@ -147,8 +148,8 @@ const styles = StyleSheet.create({
     marginBottom: 1,
   },
 
-  welcomeText: { fontSize: 22, fontWeight: "bold", color: "#2A3A56" },
-  subwelcomeText: { fontSize: 14, color: "#2A3A56", opacity: 0.8 },
+  welcomeText: { fontSize: Typography.pageTitle, fontWeight: FontWeight.bold, color: Colors.text },
+  subwelcomeText: { fontSize: Typography.body, color: Colors.text, opacity: 0.8 },
 
   headerIcons: {
     flexDirection: "row",
@@ -160,25 +161,25 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#E0E0E0",
+    borderColor: Colors.border,
   },
 
-  avatarText: { fontSize: 16, fontWeight: "bold", color: "#2A3A56" },
+  avatarText: { fontSize: Typography.subtitle, fontWeight: FontWeight.bold, color: Colors.text },
 
   menuItem: {
+    padding: Spacing.card,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "#FFF",
-    padding: 16,
-    borderRadius: 18,
-    marginBottom: 12,
+    backgroundColor: Colors.white,
+    borderRadius: Radius.card,
+    marginBottom: Spacing.cardGap,
     elevation: 2,
-    shadowColor: "#000",
+    shadowColor: Colors.black,
     shadowOpacity: 0.05,
     shadowRadius: 5,
   },
@@ -187,25 +188,25 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: "#00D1A0",
+    backgroundColor: Colors.accent,
     justifyContent: "center",
     alignItems: "center",
     marginRight: 15,
   },
-  menuText: { fontSize: 15, color: "#2A3A56", fontWeight: "600" },
+  menuText: { fontSize: Typography.medium, color: Colors.text, fontWeight: FontWeight.semibold },
 
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    paddingHorizontal: 25,
-    paddingTop: 30,
+    paddingHorizontal: Spacing.screen,
+    paddingTop: Spacing.xxl,
   },
   sectionTitle: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 20,
-    fontWeight: "600",
+    fontSize: Typography.sectionTitle,
+    color: Colors.muted,
+    marginBottom: Spacing.lg,
+    fontWeight: FontWeight.semibold,
   },
 });

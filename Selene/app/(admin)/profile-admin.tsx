@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -21,6 +22,7 @@ export default function ProfileScreen() {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [iniciais, setIniciais] = useState("US");
+  const [fotoUri, setFotoUri] = useState<string | null>(null);
 
   const [userData, setUserData] = useState({
     nome: "",
@@ -99,7 +101,7 @@ export default function ProfileScreen() {
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
-              <Feather name="arrow-left" size={28} color="#2A3A56" />
+              <Feather name="arrow-left" size={28} color={Colors.text} />
             </TouchableOpacity>
             <View style={styles.textContainer}>
               <Text style={styles.welcomeText}>Perfil</Text>
@@ -119,7 +121,11 @@ export default function ProfileScreen() {
 
           <View style={styles.imageContainer}>
             <Image
-              source="https://i.pravatar.cc/300"
+              source={
+                fotoUri
+                  ? { uri: fotoUri }
+                  : require("../../assets/images/user-icon.png")
+              }
               style={styles.profileImage}
             />
           </View>
@@ -128,8 +134,8 @@ export default function ProfileScreen() {
           {loading ? (
             <ActivityIndicator
               size="large"
-              color="#95C159"
-              style={{ marginTop: 20 }}
+              color={Colors.primary}
+              style={{ marginTop: Spacing.lg }}
             />
           ) : (
             <>
@@ -158,10 +164,10 @@ export default function ProfileScreen() {
               <View
                 style={[
                   styles.menuIconContainer,
-                  { backgroundColor: "#95C159" },
+                  { backgroundColor: Colors.primary },
                 ]}
               >
-                <Ionicons name="person-outline" size={22} color="#FFF" />
+                <Ionicons name="person-outline" size={22} color={Colors.white} />
               </View>
               <Text style={styles.menuText}>Editar Perfil</Text>
             </TouchableOpacity>
@@ -174,13 +180,13 @@ export default function ProfileScreen() {
               <View
                 style={[
                   styles.menuIconContainer,
-                  { backgroundColor: "#95C159" },
+                  { backgroundColor: Colors.primary },
                 ]}
               >
                 <Ionicons
                   name="shield-checkmark-outline"
                   size={22}
-                  color="#FFF"
+                  color={Colors.white}
                 />
               </View>
               <Text style={styles.menuText}>Segurança</Text>
@@ -194,10 +200,10 @@ export default function ProfileScreen() {
               <View
                 style={[
                   styles.menuIconContainer,
-                  { backgroundColor: "#95C159" },
+                  { backgroundColor: Colors.primary },
                 ]}
               >
-                <Ionicons name="headset-outline" size={22} color="#FFF" />
+                <Ionicons name="headset-outline" size={22} color={Colors.white} />
               </View>
               <Text style={styles.menuText}>Suporte</Text>
             </TouchableOpacity>
@@ -210,12 +216,12 @@ export default function ProfileScreen() {
               <View
                 style={[
                   styles.menuIconContainer,
-                  { backgroundColor: "#FF4B4B" },
+                  { backgroundColor: Colors.danger },
                 ]}
               >
-                <MaterialCommunityIcons name="logout" size={22} color="#FFF" />
+                <MaterialCommunityIcons name="logout" size={22} color={Colors.white} />
               </View>
-              <Text style={[styles.menuText, { color: "#FF4B4B" }]}>
+              <Text style={[styles.menuText, { color: Colors.danger }]}>
                 Sair da Conta
               </Text>
             </TouchableOpacity>
@@ -230,25 +236,25 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
   },
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    paddingHorizontal: 25,
+    paddingHorizontal: Spacing.screen,
     paddingTop: 80,
   },
 
 
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 30,
+    paddingBottom: Spacing.xxl,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
   header: {
     flexDirection: "row",
@@ -263,18 +269,18 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    marginLeft: 20,
+    marginLeft: Spacing.lg,
     justifyContent: "center",
   },
   welcomeText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.pageTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
     textAlign: "left",
   },
   subwelcomeText: {
-    fontSize: 14,
-    color: "#2A3A56",
+    fontSize: Typography.body,
+    color: Colors.text,
     opacity: 0.8,
   },
 
@@ -283,34 +289,35 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#E0E0E0",
+    borderColor: Colors.border,
   },
   avatarText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.subtitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
 
 
   profileCard: {
+    paddingHorizontal: Spacing.card,
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     marginTop: -40,
-    marginHorizontal: 20,
-    borderRadius: 40,
+    marginHorizontal: Spacing.lg,
+    borderRadius: Radius.card,
     paddingTop: 70,
-    marginBottom: 20,
+    marginBottom: Spacing.cardGap,
     elevation: 5,
   },
   imageContainer: {
     position: "absolute",
     top: -60,
     alignSelf: "center",
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     padding: 5,
     borderRadius: 65,
   },
@@ -320,61 +327,62 @@ const styles = StyleSheet.create({
     borderRadius: 60,
   },
   userName: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.title,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
     textAlign: "center",
   },
   userId: {
-    fontSize: 14,
-    color: "#2A3A56",
+    fontSize: Typography.body,
+    color: Colors.text,
     textAlign: "center",
     opacity: 0.6,
-    marginBottom: 25,
+    marginBottom: Spacing.xl,
   },
 
 
   menuList: {
-    paddingHorizontal: 25,
+    paddingHorizontal: Spacing.xl,
   },
   menuItem: {
+    padding: Spacing.card,
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 18,
+    marginBottom: Spacing.cardGap,
   },
   menuIconContainer: {
     width: 40,
     height: 40,
-    borderRadius: 12,
+    borderRadius: Radius.md,
     justifyContent: "center",
     alignItems: "center",
     marginRight: 15,
   },
   menuText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#2A3A56",
+    fontSize: Typography.subtitle,
+    fontWeight: FontWeight.semibold,
+    color: Colors.text,
   },
   sectionLabel: {
-    fontSize: 12,
-    fontWeight: "bold",
-    color: "#A0A0A0",
+    fontSize: Typography.caption,
+    fontWeight: FontWeight.bold,
+    color: Colors.progressText,
     textTransform: "uppercase",
     marginBottom: 15,
     marginLeft: 5,
   },
   sectionTitle: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 20,
-    fontWeight: "600",
+    fontSize: Typography.sectionTitle,
+    color: Colors.muted,
+    marginBottom: Spacing.lg,
+    fontWeight: FontWeight.semibold,
   },
   adminSection: {
     marginBottom: 10,
   },
   divider: {
     height: 1,
-    backgroundColor: "#F0F0F0",
+    backgroundColor: Colors.borderSubtle,
     marginVertical: 15,
   },
 });

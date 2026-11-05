@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -120,7 +121,7 @@ export default function MenuAtualizacoes() {
   const renderItem = ({ item }: { item: Atualizacao }) => (
     <View style={styles.itemCard}>
       <View style={styles.iconBox}>
-        <MaterialCommunityIcons name="source-commit" size={24} color="#FFF" />
+        <MaterialCommunityIcons name="source-commit" size={24} color={Colors.white} />
       </View>
 
       <View style={styles.infoBox}>
@@ -141,7 +142,7 @@ export default function MenuAtualizacoes() {
             <TouchableOpacity
               onPress={() => router.push("/(admin)/(tabs)/home-admin")}
             >
-              <Feather name="arrow-left" size={28} color="#2A3A56" />
+              <Feather name="arrow-left" size={28} color={Colors.text} />
             </TouchableOpacity>
 
             <View style={styles.textContainer}>
@@ -198,13 +199,13 @@ export default function MenuAtualizacoes() {
           </View>
 
           {loading ? (
-            <ActivityIndicator size="large" color="#00D191" />
+            <ActivityIndicator size="large" color={Colors.accent} />
           ) : (
             <FlatList
               data={commits}
               keyExtractor={(item) => item.id}
               renderItem={renderItem}
-              contentContainerStyle={{ paddingBottom: 20 }}
+              contentContainerStyle={{ paddingBottom: Spacing.lg }}
               showsVerticalScrollIndicator={false}
             />
           )}
@@ -218,33 +219,33 @@ export default function MenuAtualizacoes() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#95C159"
+    backgroundColor: Colors.primary
   },
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    paddingHorizontal: 25,
-    paddingTop: 40,
+    paddingHorizontal: Spacing.screen,
+    paddingTop: Spacing.section,
     paddingBottom: 80,
   },
 
 
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 30,
+    paddingBottom: Spacing.xxl,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     marginTop: 10,
-    marginBottom: 4,
+    marginBottom: Spacing.xxs,
   },
   headerIcons: {
     flexDirection: "row",
@@ -253,16 +254,16 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    marginLeft: 20
+    marginLeft: Spacing.lg
   },
   welcomeText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#2A3A56"
+    fontSize: Typography.pageTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text
   },
   subwelcomeText: {
-    fontSize: 14,
-    color: "#2A3A56",
+    fontSize: Typography.body,
+    color: Colors.text,
     opacity: 0.8
   },
 
@@ -271,40 +272,40 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
   },
   avatarText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#2A3A56"
+    fontSize: Typography.subtitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text
   },
 
 
   tabContainer: {
     flexDirection: "row",
-    backgroundColor: "#E8F5E9",
-    borderRadius: 15,
+    backgroundColor: Colors.greenSoft,
+    borderRadius: Radius.lg,
     padding: 5,
-    marginBottom: 25,
+    marginBottom: Spacing.xl,
   },
   tabButton: {
     flex: 1,
-    paddingVertical: 12,
+    paddingVertical: Spacing.sm,
     alignItems: "center",
-    borderRadius: 12,
+    borderRadius: Radius.md,
   },
   tabActive: {
-    backgroundColor: "#00D191",
+    backgroundColor: Colors.accent,
   },
   tabText: {
-    color: "#2A3A56",
-    fontWeight: "500"
+    color: Colors.text,
+    fontWeight: FontWeight.medium
   },
   tabTextActive: {
-    color: "#FFF",
-    fontWeight: "bold"
+    color: Colors.white,
+    fontWeight: FontWeight.bold
   },
 
 
@@ -312,28 +313,28 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: Spacing.lg,
   },
   monthText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#2A3A56"
+    fontSize: Typography.subtitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text
   },
   calendarIcon: {
-    backgroundColor: "#00D191",
+    backgroundColor: Colors.accent,
     padding: 6,
     borderRadius: 8,
   },
   itemCard: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: Spacing.cardGap,
   },
   iconBox: {
     width: 50,
     height: 50,
-    backgroundColor: "#00D191",
-    borderRadius: 12,
+    backgroundColor: Colors.accent,
+    borderRadius: Radius.md,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -342,18 +343,18 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   itemTitle: {
-    fontSize: 15,
-    fontWeight: "bold",
-    color: "#2A3A56"
+    fontSize: Typography.medium,
+    fontWeight: FontWeight.bold,
+    color: Colors.text
   },
   itemDate: {
-    fontSize: 12,
+    fontSize: Typography.caption,
     color: "#007BFF",
     marginTop: 2
   },
   statusText: {
-    fontSize: 14,
+    fontSize: Typography.body,
     color: "#007BFF",
-    fontWeight: "600",
+    fontWeight: FontWeight.semibold,
   },
 });

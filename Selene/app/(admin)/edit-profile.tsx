@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -210,7 +211,7 @@ export default function EditProfileScreen() {
           },
         ]}
       >
-        <ActivityIndicator size="large" color="#2A3A56" />
+        <ActivityIndicator size="large" color={Colors.text} />
       </View>
     );
   }
@@ -223,7 +224,7 @@ export default function EditProfileScreen() {
             onPress={() => router.back()}
             style={styles.backButton}
           >
-            <Feather name="arrow-left" size={26} color="#2A3A56" />
+            <Feather name="arrow-left" size={26} color={Colors.text} />
           </TouchableOpacity>
 
           <Text style={styles.headerTitle}>Editar Cadastro</Text>
@@ -306,7 +307,7 @@ export default function EditProfileScreen() {
               disabled={saving}
             >
               {saving ? (
-                <ActivityIndicator color="#2A3A56" />
+                <ActivityIndicator color={Colors.text} />
               ) : (
                 <Text style={styles.btnSaveText}>Salvar Alterações</Text>
               )}
@@ -321,7 +322,7 @@ export default function EditProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
   },
 
   scrollContent: {
@@ -329,12 +330,12 @@ const styles = StyleSheet.create({
   },
 
   card: {
+    padding: Spacing.card,
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    paddingHorizontal: 25,
-    paddingTop: 40,
+    paddingTop: Spacing.section,
     marginTop: 10,
   },
 
@@ -344,19 +345,19 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.lg,
   },
 
   headerTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.pageTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
 
   backButton: {
-    padding: 8,
+    padding: Spacing.xs,
     backgroundColor: "rgba(255,255,255,0.3)",
-    borderRadius: 12,
+    borderRadius: Radius.md,
   },
 
 
@@ -365,20 +366,20 @@ const styles = StyleSheet.create({
   },
 
   label: {
-    fontSize: 13,
-    color: "#666",
+    fontSize: Typography.small,
+    color: Colors.muted,
     marginBottom: 6,
-    fontWeight: "600",
+    fontWeight: FontWeight.semibold,
   },
 
   input: {
-    backgroundColor: "#F5F5F5",
-    borderRadius: 15,
+    backgroundColor: Colors.background,
+    borderRadius: Radius.lg,
     padding: 14,
-    fontSize: 16,
-    color: "#2A3A56",
+    fontSize: Typography.subtitle,
+    color: Colors.text,
     borderWidth: 1,
-    borderColor: "#E0E0E0",
+    borderColor: Colors.border,
   },
 
   textArea: {
@@ -388,16 +389,16 @@ const styles = StyleSheet.create({
 
 
   btnSave: {
-    backgroundColor: "#F4C542",
-    padding: 16,
-    borderRadius: 25,
+    backgroundColor: Colors.accentYellow,
+    padding: Spacing.md,
+    borderRadius: Radius.xxl,
     alignItems: "center",
-    marginTop: 30,
+    marginTop: Spacing.xxl,
   },
 
   btnSaveText: {
-    fontWeight: "bold",
-    color: "#2A3A56",
-    fontSize: 16,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
+    fontSize: Typography.subtitle,
   },
 });

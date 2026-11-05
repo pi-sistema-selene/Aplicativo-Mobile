@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import { API_V1 } from "@/constants/api";
   import React, { useEffect, useState } from "react";
   import {
@@ -180,7 +181,7 @@ import { API_V1 } from "@/constants/api";
               <TouchableOpacity
                 onPress={() => router.push("/(admin)/(tabs)/monitoring")}
               >
-                <Feather name="arrow-left" size={28} color="#2A3A56" />
+                <Feather name="arrow-left" size={28} color={Colors.text} />
               </TouchableOpacity>
 
               <View style={styles.textContainer}>
@@ -281,7 +282,7 @@ import { API_V1 } from "@/constants/api";
               disabled={loading}
             >
               {loading ? (
-                <ActivityIndicator color="#fff" />
+                <ActivityIndicator color={Colors.white} />
               ) : (
                 <Text style={styles.buttonText}>Criar</Text>
               )}
@@ -296,25 +297,25 @@ import { API_V1 } from "@/constants/api";
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: "#95C159"
+      backgroundColor: Colors.primary
     },
     content: {
       flex: 1,
-      backgroundColor: "#FFF",
+      backgroundColor: Colors.white,
       borderTopLeftRadius: 50,
       borderTopRightRadius: 50,
-      paddingHorizontal: 25,
-      paddingTop: 40,
+      paddingHorizontal: Spacing.screen,
+      paddingTop: Spacing.section,
     },
 
 
     topContainer: {
-      backgroundColor: "#95C159",
+      backgroundColor: Colors.primary,
       borderBottomLeftRadius: 40,
       borderBottomRightRadius: 40,
-      paddingBottom: 30,
+      paddingBottom: Spacing.xxl,
       paddingTop: 10,
-      paddingHorizontal: 20,
+      paddingHorizontal: Spacing.screen,
     },
     header: {
       flexDirection: "row",
@@ -329,16 +330,16 @@ import { API_V1 } from "@/constants/api";
     },
     textContainer: {
       flex: 1,
-      marginLeft: 20
+      marginLeft: Spacing.lg
     },
     welcomeText: {
-      fontSize: 22,
-      fontWeight: "bold",
-      color: "#2A3A56"
+      fontSize: Typography.pageTitle,
+      fontWeight: FontWeight.bold,
+      color: Colors.text
     },
     subwelcomeText: {
-      fontSize: 14,
-      color: "#2A3A56",
+      fontSize: Typography.body,
+      color: Colors.text,
       opacity: 0.8
     },
 
@@ -347,32 +348,32 @@ import { API_V1 } from "@/constants/api";
       width: 45,
       height: 45,
       borderRadius: 22.5,
-      backgroundColor: "#EDFCED",
+      backgroundColor: Colors.avatarBg,
       justifyContent: "center",
       alignItems: "center",
     },
     avatarText: {
-      fontSize: 16,
-      fontWeight: "bold",
-      color: "#2A3A56"
+      fontSize: Typography.subtitle,
+      fontWeight: FontWeight.bold,
+      color: Colors.text
     },
 
 
     label: {
-      fontWeight: "bold",
+      fontWeight: FontWeight.bold,
       marginBottom: 5,
     },
     input: {
       borderWidth: 1,
-      borderColor: "#ddd",
-      borderRadius: 10,
+      borderColor: Colors.border,
+      borderRadius: Radius.sm,
       padding: 10,
       marginBottom: 15,
     },
     pickerBox: {
       borderWidth: 1,
-      borderColor: "#ddd",
-      borderRadius: 10,
+      borderColor: Colors.border,
+      borderRadius: Radius.sm,
       marginBottom: 15,
     },
     row: {
@@ -386,23 +387,23 @@ import { API_V1 } from "@/constants/api";
       flex: 1,
       padding: 10,
       borderWidth: 1,
-      borderColor: "#95C159",
-      borderRadius: 10,
+      borderColor: Colors.primary,
+      borderRadius: Radius.sm,
       alignItems: "center",
     },
     typeButtonActive: {
-      backgroundColor: "#95C159",
+      backgroundColor: Colors.primary,
     },
 
 
     button: {
-      backgroundColor: "#2A3A56",
+      backgroundColor: Colors.text,
       padding: 15,
-      borderRadius: 10,
+      borderRadius: Radius.sm,
       alignItems: "center",
     },
     buttonText: {
-      color: "#fff",
-      fontWeight: "bold"
+      color: Colors.white,
+      fontWeight: FontWeight.bold
     },
   });

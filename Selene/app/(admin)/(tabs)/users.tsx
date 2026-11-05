@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -168,7 +169,7 @@ export default function ControleAcessoScreen() {
     >
       <View style={styles.userCard}>
         <View style={styles.userIconContainer}>
-          <Feather name="user" size={24} color="#fff" />
+          <Feather name="user" size={24} color={Colors.white} />
         </View>
 
         <View style={styles.userInfo}>
@@ -196,7 +197,7 @@ export default function ControleAcessoScreen() {
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
-              <Feather name="arrow-left" size={28} color="#2A3A56" />
+              <Feather name="arrow-left" size={28} color={Colors.text} />
             </TouchableOpacity>
 
             <View style={styles.textContainer}>
@@ -226,7 +227,7 @@ export default function ControleAcessoScreen() {
           <View style={styles.secondaryStatsRow}>
             <View style={styles.subStat}>
               <View style={styles.subStatLabelRow}>
-                <Feather name="external-link" size={14} color="#2A3A56" />
+                <Feather name="external-link" size={14} color={Colors.text} />
 
                 <Text style={styles.subStatLabel}>Usuários</Text>
               </View>
@@ -238,12 +239,12 @@ export default function ControleAcessoScreen() {
 
             <View style={styles.subStat}>
               <View style={styles.subStatLabelRow}>
-                <Feather name="corner-right-down" size={14} color="#2A3A56" />
+                <Feather name="corner-right-down" size={14} color={Colors.text} />
 
                 <Text style={styles.subStatLabel}>Pendente Validação</Text>
               </View>
 
-              <Text style={[styles.subStatValue, { color: "#2D9CDB" }]}>
+              <Text style={[styles.subStatValue, { color: Colors.info }]}>
                 --
               </Text>
             </View>
@@ -256,7 +257,7 @@ export default function ControleAcessoScreen() {
           </View>
 
           {loading ? (
-            <ActivityIndicator size="large" color="#00D2B1" />
+            <ActivityIndicator size="large" color={Colors.accent} />
           ) : (
             <FlatList
               data={[...admins, ...usuarios]}
@@ -292,25 +293,25 @@ export default function ControleAcessoScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
   },
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    paddingHorizontal: 25,
-    paddingTop: 40,
+    paddingHorizontal: Spacing.screen,
+    paddingTop: Spacing.section,
   },
 
 
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 30,
+    paddingBottom: Spacing.xxl,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
   header: {
     flexDirection: "row",
@@ -325,16 +326,16 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    marginLeft: 20,
+    marginLeft: Spacing.lg,
   },
   welcomeText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.pageTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
   subwelcomeText: {
-    fontSize: 14,
-    color: "#2A3A56",
+    fontSize: Typography.body,
+    color: Colors.text,
     opacity: 0.8,
   },
 
@@ -343,40 +344,40 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
   },
   avatarText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.subtitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
 
 
   statsContainer: {
-    paddingHorizontal: 25,
-    marginBottom: 25,
+    paddingHorizontal: Spacing.xl,
+    marginBottom: Spacing.xl,
   },
   mainStatCard: {
-    backgroundColor: "#FFF",
-    borderRadius: 15,
-    padding: 5,
+    padding: Spacing.card,
+    backgroundColor: Colors.white,
+    borderRadius: Radius.card,
     alignItems: "center",
   },
   statValueBig: {
-    fontSize: 25,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.stat,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
   statLabelLink: {
-    color: "#2A3A56",
+    color: Colors.text,
     textDecorationLine: "underline",
-    fontWeight: "bold",
+    fontWeight: FontWeight.bold,
   },
   secondaryStatsRow: {
     flexDirection: "row",
-    marginTop: 20,
+    marginTop: Spacing.lg,
     alignItems: "center",
   },
   subStat: {
@@ -389,19 +390,19 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   subStatLabel: {
-    fontSize: 13,
-    color: "#2A3A56",
+    fontSize: Typography.small,
+    color: Colors.text,
     marginLeft: 5,
   },
   subStatValue: {
-    fontSize: 25,
-    fontWeight: "bold",
-    color: "#FFF",
+    fontSize: Typography.stat,
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
   },
   verticalDivider: {
     width: 1.5,
     height: 40,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     opacity: 0.6,
     marginHorizontal: 15,
   },
@@ -410,71 +411,71 @@ const styles = StyleSheet.create({
   timeFilterContainer: {
     flexDirection: "row",
     backgroundColor: "#F0F5F0",
-    borderRadius: 25,
+    borderRadius: Radius.xxl,
     padding: 5,
-    marginBottom: 25,
+    marginBottom: Spacing.xl,
   },
   timeBtn: {
     flex: 1,
-    paddingVertical: 12,
+    paddingVertical: Spacing.sm,
     alignItems: "center",
-    borderRadius: 20,
+    borderRadius: Radius.xl,
   },
   timeBtnActive: {
-    backgroundColor: "#00D2B1",
+    backgroundColor: Colors.accent,
   },
   timeBtnText: {
-    color: "#2A3A56",
-    fontSize: 14,
+    color: Colors.text,
+    fontSize: Typography.body,
   },
   timeBtnTextActive: {
-    color: "#FFF",
-    fontWeight: "bold",
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
   },
   sectionHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: Spacing.lg,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
+    fontSize: Typography.sectionTitle,
+    fontWeight: FontWeight.bold,
     color: "#1A2E35",
   },
   filterIconBtn: {
-    backgroundColor: "#00D2B1",
-    padding: 8,
-    borderRadius: 12,
+    backgroundColor: Colors.accent,
+    padding: Spacing.xs,
+    borderRadius: Radius.md,
   },
 
 
   userCard: {
+    padding: Spacing.card,
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 15,
-  },
+    },
   userIconContainer: {
     width: 50,
     height: 50,
-    borderRadius: 25,
-    backgroundColor: "#00D2B1",
+    borderRadius: Radius.xxl,
+    backgroundColor: Colors.accent,
     justifyContent: "center",
     alignItems: "center",
   },
   userInfo: {
     flex: 1.5,
-    marginLeft: 12,
+    marginLeft: Spacing.sm,
   },
   userName: {
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: Typography.subtitle,
+    fontWeight: FontWeight.bold,
     color: "#1A2E35",
   },
   userData: {
-    fontSize: 12,
-    color: "#2D9CDB",
-    fontWeight: "bold",
+    fontSize: Typography.caption,
+    color: Colors.info,
+    fontWeight: FontWeight.bold,
   },
   roleContainer: {
     flex: 1,
@@ -483,22 +484,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   roleText: {
-    fontSize: 12,
-    color: "#666",
+    fontSize: Typography.caption,
+    color: Colors.muted,
   },
   userCode: {
     flex: 1,
-    fontSize: 15,
-    fontWeight: "bold",
-    color: "#2D9CDB",
+    fontSize: Typography.medium,
+    fontWeight: FontWeight.bold,
+    color: Colors.info,
     textAlign: "right",
   },
   verticalLine: {
     width: 1.5,
     height: 35,
-    backgroundColor: "#00D2B1",
+    backgroundColor: Colors.accent,
     opacity: 0.4,
-    marginHorizontal: 12,
+    marginHorizontal: Spacing.sm,
   },
 
 
@@ -511,9 +512,9 @@ const styles = StyleSheet.create({
   },
 
   btnNewUser: {
-    backgroundColor: "#00D2B1",
+    backgroundColor: Colors.accent,
     height: 50,
-    borderRadius: 25,
+    borderRadius: Radius.xxl,
     justifyContent: "center",
     alignItems: "center",
     position: "absolute",
@@ -523,7 +524,7 @@ const styles = StyleSheet.create({
   },
   btnNewUserText: {
     color: "#1A2E35",
-    fontWeight: "bold",
-    fontSize: 16,
+    fontWeight: FontWeight.bold,
+    fontSize: Typography.subtitle,
   },
 });

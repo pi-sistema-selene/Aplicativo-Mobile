@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
@@ -102,7 +103,7 @@ export default function ListaChats() {
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
-              <Feather name="arrow-left" size={28} color="#2A3A56" />
+              <Feather name="arrow-left" size={28} color={Colors.text} />
             </TouchableOpacity>
 
             <View>
@@ -119,7 +120,7 @@ export default function ListaChats() {
               </TouchableOpacity>
 
               <TouchableOpacity onPress={() => router.push("/alert")}>
-                <Feather name="bell" size={24} color="#2A3A56" />
+                <Feather name="bell" size={24} color={Colors.text} />
               </TouchableOpacity>
             </View>
           </View>
@@ -132,7 +133,7 @@ export default function ListaChats() {
             data={chats}
             keyExtractor={(item) => item._id}
             ListEmptyComponent={() => (
-              <Text style={{ textAlign: "center", marginTop: 20 }}>
+              <Text style={{ textAlign: "center", marginTop: Spacing.lg }}>
                 Nenhum chat ativo
               </Text>
             )}
@@ -147,7 +148,7 @@ export default function ListaChats() {
                 }
               >
                 <View style={styles.avatar}>
-                  <Feather name="user" size={20} color="#95C159" />
+                  <Feather name="user" size={20} color={Colors.primary} />
                 </View>
 
                 <View style={styles.chatInfo}>
@@ -174,7 +175,7 @@ export default function ListaChats() {
               style={styles.newChatButton}
               onPress={iniciarNovoChat}
             >
-              <Feather name="plus" size={18} color="#FFF" />
+              <Feather name="plus" size={18} color={Colors.white} />
               <Text style={styles.newChatText}>Nova Conversa</Text>
             </TouchableOpacity>
           )}
@@ -188,25 +189,25 @@ export default function ListaChats() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
   },
 
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    padding: 25,
+    padding: Spacing.xl,
   },
 
 
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 30,
+    paddingBottom: Spacing.xxl,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
 
   header: {
@@ -218,14 +219,14 @@ const styles = StyleSheet.create({
   },
 
   welcomeText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.pageTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
 
   subwelcomeText: {
-    fontSize: 14,
-    color: "#2A3A56",
+    fontSize: Typography.body,
+    color: Colors.text,
     opacity: 0.8,
   },
 
@@ -238,59 +239,59 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#E0E0E0",
+    borderColor: Colors.border,
   },
 
   avatarText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.subtitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
 
   avatar: {
     width: 50,
     height: 50,
-    borderRadius: 25,
-    backgroundColor: "#E8F5E9",
+    borderRadius: Radius.xxl,
+    backgroundColor: Colors.greenSoft,
     justifyContent: "center",
     alignItems: "center",
   },
 
   sectionTitle: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: "#999",
-    marginBottom: 20,
+    fontSize: Typography.sectionTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.mutedLight,
+    marginBottom: Spacing.lg,
   },
 
   newChatButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#00D2B1",
+    backgroundColor: Colors.accent,
     padding: 14,
-    borderRadius: 20,
-    marginBottom: 20,
-    gap: 8,
+    borderRadius: Radius.xl,
+    marginBottom: Spacing.lg,
+    gap: Spacing.xs,
   },
 
   newChatText: {
-    color: "#FFF",
-    fontWeight: "bold",
-    fontSize: 14,
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontSize: Typography.body,
   },
 
   chatCard: {
+    padding: Spacing.card,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#F9F9F9",
-    padding: 15,
-    borderRadius: 22,
-    marginBottom: 15,
+    backgroundColor: Colors.surfaceSubtle,
+    borderRadius: Radius.card,
+    marginBottom: Spacing.cardGap,
   },
 
   chatInfo: {
@@ -299,17 +300,17 @@ const styles = StyleSheet.create({
   },
 
   chatName: {
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: Typography.subtitle,
+    fontWeight: FontWeight.bold,
   },
 
   chatStatus: {
-    fontSize: 13,
-    color: "#95C159",
+    fontSize: Typography.small,
+    color: Colors.primary,
   },
 
   chatTime: {
-    fontSize: 11,
+    fontSize: Typography.footnote,
     color: "#AAA",
   },
 });

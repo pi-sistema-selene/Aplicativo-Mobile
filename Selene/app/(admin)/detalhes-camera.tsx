@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useEffect, useState, useCallback } from "react";
 import {
   View,
@@ -153,8 +154,8 @@ export default function DetalhesCamera() {
           { justifyContent: "center", alignItems: "center" },
         ]}
       >
-        <ActivityIndicator size="large" color="#2A3A56" />
-        <Text style={{ marginTop: 10, color: "#2A3A56", fontWeight: "bold" }}>
+        <ActivityIndicator size="large" color={Colors.text} />
+        <Text style={{ marginTop: 10, color: Colors.text, fontWeight: FontWeight.bold }}>
           Carregando capturas...
         </Text>
       </View>
@@ -180,7 +181,7 @@ export default function DetalhesCamera() {
             <TouchableOpacity
               onPress={() => router.push("/(admin)/(tabs)/monitoring")}
             >
-              <Feather name="arrow-left" size={28} color="#2A3A56" />
+              <Feather name="arrow-left" size={28} color={Colors.text} />
             </TouchableOpacity>
             <View style={styles.textContainer}>
               <Text style={styles.welcomeText}>{nome || "Câmera"}</Text>
@@ -209,16 +210,16 @@ export default function DetalhesCamera() {
               <RefreshControl
                 refreshing={refreshing}
                 onRefresh={onRefresh}
-                colors={["#95C159"]}
-                tintColor="#95C159"
+                colors={[Colors.primary]}
+                tintColor={Colors.primary}
               />
             }
           >
             <Text style={styles.panelTitle}>HISTÓRICO DE CAPTURAS</Text>
 
             {leituras.length === 0 ? (
-              <View style={{ alignItems: "center", marginTop: 50 }}>
-                <Feather name="camera-off" size={50} color="#CCC" />
+              <View style={{ alignItems: "center", marginTop: Spacing.panel }}>
+                <Feather name="camera-off" size={50} color={Colors.border} />
                 <Text style={styles.emptyText}>
                   Nenhuma captura disponível.
                 </Text>
@@ -256,7 +257,7 @@ export default function DetalhesCamera() {
                         <Feather
                           name={isAnomalia ? "alert-triangle" : "check-circle"}
                           size={14}
-                          color="#FFF"
+                          color={Colors.white}
                         />
                         <Text style={styles.predicaoText}>
                           {predicao.classe || "—"}
@@ -265,7 +266,7 @@ export default function DetalhesCamera() {
                       </View>
                     )}
                     <View style={styles.imageFooter}>
-                      <Feather name="calendar" size={14} color="#2A3A56" />
+                      <Feather name="calendar" size={14} color={Colors.text} />
                       <Text style={styles.imageDate}>
                         {item.timestamp
                           ? new Date(item.timestamp).toLocaleString("pt-BR")
@@ -289,12 +290,12 @@ export default function DetalhesCamera() {
                 });
               }}
             >
-              <Feather name="edit-2" size={20} color="#FFF" />
+              <Feather name="edit-2" size={20} color={Colors.white} />
               <Text style={styles.editBtnText}>Editar Sensor</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.deleteBtn} onPress={handleExcluir}>
-              <Feather name="trash-2" size={20} color="#FFF" />
+              <Feather name="trash-2" size={20} color={Colors.white} />
               <Text style={styles.deleteBtnText}>Excluir Câmera</Text>
             </TouchableOpacity>
           </ScrollView>
@@ -308,25 +309,25 @@ export default function DetalhesCamera() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
   },
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    paddingHorizontal: 25,
-    paddingTop: 40,
+    paddingHorizontal: Spacing.screen,
+    paddingTop: Spacing.section,
   },
 
 
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 30,
+    paddingBottom: Spacing.xxl,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
   header: {
     flexDirection: "row",
@@ -336,16 +337,16 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    marginLeft: 20,
+    marginLeft: Spacing.lg,
   },
   welcomeText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.pageTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
   subwelcomeText: {
-    fontSize: 14,
-    color: "#2A3A56",
+    fontSize: Typography.body,
+    color: Colors.text,
     opacity: 0.8,
   },
 
@@ -354,32 +355,32 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
   },
   avatarText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.subtitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
 
 
   panelTitle: {
-    fontSize: 18,
-    fontWeight: "900",
-    color: "#2A3A56",
-    marginBottom: 20,
+    fontSize: Typography.sectionTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
+    marginBottom: Spacing.lg,
     letterSpacing: 1,
     textAlign: "center",
   },
   imageCard: {
-    marginBottom: 25,
-    backgroundColor: "#F9F9F9",
-    borderRadius: 20,
+    marginBottom: Spacing.cardGap,
+    backgroundColor: Colors.surfaceSubtle,
+    borderRadius: Radius.card,
     overflow: "hidden",
     elevation: 2,
-    shadowColor: "#000",
+    shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -387,74 +388,74 @@ const styles = StyleSheet.create({
   capturedImage: {
     width: "100%",
     height: 280,
-    backgroundColor: "#EEE",
+    backgroundColor: Colors.borderSubtle,
   },
   predicaoBadge: {
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: Spacing.xs,
   },
   predicaoAnomalia: {
-    backgroundColor: "#E74C3C",
+    backgroundColor: Colors.danger,
   },
   predicaoSaudavel: {
     backgroundColor: "#27AE60",
   },
   predicaoText: {
-    color: "#FFF",
-    fontSize: 13,
-    fontWeight: "700",
+    color: Colors.white,
+    fontSize: Typography.small,
+    fontWeight: FontWeight.bold,
     textTransform: "capitalize",
   },
   imageFooter: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 12,
-    gap: 8,
+    padding: Spacing.sm,
+    gap: Spacing.xs,
   },
   imageDate: {
-    color: "#2A3A56",
-    fontSize: 14,
-    fontWeight: "600",
+    color: Colors.text,
+    fontSize: Typography.body,
+    fontWeight: FontWeight.semibold,
   },
   emptyText: {
     textAlign: "center",
-    color: "#999",
+    color: Colors.mutedLight,
     marginTop: 10,
-    fontSize: 16,
+    fontSize: Typography.subtitle,
   },
 
 
   deleteBtn: {
     flexDirection: "row",
-    backgroundColor: "#FF6666",
+    backgroundColor: Colors.danger,
     height: 55,
-    borderRadius: 20,
+    borderRadius: Radius.xl,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: Spacing.lg,
     gap: 10,
   },
   deleteBtnText: {
-    color: "#FFF",
-    fontWeight: "bold",
-    fontSize: 16,
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontSize: Typography.subtitle,
   },
   editBtn: {
     flexDirection: "row",
     backgroundColor: "#4A90E2",
     height: 55,
-    borderRadius: 20,
+    borderRadius: Radius.xl,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: Spacing.lg,
     gap: 10,
   },
   editBtnText: {
-    color: "#FFF",
-    fontWeight: "bold",
-    fontSize: 16,
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontSize: Typography.subtitle,
   },
 });

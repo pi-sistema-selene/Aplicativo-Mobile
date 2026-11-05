@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/Colors";
 import { Tabs } from "expo-router";
 import { View, StyleSheet, Platform } from "react-native";
 import {
@@ -10,9 +11,9 @@ import {
 const COLORS = {
   active: "#8bc34a",
   inactive: "#9E9E9E",
-  background: "#FFFFFF",
+  background: Colors.white,
   fabActive: "#8bc34a",
-  fabInactive: "#2A3A56", // Um tom escuro para contrastar quando não estiver na home
+  fabInactive: Colors.text, // Um tom escuro para contrastar quando não estiver na home
 };
 
 export default function AdminLayout() {
@@ -64,7 +65,7 @@ export default function AdminLayout() {
                   },
                 ]}
               >
-                <Ionicons name="pie-chart" size={28} color="#FFFFFF" />
+                <Ionicons name="pie-chart" size={28} color={Colors.white} />
               </View>
             </View>
           ),
@@ -108,7 +109,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    shadowColor: "#000",
+    shadowColor: Colors.black,
     shadowOffset: { width: 0, height: -4 },
     shadowOpacity: 0.08,
     shadowRadius: 12,
@@ -135,7 +136,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 4,
-    borderColor: "#FFFFFF",
+    borderColor: Colors.white,
     shadowColor: COLORS.fabActive,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,

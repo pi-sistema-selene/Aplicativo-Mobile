@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useState, useEffect, useMemo } from "react";
 import {
   View,
@@ -13,7 +14,6 @@ import { Feather, MaterialIcons, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
-import { IMAGES } from "@/constants/images";
 import { useUserInitials } from "@/hooks/useUserInitials";
 import { getMeusDispositivos, getLeituras } from "@/services/dispositivoService";
 import {
@@ -27,8 +27,8 @@ import type { AlertaItem } from "@/types/alerta";
 interface AnaliseItem {
   id: string;
   img: string;
-  data: string;
-  local: string;
+  data?: string;
+  local?: string;
 }
 
 export default function AlertasScreen() {
@@ -68,40 +68,27 @@ export default function AlertasScreen() {
               });
             }
 
+            const imagem = leitura.dados?.foto_path || leitura.dados?.foto;
             if (
-              (leitura.tipo_leitura === "CAMERA" || leitura.dados?.foto_path) &&
+              leitura.tipo_leitura === "CAMERA" &&
+              imagem?.trim() &&
               listaAnalisesGeradas.length < 10
             ) {
+              const dataLeitura = leitura.createdAt || leitura.timestamp;
+              const local = [dispositivo.nome, leitura.dados?.setor]
+                .filter(Boolean)
+                .join(" - ");
+
               listaAnalisesGeradas.push({
                 id: leitura._id || `${dispositivo._id}_cam_${index}`,
-                img:
-                  leitura.dados?.foto_path ||
-                  leitura.dados?.foto ||
-                  IMAGES.placeholderGreenhouse,
-                data: leitura.createdAt
-                  ? `${formatDateBR(leitura.createdAt)}, ${formatTimeBR(leitura.createdAt)}`
-                  : "Data indisponível",
-                local: `${dispositivo.nome || "Estufa"} - ${leitura.dados?.setor || "Setor B"}`,
+                img: imagem,
+                data: dataLeitura
+                  ? `${formatDateBR(dataLeitura)}, ${formatTimeBR(dataLeitura)}`
+                  : undefined,
+                local: local || undefined,
               });
             }
           });
-        }
-
-        if (listaAnalisesGeradas.length === 0) {
-          listaAnalisesGeradas.push(
-            {
-              id: "mock1",
-              img: IMAGES.placeholderGreenhouse,
-              data: "05 de outubro, 16:25",
-              local: "Estufa 2 - Setor B",
-            },
-            {
-              id: "mock2",
-              img: IMAGES.placeholderGreenhouse2,
-              data: "05 de outubro, 12:15",
-              local: "Estufa 5 - Setor A",
-            },
-          );
         }
 
         setAlertas(listaAlertasGerados);
@@ -133,7 +120,7 @@ export default function AlertasScreen() {
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
-              <Feather name="arrow-left" size={26} color="#1E2E4A" />
+              <Feather name="arrow-left" size={26} color={Colors.textAlt} />
             </TouchableOpacity>
             <View style={styles.textContainer}>
               <Text style={styles.welcomeText}>Alertas</Text>
@@ -145,7 +132,7 @@ export default function AlertasScreen() {
                 <Text style={styles.avatarText}>{iniciais}</Text>
               </TouchableOpacity>
               <TouchableOpacity>
-                <Feather name="bell" size={24} color="#1E2E4A" />
+                <Feather name="bell" size={24} color={Colors.textAlt} />
                 {countAlta > 0 && <View style={styles.badgeNotificacaoVermelha} />}
               </TouchableOpacity>
             </View>
@@ -156,11 +143,11 @@ export default function AlertasScreen() {
         <View style={styles.content}>
           {loading ? (
             <View style={styles.loadingCenter}>
-              <ActivityIndicator size="large" color="#94C11F" />
+              <ActivityIndicator size="large" color={Colors.loading} />
               <Text style={styles.loadingText}>Buscando anomalias registradas...</Text>
             </View>
           ) : (
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: Spacing.section }}>
 
 
               <View style={styles.filterContainer}>
@@ -204,7 +191,7 @@ export default function AlertasScreen() {
 
               {alertasFiltrados.length === 0 ? (
                 <View style={styles.emptyContainer}>
-                  <MaterialIcons name="check-circle-outline" size={48} color="#94C11F" />
+                  <MaterialIcons name="check-circle-outline" size={48} color={Colors.loading} />
                   <Text style={styles.emptyText}>Nenhuma irregularidade para este filtro.</Text>
                 </View>
               ) : (
@@ -250,7 +237,7 @@ function AlertaCard({ titulo, sub, estufa, tempo, prioridade, corPrioridade, tip
           <Ionicons
             name={tipo === "risco" ? "close-circle-outline" : "warning-outline"}
             size={22}
-            color={isAlta ? "#EF4444" : "#F59E0B"}
+            color={isAlta ? Colors.alertHigh : Colors.alertMedium}
           />
         </View>
 
@@ -275,26 +262,30 @@ function AnaliseCard({ img, data, local }: any) {
     <View style={styles.analiseCard}>
       <Image source={{ uri: img }} style={styles.capturedImage} />
       <View style={styles.cardInfoContainer}>
-        <View style={styles.infoRow}>
-          <Feather name="calendar" size={12} color="#7E8B9B" />
-          <Text style={styles.imageDate} numberOfLines={1}>{data}</Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Feather name="map-pin" size={12} color="#7E8B9B" />
-          <Text style={styles.imageDate} numberOfLines={1}>{local}</Text>
-        </View>
+        {data && (
+          <View style={styles.infoRow}>
+            <Feather name="calendar" size={12} color={Colors.textMuted} />
+            <Text style={styles.imageDate} numberOfLines={1}>{data}</Text>
+          </View>
+        )}
+        {local && (
+          <View style={styles.infoRow}>
+            <Feather name="map-pin" size={12} color={Colors.textMuted} />
+            <Text style={styles.imageDate} numberOfLines={1}>{local}</Text>
+          </View>
+        )}
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#95C159" },
+  container: { flex: 1, backgroundColor: Colors.primary },
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     paddingBottom: 45,
     paddingTop: 15,
-    paddingHorizontal: 25,
+    paddingHorizontal: Spacing.screen,
   },
   header: {
     flexDirection: "row",
@@ -302,18 +293,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   textContainer: { flex: 1, marginLeft: 15 },
-  welcomeText: { fontSize: 24, fontWeight: "bold", color: "#1E2E4A" },
-  subwelcomeText: { fontSize: 14, color: "#1E2E4A", opacity: 0.8, marginTop: 1 },
+  welcomeText: { fontSize: Typography.pageTitle, fontWeight: FontWeight.bold, color: Colors.textAlt },
+  subwelcomeText: { fontSize: Typography.body, color: Colors.textAlt, opacity: 0.8, marginTop: 1 },
   headerIcons: { flexDirection: "row", alignItems: "center", gap: 15 },
   avatarCircle: {
     width: 40,
     height: 40,
-    borderRadius: 20,
-    backgroundColor: "#FFF",
+    borderRadius: Radius.xl,
+    backgroundColor: Colors.white,
     justifyContent: "center",
     alignItems: "center",
   },
-  avatarText: { fontSize: 14, fontWeight: "bold", color: "#1E2E4A" },
+  avatarText: { fontSize: Typography.body, fontWeight: FontWeight.bold, color: Colors.textAlt },
   badgeNotificacaoVermelha: {
     position: "absolute",
     top: -2,
@@ -321,43 +312,43 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "#D9534F",
+    backgroundColor: Colors.alertHighAlt,
   },
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
-    paddingHorizontal: 20,
-    paddingTop: 25,
+    paddingHorizontal: Spacing.screen,
+    paddingTop: Spacing.xl,
     marginTop: -25,
   },
   loadingCenter: { flex: 0.8, justifyContent: "center", alignItems: "center" },
-  loadingText: { marginTop: 12, color: "#1E2E4A", fontSize: 14, fontWeight: "600" },
+  loadingText: { marginTop: Spacing.sm, color: Colors.textAlt, fontSize: Typography.body, fontWeight: FontWeight.semibold },
   filterContainer: {
     flexDirection: "row",
     backgroundColor: "#F1F3F5",
     borderRadius: 14,
-    padding: 4,
-    marginBottom: 25,
-    shadowColor: "#000",
+    padding: Spacing.xxs,
+    marginBottom: Spacing.xl,
+    shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
     elevation: 1,
   },
-  filterTab: { flex: 1, paddingVertical: 8, alignItems: "center", borderRadius: 10 },
-  filterActive: { backgroundColor: "#1E2E4A" },
-  filterText: { color: "#5A6E85", fontSize: 13, fontWeight: "600" },
-  filterTextActive: { color: "#FFF" },
-  emptyContainer: { padding: 40, alignItems: "center" },
-  emptyText: { marginTop: 10, color: "#8A99AD", fontSize: 14, fontWeight: "500" },
+  filterTab: { flex: 1, paddingVertical: Spacing.xs, alignItems: "center", borderRadius: Radius.sm },
+  filterActive: { backgroundColor: Colors.textAlt },
+  filterText: { color: Colors.textMuted, fontSize: Typography.small, fontWeight: FontWeight.semibold },
+  filterTextActive: { color: Colors.white },
+  emptyContainer: { padding: Spacing.section, alignItems: "center" },
+  emptyText: { marginTop: 10, color: "#8A99AD", fontSize: Typography.body, fontWeight: FontWeight.medium },
   alertaCard: {
-    backgroundColor: "#FFF",
-    borderRadius: 30,
-    padding: 20,
-    marginBottom: 20,
-    shadowColor: "#000",
+    padding: Spacing.card,
+    backgroundColor: Colors.white,
+    borderRadius: Radius.card,
+    marginBottom: Spacing.cardGap,
+    shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.12,
     shadowRadius: 15,
@@ -370,36 +361,36 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 12,
+    marginRight: Spacing.sm,
     marginTop: 2,
   },
-  alertaTextColumn: { flex: 1, marginRight: 8 },
-  alertaTitle: { fontSize: 16, fontWeight: "700", color: "#1E2E4A", marginBottom: 4 },
-  alertaSub: { fontSize: 13, color: "#5A6E85", lineHeight: 18, marginBottom: 8 },
-  alertaFooter: { fontSize: 11, color: "#A0AEC0", fontWeight: "500" },
+  alertaTextColumn: { flex: 1, marginRight: Spacing.xs },
+  alertaTitle: { fontSize: Typography.subtitle, fontWeight: FontWeight.bold, color: Colors.textAlt, marginBottom: Spacing.xxs },
+  alertaSub: { fontSize: Typography.small, color: Colors.textMuted, lineHeight: 18, marginBottom: Spacing.xs },
+  alertaFooter: { fontSize: Typography.footnote, color: "#A0AEC0", fontWeight: FontWeight.medium },
   badge: {
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 12,
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: Spacing.xxs,
+    borderRadius: Radius.md,
     alignSelf: "flex-start"
   },
-  badgeText: { color: "#FFF", fontSize: 11, fontWeight: "bold" },
-  panelTitle: { fontSize: 18, fontWeight: "700", color: "#1E2E4A", marginBottom: 15, paddingLeft: 4 },
-  analiseScroll: { paddingLeft: 4, paddingBottom: 15 },
+  badgeText: { color: Colors.white, fontSize: Typography.footnote, fontWeight: FontWeight.bold },
+  panelTitle: { fontSize: Typography.sectionTitle, fontWeight: FontWeight.bold, color: Colors.textAlt, marginBottom: 15, paddingLeft: Spacing.xxs },
+  analiseScroll: { paddingLeft: Spacing.xxs, paddingBottom: 15 },
   analiseCard: {
     width: 200,
-    marginRight: 16,
-    backgroundColor: "#FFF",
-    borderRadius: 24,
+    marginRight: Spacing.md,
+    backgroundColor: Colors.white,
+    borderRadius: Radius.card,
     overflow: "hidden",
-    shadowColor: "#000",
+    shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.1,
     shadowRadius: 12,
     elevation: 4,
   },
   capturedImage: { width: "100%", height: 130, resizeMode: "cover" },
-  cardInfoContainer: { padding: 12, backgroundColor: "#FFF" },
-  infoRow: { flexDirection: "row", alignItems: "center", gap: 6, marginBottom: 4 },
-  imageDate: { color: "#5A6E85", fontSize: 11, fontWeight: "500", flex: 1 },
+  cardInfoContainer: { padding: Spacing.sm, backgroundColor: Colors.white },
+  infoRow: { flexDirection: "row", alignItems: "center", gap: 6, marginBottom: Spacing.xxs },
+  imageDate: { color: Colors.textMuted, fontSize: Typography.footnote, fontWeight: FontWeight.medium, flex: 1 },
 });

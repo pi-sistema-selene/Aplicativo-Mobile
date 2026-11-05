@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useState, useEffect, useRef } from "react";
 import {
   View,
@@ -162,7 +163,7 @@ export default function ChatScreen() {
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
-              <Feather name="arrow-left" size={28} color="#2A3A56" />
+              <Feather name="arrow-left" size={28} color={Colors.text} />
             </TouchableOpacity>
             <View>
               <Text style={styles.welcomeText}>Suporte Online</Text>
@@ -239,7 +240,7 @@ export default function ChatScreen() {
                 style={styles.sendBtn}
                 onPress={handleSendMessage}
               >
-                <Ionicons name="send" size={20} color="#FFF" />
+                <Ionicons name="send" size={20} color={Colors.white} />
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
@@ -250,24 +251,24 @@ export default function ChatScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#95C159" },
+  container: { flex: 1, backgroundColor: Colors.primary },
 
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    padding: 25,
+    padding: Spacing.xl,
   },
 
 
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 30,
+    paddingBottom: Spacing.xxl,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
 
   header: {
@@ -279,14 +280,14 @@ const styles = StyleSheet.create({
   },
 
   welcomeText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.pageTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
 
   subwelcomeText: {
-    fontSize: 14,
-    color: "#2A3A56",
+    fontSize: Typography.body,
+    color: Colors.text,
     opacity: 0.8,
   },
 
@@ -299,51 +300,51 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#E0E0E0",
+    borderColor: Colors.border,
   },
 
   avatarText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.subtitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
 
   avatar: {
     width: 50,
     height: 50,
-    borderRadius: 25,
-    backgroundColor: "#E8F5E9",
+    borderRadius: Radius.xxl,
+    backgroundColor: Colors.greenSoft,
     justifyContent: "center",
     alignItems: "center",
   },
 
   bubble: {
     padding: 10,
-    borderRadius: 15,
+    borderRadius: Radius.lg,
     marginVertical: 5,
     maxWidth: "75%",
   },
 
   bubbleMe: {
     alignSelf: "flex-end",
-    backgroundColor: "#00D2B1",
+    backgroundColor: Colors.accent,
   },
 
   bubbleThem: {
     alignSelf: "flex-start",
-    backgroundColor: "#E8F5E9",
+    backgroundColor: Colors.greenSoft,
   },
 
-  textMe: { color: "#FFF" },
-  textThem: { color: "#000" },
+  textMe: { color: Colors.white },
+  textThem: { color: Colors.black },
 
   timeText: {
-    fontSize: 10,
-    marginTop: 4,
+    fontSize: Typography.tiny,
+    marginTop: Spacing.xxs,
     opacity: 0.6,
     alignSelf: "flex-end",
   },
@@ -351,13 +352,13 @@ const styles = StyleSheet.create({
   dateLabel: {
     alignSelf: "center",
     marginVertical: 10,
-    fontSize: 12,
-    color: "#999",
+    fontSize: Typography.caption,
+    color: Colors.mutedLight,
   },
 
   typingText: {
     fontStyle: "italic",
-    color: "#999",
+    color: Colors.mutedLight,
     marginTop: 10,
   },
 
@@ -369,16 +370,16 @@ const styles = StyleSheet.create({
 
   input: {
     flex: 1,
-    backgroundColor: "#F5F5F5",
-    borderRadius: 20,
+    backgroundColor: Colors.background,
+    borderRadius: Radius.xl,
     paddingHorizontal: 15,
     height: 40,
   },
 
   sendBtn: {
-    backgroundColor: "#00D2B1",
+    backgroundColor: Colors.accent,
     marginLeft: 10,
     padding: 10,
-    borderRadius: 20,
+    borderRadius: Radius.xl,
   },
 });

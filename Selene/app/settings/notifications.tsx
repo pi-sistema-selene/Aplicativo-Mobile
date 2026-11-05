@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -68,8 +69,8 @@ export default function RelatoriosScreen() {
       <Switch
         value={value}
         onValueChange={onToggle}
-        trackColor={{ false: "#D1D1D1", true: "#00D1A0" }}
-        thumbColor="#FFF"
+        trackColor={{ false: "#D1D1D1", true: Colors.accent }}
+        thumbColor={Colors.white}
         ios_backgroundColor="#D1D1D1"
       />
     </View>
@@ -82,7 +83,7 @@ export default function RelatoriosScreen() {
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
-              <Feather name="arrow-left" size={28} color="#2A3A56" />
+              <Feather name="arrow-left" size={28} color={Colors.text} />
             </TouchableOpacity>
             <View>
               <Text style={styles.welcomeText}>Configurações</Text>
@@ -101,8 +102,8 @@ export default function RelatoriosScreen() {
                 <Feather
                   name="bell"
                   size={24}
-                  color="#2A3A56"
-                  style={{ marginLeft: 12 }}
+                  color={Colors.text}
+                  style={{ marginLeft: Spacing.sm }}
                 />
               </TouchableOpacity>
             </View>
@@ -151,15 +152,15 @@ export default function RelatoriosScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#95C159" },
+  container: { flex: 1, backgroundColor: Colors.primary },
 
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 30,
+    paddingBottom: Spacing.xxl,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
 
   header: {
@@ -170,8 +171,8 @@ const styles = StyleSheet.create({
     marginBottom: 1,
   },
 
-  welcomeText: { fontSize: 22, fontWeight: "bold", color: "#2A3A56" },
-  subwelcomeText: { fontSize: 14, color: "#2A3A56", opacity: 0.8 },
+  welcomeText: { fontSize: Typography.pageTitle, fontWeight: FontWeight.bold, color: Colors.text },
+  subwelcomeText: { fontSize: Typography.body, color: Colors.text, opacity: 0.8 },
 
   headerIcons: {
     flexDirection: "row",
@@ -183,25 +184,25 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#E0E0E0",
+    borderColor: Colors.border,
   },
 
-  avatarText: { fontSize: 16, fontWeight: "bold", color: "#2A3A56" },
+  avatarText: { fontSize: Typography.subtitle, fontWeight: FontWeight.bold, color: Colors.text },
 
   contentCard: {
+    padding: Spacing.card,
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     marginTop: -30,
-    marginHorizontal: 20,
-    marginBottom: 20, // Margem inferior para não colar na borda
-    borderRadius: 30,
-    padding: 25,
+    marginHorizontal: Spacing.lg,
+    marginBottom: Spacing.cardGap, // Margem inferior para não colar na borda
+    borderRadius: Radius.card,
     elevation: 4,
-    shadowColor: "#000",
+    shadowColor: Colors.black,
     shadowOpacity: 0.1,
     shadowRadius: 10,
   },
@@ -210,23 +211,23 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 25,
-    paddingVertical: 4, // Melhora a área de toque
+    marginBottom: Spacing.xl,
+    paddingVertical: Spacing.xxs, // Melhora a área de toque
   },
-  rowText: { fontSize: 15, color: "#2A3A56", fontWeight: "500" },
+  rowText: { fontSize: Typography.medium, color: Colors.text, fontWeight: FontWeight.medium },
 
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    paddingHorizontal: 25,
-    paddingTop: 30,
+    paddingHorizontal: Spacing.screen,
+    paddingTop: Spacing.xxl,
   },
   sectionTitle: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 20,
-    fontWeight: "600",
+    fontSize: Typography.sectionTitle,
+    color: Colors.muted,
+    marginBottom: Spacing.lg,
+    fontWeight: FontWeight.semibold,
   },
 });

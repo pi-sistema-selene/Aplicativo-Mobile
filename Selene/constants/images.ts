@@ -1,5 +1,4 @@
 export const IMAGES = {
-  placeholderAvatar: "https://i.pravatar.cc/300",
   placeholderGreenhouse:
     "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=400",
   placeholderGreenhouse2:

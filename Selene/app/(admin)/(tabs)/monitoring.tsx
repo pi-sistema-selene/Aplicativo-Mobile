@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -141,17 +142,17 @@ export default function MonitoramentoAdmin() {
             <MaterialCommunityIcons
               name={isCamera ? "camera" : "molecule"}
               size={32}
-              color="#2A3A56"
+              color={Colors.text}
             />
           </View>
           <View style={styles.sensorInfo}>
             <Text style={styles.sensorTitle}>{item.nome}</Text>
             <View style={styles.locationRow}>
-              <Feather name="cpu" size={12} color="#777" />
+              <Feather name="cpu" size={12} color={Colors.mutedLight} />
               <Text style={styles.locationText}>{item.tipo}</Text>
             </View>
             <View style={styles.locationRow}>
-              <Feather name="user" size={12} color="#777" />
+              <Feather name="user" size={12} color={Colors.mutedLight} />
               <Text style={styles.locationText}>{item.criadoPor}</Text>
             </View>
           </View>
@@ -161,7 +162,7 @@ export default function MonitoramentoAdmin() {
                 styles.statusDot,
                 {
                   backgroundColor:
-                    item.status === "Ativo" ? "#66FF66" : "#FF6666",
+                    item.status === "Ativo" ? "#66FF66" : Colors.danger,
                 },
               ]}
             />
@@ -180,7 +181,7 @@ export default function MonitoramentoAdmin() {
             <TouchableOpacity
               onPress={() => router.push("/(admin)/(tabs)/home-admin")}
             >
-              <Feather name="arrow-left" size={28} color="#2A3A56" />
+              <Feather name="arrow-left" size={28} color={Colors.text} />
             </TouchableOpacity>
 
             <View style={styles.textContainer}>
@@ -205,8 +206,8 @@ export default function MonitoramentoAdmin() {
             {loading ? (
               <ActivityIndicator
                 size="large"
-                color="#95C159"
-                style={{ marginTop: 40 }}
+                color={Colors.primary}
+                style={{ marginTop: Spacing.section }}
               />
             ) : (
               <FlatList
@@ -231,7 +232,7 @@ export default function MonitoramentoAdmin() {
               style={styles.floatingAddBtn}
               onPress={() => router.push("/(admin)/sensors")}
             >
-              <Feather name="plus" size={20} color="#2A3A56" />
+              <Feather name="plus" size={20} color={Colors.text} />
               <Text style={styles.floatingAddBtnText}>Novo Sensor</Text>
             </TouchableOpacity>
           </View>
@@ -245,28 +246,28 @@ export default function MonitoramentoAdmin() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
   },
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    paddingHorizontal: 25,
-    paddingTop: 40,
+    paddingHorizontal: Spacing.screen,
+    paddingTop: Spacing.section,
   },
   listContent: {
-    paddingBottom: 20,
+    paddingBottom: Spacing.lg,
   },
 
 
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 30,
+    paddingBottom: Spacing.xxl,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
   header: {
     flexDirection: "row",
@@ -281,16 +282,16 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    marginLeft: 20,
+    marginLeft: Spacing.lg,
   },
   welcomeText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.pageTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
   subwelcomeText: {
-    fontSize: 14,
-    color: "#2A3A56",
+    fontSize: Typography.body,
+    color: Colors.text,
     opacity: 0.8,
   },
 
@@ -299,24 +300,24 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
   },
   avatarText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.subtitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
 
 
   sensorCard: {
+    padding: Spacing.card,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#E8F9EE",
-    borderRadius: 20,
-    padding: 15,
-    marginBottom: 15,
+    borderRadius: Radius.card,
+    marginBottom: Spacing.cardGap,
   },
   sensorIconContainer: {
     alignItems: "center",
@@ -327,19 +328,19 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   sensorTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.heading,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
   locationRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
-    marginTop: 4,
+    gap: Spacing.xxs,
+    marginTop: Spacing.xxs,
   },
   locationText: {
-    fontSize: 13,
-    color: "#777",
+    fontSize: Typography.small,
+    color: Colors.mutedLight,
   },
   statusRow: {
     flexDirection: "row",
@@ -352,8 +353,8 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   statusLabel: {
-    fontSize: 13,
-    color: "#2A3A56",
+    fontSize: Typography.small,
+    color: Colors.text,
   },
 
 
@@ -368,19 +369,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#F2F2F2",
-    paddingVertical: 12,
-    paddingHorizontal: 25,
-    borderRadius: 25,
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.xl,
+    borderRadius: Radius.xxl,
     elevation: 3,
-    shadowColor: "#000",
+    shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
   },
   floatingAddBtnText: {
-    marginLeft: 8,
-    color: "#2A3A56",
-    fontWeight: "bold",
-    fontSize: 16,
+    marginLeft: Spacing.xs,
+    color: Colors.text,
+    fontWeight: FontWeight.bold,
+    fontSize: Typography.subtitle,
   },
 });

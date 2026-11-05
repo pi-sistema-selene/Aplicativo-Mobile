@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -88,7 +89,7 @@ export default function EstufasScreen() {
     >
       <View style={styles.card}>
         <View style={styles.iconContainer}>
-          <MaterialCommunityIcons name="greenhouse" size={28} color="#00D2B1" />
+          <MaterialCommunityIcons name="greenhouse" size={28} color={Colors.accent} />
         </View>
 
         <View style={styles.infoContainer}>
@@ -131,8 +132,8 @@ export default function EstufasScreen() {
                 <Feather
                   name="bell"
                   size={24}
-                  color="#2A3A56"
-                  style={{ marginLeft: 12 }}
+                  color={Colors.text}
+                  style={{ marginLeft: Spacing.sm }}
                 />
               </TouchableOpacity>
             </View>
@@ -143,7 +144,7 @@ export default function EstufasScreen() {
         <View style={styles.content}>
           {loadingEstufas ? (
             <View style={styles.center}>
-              <ActivityIndicator size="large" color="#95C159" />
+              <ActivityIndicator size="large" color={Colors.primary} />
             </View>
           ) : (
             <>
@@ -176,7 +177,7 @@ export default function EstufasScreen() {
                   <View style={styles.listHeader}>
                     <Text style={styles.monthTitle}>Registros</Text>
                     <TouchableOpacity onPress={fetchEstufas}>
-                      <Feather name="refresh-cw" size={18} color="#00D2B1" />
+                      <Feather name="refresh-cw" size={18} color={Colors.accent} />
                     </TouchableOpacity>
                   </View>
                 )}
@@ -197,16 +198,16 @@ export default function EstufasScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#95C159" },
+  container: { flex: 1, backgroundColor: Colors.primary },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
 
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 30,
+    paddingBottom: Spacing.xxl,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
 
   header: {
@@ -217,8 +218,8 @@ const styles = StyleSheet.create({
     marginBottom: 1,
   },
 
-  welcomeText: { fontSize: 22, fontWeight: "bold", color: "#2A3A56" },
-  subwelcomeText: { fontSize: 14, color: "#2A3A56", opacity: 0.8 },
+  welcomeText: { fontSize: Typography.pageTitle, fontWeight: FontWeight.bold, color: Colors.text },
+  subwelcomeText: { fontSize: Typography.body, color: Colors.text, opacity: 0.8 },
 
   headerIcons: {
     flexDirection: "row",
@@ -230,22 +231,22 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#E0E0E0",
+    borderColor: Colors.border,
   },
 
-  avatarText: { fontSize: 16, fontWeight: "bold", color: "#2A3A56" },
+  avatarText: { fontSize: Typography.subtitle, fontWeight: FontWeight.bold, color: Colors.text },
 
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    paddingHorizontal: 25,
-    paddingTop: 30,
+    paddingHorizontal: Spacing.screen,
+    paddingTop: Spacing.xxl,
   },
 
   statsSummary: {
@@ -253,13 +254,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#F0F9F7",
-    paddingVertical: 12,
-    borderRadius: 20,
-    marginBottom: 20,
+    paddingVertical: Spacing.sm,
+    borderRadius: Radius.xl,
+    marginBottom: Spacing.lg,
   },
 
-  statsText: { fontSize: 13, color: "#2A3A56" },
-  statsValue: { fontWeight: "bold", fontSize: 15 },
+  statsText: { fontSize: Typography.small, color: Colors.text },
+  statsValue: { fontWeight: FontWeight.bold, fontSize: Typography.medium },
   statsDivider: {
     width: 1,
     height: 15,
@@ -273,15 +274,15 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
 
-  monthTitle: { fontSize: 16, fontWeight: "bold", color: "#2A3A56" },
+  monthTitle: { fontSize: Typography.subtitle, fontWeight: FontWeight.bold, color: Colors.text },
 
   card: {
+    padding: Spacing.card,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFF",
-    padding: 15,
-    borderRadius: 22,
-    marginBottom: 12,
+    backgroundColor: Colors.white,
+    borderRadius: Radius.card,
+    marginBottom: Spacing.cardGap,
     elevation: 3,
   },
 
@@ -296,19 +297,19 @@ const styles = StyleSheet.create({
 
   infoContainer: { flex: 1, marginLeft: 15 },
 
-  estufaNome: { fontSize: 16, fontWeight: "bold", color: "#2A3A56" },
-  estufaData: { fontSize: 12, color: "#007AFF" },
+  estufaNome: { fontSize: Typography.subtitle, fontWeight: FontWeight.bold, color: Colors.text },
+  estufaData: { fontSize: Typography.caption, color: Colors.info },
 
   statusBadge: {
-    paddingVertical: 8,
+    paddingVertical: Spacing.xs,
     paddingHorizontal: 18,
-    borderRadius: 20,
+    borderRadius: Radius.xl,
   },
 
-  statusBaixo: { backgroundColor: "#95C159" },
+  statusBaixo: { backgroundColor: Colors.primary },
   statusMedio: { backgroundColor: "#A5A5A5" },
 
-  statusText: { color: "#FFF", fontWeight: "bold" },
+  statusText: { color: Colors.white, fontWeight: FontWeight.bold },
 
   btnNovaEstufa: {
     position: "absolute",
@@ -316,15 +317,15 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     backgroundColor: "#D1FFD7",
     paddingVertical: 14,
-    paddingHorizontal: 40,
-    borderRadius: 25,
+    paddingHorizontal: Spacing.section,
+    borderRadius: Radius.xxl,
   },
 
-  btnText: { color: "#2A3A56", fontWeight: "bold" },
+  btnText: { color: Colors.text, fontWeight: FontWeight.bold },
 
   emptyText: {
     textAlign: "center",
-    color: "#999",
-    marginTop: 40,
+    color: Colors.mutedLight,
+    marginTop: Spacing.section,
   },
 });

@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -34,6 +35,7 @@ export default function EditProfileScreen() {
 
   const [idExibicao, setIdExibicao] = useState("00000000");
   const [iniciais, setIniciais] = useState("US");
+  const [fotoUri, setFotoUri] = useState<string | null>(null);
 
 
   useEffect(() => {
@@ -153,7 +155,7 @@ export default function EditProfileScreen() {
           },
         ]}
       >
-        <ActivityIndicator size="large" color="#FFF" />
+        <ActivityIndicator size="large" color={Colors.white} />
       </View>
     );
   }
@@ -165,7 +167,7 @@ export default function EditProfileScreen() {
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
-              <Feather name="arrow-left" size={28} color="#2A3A56" />
+              <Feather name="arrow-left" size={28} color={Colors.text} />
             </TouchableOpacity>
 
             <View style={styles.textContainer}>
@@ -184,12 +186,16 @@ export default function EditProfileScreen() {
         <View style={styles.content}>
           <View style={styles.imageContainer}>
             <Image
-              source="https://i.pravatar.cc/300"
+              source={
+                fotoUri
+                  ? { uri: fotoUri }
+                  : require("../../assets/images/user-icon.png")
+              }
               style={styles.profileImage}
             />
 
             <TouchableOpacity style={styles.cameraBtn}>
-              <Ionicons name="camera" size={20} color="#FFF" />
+              <Ionicons name="camera" size={20} color={Colors.white} />
             </TouchableOpacity>
           </View>
 
@@ -254,7 +260,7 @@ export default function EditProfileScreen() {
                   onValueChange={setNotificacoes}
                   trackColor={{
                     false: "#767577",
-                    true: "#00D1A0",
+                    true: Colors.accent,
                   }}
                 />
               </View>
@@ -267,7 +273,7 @@ export default function EditProfileScreen() {
                   onValueChange={setSalvarLogin}
                   trackColor={{
                     false: "#767577",
-                    true: "#00D1A0",
+                    true: Colors.accent,
                   }}
                 />
               </View>
@@ -279,7 +285,7 @@ export default function EditProfileScreen() {
                 disabled={saving}
               >
                 {saving ? (
-                  <ActivityIndicator color="#FFF" />
+                  <ActivityIndicator color={Colors.white} />
                 ) : (
                   <Text style={styles.saveBtnText}>Salvar Alterações</Text>
                 )}
@@ -296,25 +302,25 @@ export default function EditProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
   },
 
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    paddingHorizontal: 25,
+    paddingHorizontal: Spacing.screen,
     paddingTop: 80,
   },
 
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
     paddingBottom: 60,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
 
   header: {
@@ -332,21 +338,21 @@ const styles = StyleSheet.create({
 
   textContainer: {
     flex: 1,
-    marginLeft: 20,
+    marginLeft: Spacing.lg,
     justifyContent: "center",
   },
 
   welcomeText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.pageTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
 
   imageContainer: {
     position: "absolute",
     top: -60,
     alignSelf: "center",
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     padding: 5,
     borderRadius: 65,
   },
@@ -361,74 +367,74 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 5,
     right: 5,
-    backgroundColor: "#00D1A0",
+    backgroundColor: Colors.accent,
     width: 34,
     height: 34,
     borderRadius: 17,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 2,
-    borderColor: "#FFF",
+    borderColor: Colors.white,
   },
 
   avatarCircle: {
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#E0E0E0",
+    borderColor: Colors.border,
   },
 
   avatarText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.subtitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
 
   userName: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.title,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
     textAlign: "center",
   },
 
   userId: {
-    fontSize: 14,
-    color: "#2A3A56",
+    fontSize: Typography.body,
+    color: Colors.text,
     textAlign: "center",
     opacity: 0.6,
-    marginBottom: 20,
+    marginBottom: Spacing.lg,
   },
 
   sectionTitle: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 20,
-    fontWeight: "600",
+    fontSize: Typography.sectionTitle,
+    color: Colors.muted,
+    marginBottom: Spacing.lg,
+    fontWeight: FontWeight.semibold,
   },
 
   label: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: "#2A3A56",
-    marginBottom: 8,
+    fontSize: Typography.body,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
+    marginBottom: Spacing.xs,
   },
 
   input: {
-    backgroundColor: "#E8F5E9",
-    borderRadius: 12,
+    backgroundColor: Colors.greenSoft,
+    borderRadius: Radius.md,
     minHeight: 45,
     paddingHorizontal: 15,
-    marginBottom: 20,
-    color: "#2A3A56",
+    marginBottom: Spacing.lg,
+    color: Colors.text,
   },
 
   textArea: {
     height: 100,
-    paddingTop: 12,
+    paddingTop: Spacing.sm,
     textAlignVertical: "top",
   },
 
@@ -440,18 +446,18 @@ const styles = StyleSheet.create({
   },
 
   saveBtn: {
-    backgroundColor: "#00D1A0",
+    backgroundColor: Colors.accent,
     height: 50,
-    borderRadius: 25,
+    borderRadius: Radius.xxl,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 10,
-    marginBottom: 30,
+    marginBottom: Spacing.xxl,
   },
 
   saveBtnText: {
-    color: "#FFF",
-    fontWeight: "bold",
-    fontSize: 16,
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontSize: Typography.subtitle,
   },
 });

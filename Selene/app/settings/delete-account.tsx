@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -70,7 +71,7 @@ export default function DeleteAccountScreen() {
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
-              <Feather name="arrow-left" size={28} color="#2A3A56" />
+              <Feather name="arrow-left" size={28} color={Colors.text} />
             </TouchableOpacity>
             <View>
               <Text style={styles.welcomeText}>Configurações</Text>
@@ -89,8 +90,8 @@ export default function DeleteAccountScreen() {
                 <Feather
                   name="bell"
                   size={24}
-                  color="#2A3A56"
-                  style={{ marginLeft: 12 }}
+                  color={Colors.text}
+                  style={{ marginLeft: Spacing.sm }}
                 />
               </TouchableOpacity>
             </View>
@@ -100,7 +101,7 @@ export default function DeleteAccountScreen() {
 
         <ScrollView
           style={styles.content}
-          contentContainerStyle={{ paddingBottom: 30 }}
+          contentContainerStyle={{ paddingBottom: Spacing.xxl }}
           showsVerticalScrollIndicator={false}
         >
           <Text style={styles.warningTitle}>
@@ -138,13 +139,13 @@ export default function DeleteAccountScreen() {
               style={styles.input}
               value={password}
               onChangeText={setPassword}
-              placeholderTextColor="#A0A0A0"
+              placeholderTextColor={Colors.progressText}
             />
             <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
               <Ionicons
                 name={showPassword ? "eye-off-outline" : "eye-outline"}
                 size={20}
-                color="#00D1A0"
+                color={Colors.accent}
               />
             </TouchableOpacity>
           </View>
@@ -167,15 +168,15 @@ export default function DeleteAccountScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#95C159" },
+  container: { flex: 1, backgroundColor: Colors.primary },
 
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 30,
+    paddingBottom: Spacing.xxl,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
 
   header: {
@@ -186,8 +187,8 @@ const styles = StyleSheet.create({
     marginBottom: 1,
   },
 
-  welcomeText: { fontSize: 22, fontWeight: "bold", color: "#2A3A56" },
-  subwelcomeText: { fontSize: 14, color: "#2A3A56", opacity: 0.8 },
+  welcomeText: { fontSize: Typography.pageTitle, fontWeight: FontWeight.bold, color: Colors.text },
+  subwelcomeText: { fontSize: Typography.body, color: Colors.text, opacity: 0.8 },
 
   headerIcons: {
     flexDirection: "row",
@@ -199,56 +200,56 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#E0E0E0",
+    borderColor: Colors.border,
   },
 
-  avatarText: { fontSize: 16, fontWeight: "bold", color: "#2A3A56" },
+  avatarText: { fontSize: Typography.subtitle, fontWeight: FontWeight.bold, color: Colors.text },
 
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    paddingHorizontal: 25,
-    paddingTop: 30,
+    paddingHorizontal: Spacing.screen,
+    paddingTop: Spacing.xxl,
   },
   sectionTitle: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 20,
-    fontWeight: "600",
+    fontSize: Typography.sectionTitle,
+    color: Colors.muted,
+    marginBottom: Spacing.lg,
+    fontWeight: FontWeight.semibold,
   },
 
   warningTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.subtitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: Spacing.lg,
   },
 
   infoBox: {
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     padding: 15,
-    borderRadius: 15,
-    marginBottom: 25,
+    borderRadius: Radius.lg,
+    marginBottom: Spacing.xl,
   },
   infoText: {
-    fontSize: 13,
-    color: "#2A3A56",
+    fontSize: Typography.small,
+    color: Colors.text,
     marginBottom: 10,
     lineHeight: 18,
   },
-  bullet: { fontSize: 12, color: "#2A3A56", marginBottom: 5, paddingLeft: 5 },
+  bullet: { fontSize: Typography.caption, color: Colors.text, marginBottom: 5, paddingLeft: 5 },
 
   confirmLabel: {
-    fontSize: 13,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.small,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
     textAlign: "center",
     marginBottom: 15,
   },
@@ -256,30 +257,30 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#EDFCED",
-    borderRadius: 15,
+    backgroundColor: Colors.avatarBg,
+    borderRadius: Radius.lg,
     paddingHorizontal: 15,
     height: 50,
-    marginBottom: 20,
+    marginBottom: Spacing.lg,
   },
-  input: { flex: 1, color: "#2A3A56" },
+  input: { flex: 1, color: Colors.text },
 
   confirmButton: {
-    backgroundColor: "#00D1A0",
+    backgroundColor: Colors.accent,
     height: 50,
-    borderRadius: 25,
+    borderRadius: Radius.xxl,
     justifyContent: "center",
     alignItems: "center",
   },
-  btnText: { color: "#FFF", fontWeight: "bold" },
+  btnText: { color: Colors.white, fontWeight: FontWeight.bold },
 
   cancelButton: {
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     height: 50,
-    borderRadius: 25,
+    borderRadius: Radius.xxl,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 10,
   },
-  cancelText: { color: "#2A3A56", fontWeight: "bold" },
+  cancelText: { color: Colors.text, fontWeight: FontWeight.bold },
 });

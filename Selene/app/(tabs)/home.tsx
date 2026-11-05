@@ -13,7 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
-import { Colors } from "@/constants/Colors";
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import { useUserInitials } from "@/hooks/useUserInitials";
 import {
   getMeusDispositivos,
@@ -154,7 +154,7 @@ export default function HomeScreen() {
             <View style={styles.header}>
               <View>
                 {loading || loadingUser ? (
-                  <ActivityIndicator size="small" color="#2A3A56" />
+                  <ActivityIndicator size="small" color={Colors.text} />
                 ) : (
                   <>
                     <Text style={styles.welcomeText}>Olá, {nomeUsuario}</Text>
@@ -177,8 +177,8 @@ export default function HomeScreen() {
                   <Feather
                     name="bell"
                     size={24}
-                    color="#2A3A56"
-                    style={{ marginLeft: 12 }}
+                    color={Colors.text}
+                    style={{ marginLeft: Spacing.sm }}
                   />
                 </TouchableOpacity>
               </View>
@@ -190,7 +190,7 @@ export default function HomeScreen() {
                   <Ionicons
                     name="document-text-outline"
                     size={20}
-                    color="#2A3A56"
+                    color={Colors.text}
                   />
                   <Text style={styles.resumoLabel}>Total Detecções</Text>
                 </View>
@@ -199,10 +199,10 @@ export default function HomeScreen() {
               <View style={styles.verticalDivider} />
               <View style={styles.resumoItem}>
                 <View style={styles.resumoHeader}>
-                  <Ionicons name="warning-outline" size={20} color="#2A3A56" />
+                  <Ionicons name="warning-outline" size={20} color={Colors.text} />
                   <Text style={styles.resumoLabel}>Total Análises</Text>
                 </View>
-                <Text style={[styles.resumoValue, { color: "#2A3A56" }]}>
+                <Text style={[styles.resumoValue, { color: Colors.text }]}>
                   {totalDadosSensor}
                 </Text>
               </View>
@@ -219,7 +219,7 @@ export default function HomeScreen() {
               <Ionicons
                 name="checkmark-circle-outline"
                 size={20}
-                color="#2A3A56"
+                color={Colors.text}
               />
               <Text style={styles.progressDescriptionText}>
                 {porcentagem}% De Detecções
@@ -234,7 +234,7 @@ export default function HomeScreen() {
             <MaterialCommunityIcons
               name="view-dashboard-outline"
               size={24}
-              color="#2A3A56"
+              color={Colors.text}
             />
             <Text style={styles.sectionTitle}>Visão Geral</Text>
           </View>
@@ -244,7 +244,7 @@ export default function HomeScreen() {
               <MaterialCommunityIcons
                 name="thermometer"
                 size={16}
-                color="#2A3A56"
+                color={Colors.text}
               />,
               "Temp.",
               ultimaLeitura?.dados?.temperatura != null
@@ -255,7 +255,7 @@ export default function HomeScreen() {
               <MaterialCommunityIcons
                 name="water-percent"
                 size={16}
-                color="#2A3A56"
+                color={Colors.text}
               />,
               "Umid.",
               ultimaLeitura?.dados?.umidade != null
@@ -263,7 +263,7 @@ export default function HomeScreen() {
                 : "--",
             )}
             {renderCardGeral(
-              <Ionicons name="partly-sunny" size={16} color="#2A3A56" />,
+              <Ionicons name="partly-sunny" size={16} color={Colors.text} />,
               "Luz",
               ultimaLeitura?.dados?.luminosidade != null
                 ? `${Number(ultimaLeitura.dados.luminosidade).toFixed(0)}`
@@ -272,13 +272,13 @@ export default function HomeScreen() {
           </View>
 
           <View style={[styles.sectionHeaderGeral, { marginBottom: 15 }]}>
-            <Ionicons name="warning-outline" size={24} color="#2A3A56" />
+            <Ionicons name="warning-outline" size={24} color={Colors.text} />
             <Text style={styles.sectionTitle}>Alertas ({alertas.length})</Text>
           </View>
 
           {alertas.length === 0 ? (
             <View style={{ padding: 10, alignItems: "center" }}>
-              <Text style={{ color: "#2A3A56", opacity: 0.6 }}>Nenhuma irregularidade recente pendente.</Text>
+              <Text style={{ color: Colors.text, opacity: 0.6 }}>Nenhuma irregularidade recente pendente.</Text>
             </View>
           ) : (
             alertas.map((alerta) => (
@@ -298,7 +298,7 @@ export default function HomeScreen() {
                           }
                           size={28}
                           color={
-                            alerta.gravidade === "Alta" ? "#EF4444" : "#F59E0B"
+                            alerta.gravidade === "Alta" ? Colors.alertHigh : Colors.alertMedium
                           }
                         />
                       </View>
@@ -314,7 +314,7 @@ export default function HomeScreen() {
                         styles.badgeGravidade,
                         {
                           backgroundColor:
-                            alerta.gravidade === "Alta" ? "#EF4444" : "#F59E0B",
+                            alerta.gravidade === "Alta" ? Colors.alertHigh : Colors.alertMedium,
                         },
                       ]}
                     >
@@ -346,8 +346,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 40,
-    paddingHorizontal: 20,
+    paddingBottom: Spacing.section,
+    paddingHorizontal: Spacing.screen,
   },
   topContent: { flex: 1 },
   header: {
@@ -355,10 +355,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginTop: 10,
-    marginBottom: 40,
+    marginBottom: Spacing.section,
   },
-  welcomeText: { fontSize: 22, fontWeight: "bold", color: Colors.text },
-  subwelcomeText: { fontSize: 14, color: Colors.text, opacity: 0.8 },
+  welcomeText: { fontSize: Typography.pageTitle, fontWeight: FontWeight.bold, color: Colors.text },
+  subwelcomeText: { fontSize: Typography.body, color: Colors.text, opacity: 0.8 },
   headerIcons: { flexDirection: "row", alignItems: "center", gap: 15 },
   avatarCircle: {
     width: 45,
@@ -370,22 +370,22 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.border,
   },
-  avatarText: { fontSize: 16, fontWeight: "bold", color: Colors.text },
+  avatarText: { fontSize: Typography.subtitle, fontWeight: FontWeight.bold, color: Colors.text },
   resumoContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    marginBottom: 25,
+    marginBottom: Spacing.xl,
   },
   resumoItem: { alignItems: "center" },
   resumoHeader: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: Spacing.xs,
     marginBottom: 10,
   },
-  resumoLabel: { fontSize: 14, color: Colors.text, fontWeight: "bold" },
-  resumoValue: { fontSize: 48, fontWeight: "bold", color: Colors.background },
+  resumoLabel: { fontSize: Typography.body, color: Colors.text, fontWeight: FontWeight.bold },
+  resumoValue: { fontSize: Typography.metric, fontWeight: FontWeight.bold, color: Colors.background },
   verticalDivider: {
     width: 1.5,
     height: 60,
@@ -396,7 +396,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: Colors.avatarBg,
-    borderRadius: 15,
+    borderRadius: Radius.lg,
     height: 35,
     padding: 3,
     marginBottom: 10,
@@ -404,48 +404,47 @@ const styles = StyleSheet.create({
   progressBar: {
     backgroundColor: Colors.text,
     height: "100%",
-    borderRadius: 12,
+    borderRadius: Radius.md,
     justifyContent: "center",
     paddingHorizontal: 15,
   },
-  progressText: { color: Colors.white, fontSize: 14, fontWeight: "bold" },
+  progressText: { color: Colors.white, fontSize: Typography.body, fontWeight: FontWeight.bold },
   progressValueText: {
     position: "absolute",
     right: 15,
     color: Colors.progressText,
-    fontSize: 14,
-    fontWeight: "bold",
+    fontSize: Typography.body,
+    fontWeight: FontWeight.bold,
   },
   progressDescriptionRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: Spacing.xs,
     marginLeft: 5,
   },
   progressDescriptionText: {
-    fontSize: 14,
+    fontSize: Typography.body,
     color: Colors.text,
-    fontWeight: "bold",
+    fontWeight: FontWeight.bold,
   },
-  bottomContainer: { paddingHorizontal: 20, paddingTop: 30 },
+  bottomContainer: { paddingHorizontal: Spacing.screen, paddingTop: Spacing.xxl },
   sectionHeaderGeral: {
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-    marginBottom: 20,
+    marginBottom: Spacing.lg,
   },
-  sectionTitle: { fontSize: 18, fontWeight: "bold", color: Colors.text },
+  sectionTitle: { fontSize: Typography.sectionTitle, fontWeight: FontWeight.bold, color: Colors.text },
   cardsGeralContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
     marginBottom: 35,
   },
   cardGeral: {
+    padding: Spacing.cardCompact,
     backgroundColor: Colors.white,
-    borderRadius: 15,
+    borderRadius: Radius.card,
     width: "28%",
-    paddingVertical: 15,
-    paddingHorizontal: 5,
     alignItems: "center",
     elevation: 3,
   },
@@ -455,19 +454,19 @@ const styles = StyleSheet.create({
     gap: 3,
     marginBottom: 10,
   },
-  cardLabelGeral: { fontSize: 9, color: Colors.text, fontWeight: "bold" },
+  cardLabelGeral: { fontSize: Typography.micro, color: Colors.text, fontWeight: FontWeight.bold },
   cardValueGeral: {
-    fontSize: 18,
-    fontWeight: "bold",
+    fontSize: Typography.heading,
+    fontWeight: FontWeight.bold,
     color: Colors.text,
     marginBottom: 5,
   },
-  cardStatusGeral: { fontSize: 10, color: Colors.primary, fontWeight: "bold" },
+  cardStatusGeral: { fontSize: Typography.tiny, color: Colors.primary, fontWeight: FontWeight.bold },
   cardAlerta: {
+    padding: Spacing.card,
     backgroundColor: Colors.white,
-    borderRadius: 15,
-    padding: 15,
-    marginBottom: 15,
+    borderRadius: Radius.card,
+    marginBottom: Spacing.cardGap,
     elevation: 3,
   },
   cardAlertaMain: {
@@ -476,17 +475,17 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     marginBottom: 15,
   },
-  cardAlertaContentRow: { flexDirection: "row", gap: 12, flex: 1 },
+  cardAlertaContentRow: { flexDirection: "row", gap: Spacing.sm, flex: 1 },
   alertaIconContainer: { width: 30, justifyContent: "center" },
   alertaTextContainer: { flex: 1 },
-  alertaTitle: { fontSize: 16, fontWeight: "bold", color: Colors.text },
-  alertaSubtitle: { fontSize: 13, color: Colors.text, opacity: 0.8 },
+  alertaTitle: { fontSize: Typography.subtitle, fontWeight: FontWeight.bold, color: Colors.text },
+  alertaSubtitle: { fontSize: Typography.small, color: Colors.text, opacity: 0.8 },
   badgeGravidade: {
-    borderRadius: 15,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
+    borderRadius: Radius.lg,
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: Spacing.xxs,
   },
-  badgeText: { fontSize: 11, fontWeight: "bold", color: Colors.white },
-  alertaFooter: { flexDirection: "row", gap: 20, marginLeft: 42, opacity: 0.6 },
-  alertaFooterText: { fontSize: 12, color: Colors.text },
+  badgeText: { fontSize: Typography.footnote, fontWeight: FontWeight.bold, color: Colors.white },
+  alertaFooter: { flexDirection: "row", gap: Spacing.lg, marginLeft: 42, opacity: 0.6 },
+  alertaFooterText: { fontSize: Typography.caption, color: Colors.text },
 });

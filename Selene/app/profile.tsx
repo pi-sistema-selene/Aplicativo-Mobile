@@ -14,7 +14,7 @@ import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { IMAGES } from "@/constants/images";
-import { Colors } from "@/constants/Colors";
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import { API_V1, getApiAssetUrl } from "@/constants/api";
 import { useLogout } from "@/hooks/useLogout";
 import { getInitials } from "@/utils/initials";
@@ -82,7 +82,7 @@ export default function ProfileScreen() {
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
-              <Feather name="arrow-left" size={28} color="#2A3A56" />
+              <Feather name="arrow-left" size={28} color={Colors.text} />
             </TouchableOpacity>
             <View style={styles.textContainer}>
               <Text style={styles.welcomeText}>Perfil</Text>
@@ -96,8 +96,8 @@ export default function ProfileScreen() {
                 <Feather
                   name="bell"
                   size={24}
-                  color="#2A3A56"
-                  style={{ marginLeft: 12 }}
+                  color={Colors.text}
+                  style={{ marginLeft: Spacing.sm }}
                 />
               </TouchableOpacity>
             </View>
@@ -110,7 +110,11 @@ export default function ProfileScreen() {
 
           <View style={styles.imageContainer}>
             <Image
-              source={fotoUri || IMAGES.placeholderAvatar}
+              source={
+                fotoUri
+                  ? { uri: fotoUri }
+                  : require("../assets/images/user-icon.png")
+              }
               style={styles.profileImage}
             />
           </View>
@@ -119,8 +123,8 @@ export default function ProfileScreen() {
           {loading ? (
             <ActivityIndicator
               size="large"
-              color="#95C159"
-              style={{ marginTop: 20 }}
+              color={Colors.primary}
+              style={{ marginTop: Spacing.lg }}
             />
           ) : (
             <>
@@ -146,10 +150,10 @@ export default function ProfileScreen() {
                   <View
                     style={[
                       styles.menuIconContainer,
-                      { backgroundColor: "#2A3A56" },
+                      { backgroundColor: Colors.text },
                     ]}
                   >
-                    <Ionicons name="people-outline" size={22} color="#FFF" />
+                    <Ionicons name="people-outline" size={22} color={Colors.white} />
                   </View>
                   <Text style={styles.menuText}>Gerenciar Usuários</Text>
                 </TouchableOpacity>
@@ -161,13 +165,13 @@ export default function ProfileScreen() {
                   <View
                     style={[
                       styles.menuIconContainer,
-                      { backgroundColor: "#2A3A56" },
+                      { backgroundColor: Colors.text },
                     ]}
                   >
                     <Ionicons
                       name="hardware-chip-outline"
                       size={22}
-                      color="#FFF"
+                      color={Colors.white}
                     />
                   </View>
                   <Text style={styles.menuText}>Gerenciar Sensores</Text>
@@ -185,10 +189,10 @@ export default function ProfileScreen() {
               <View
                 style={[
                   styles.menuIconContainer,
-                  { backgroundColor: "#95C159" },
+                  { backgroundColor: Colors.primary },
                 ]}
               >
-                <Ionicons name="person-outline" size={22} color="#FFF" />
+                <Ionicons name="person-outline" size={22} color={Colors.white} />
               </View>
               <Text style={styles.menuText}>Editar Perfil</Text>
             </TouchableOpacity>
@@ -201,13 +205,13 @@ export default function ProfileScreen() {
               <View
                 style={[
                   styles.menuIconContainer,
-                  { backgroundColor: "#95C159" },
+                  { backgroundColor: Colors.primary },
                 ]}
               >
                 <Ionicons
                   name="shield-checkmark-outline"
                   size={22}
-                  color="#FFF"
+                  color={Colors.white}
                 />
               </View>
               <Text style={styles.menuText}>Segurança</Text>
@@ -221,10 +225,10 @@ export default function ProfileScreen() {
               <View
                 style={[
                   styles.menuIconContainer,
-                  { backgroundColor: "#95C159" },
+                  { backgroundColor: Colors.primary },
                 ]}
               >
-                <Ionicons name="headset-outline" size={22} color="#FFF" />
+                <Ionicons name="headset-outline" size={22} color={Colors.white} />
               </View>
               <Text style={styles.menuText}>Suporte</Text>
             </TouchableOpacity>
@@ -237,12 +241,12 @@ export default function ProfileScreen() {
               <View
                 style={[
                   styles.menuIconContainer,
-                  { backgroundColor: "#FF4B4B" },
+                  { backgroundColor: Colors.danger },
                 ]}
               >
-                <MaterialCommunityIcons name="logout" size={22} color="#FFF" />
+                <MaterialCommunityIcons name="logout" size={22} color={Colors.white} />
               </View>
-              <Text style={[styles.menuText, { color: "#FF4B4B" }]}>
+              <Text style={[styles.menuText, { color: Colors.danger }]}>
                 Sair da Conta
               </Text>
             </TouchableOpacity>
@@ -254,14 +258,14 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#95C159" },
+  container: { flex: 1, backgroundColor: Colors.primary },
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
     paddingBottom: 60,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
   header: {
     flexDirection: "row",
@@ -270,35 +274,36 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 1,
   },
-  welcomeText: { fontSize: 22, fontWeight: "bold", color: "#2A3A56" },
-  subwelcomeText: { fontSize: 14, color: "#2A3A56", opacity: 0.8 },
+  welcomeText: { fontSize: Typography.pageTitle, fontWeight: FontWeight.bold, color: Colors.text },
+  subwelcomeText: { fontSize: Typography.body, color: Colors.text, opacity: 0.8 },
   headerIcons: { flexDirection: "row", alignItems: "center", gap: 15 },
   avatarCircle: {
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#E0E0E0",
+    borderColor: Colors.border,
   },
-  avatarText: { fontSize: 16, fontWeight: "bold", color: "#2A3A56" },
+  avatarText: { fontSize: Typography.subtitle, fontWeight: FontWeight.bold, color: Colors.text },
 
   textContainer: {
     flex: 1,
-    marginLeft: 20,
+    marginLeft: Spacing.lg,
     justifyContent: "center",
   },
 
   profileCard: {
+    paddingHorizontal: Spacing.card,
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     marginTop: -40,
-    marginHorizontal: 20,
-    borderRadius: 40,
+    marginHorizontal: Spacing.lg,
+    borderRadius: Radius.card,
     paddingTop: 70,
-    marginBottom: 20,
+    marginBottom: Spacing.cardGap,
     elevation: 5,
   },
 
@@ -306,7 +311,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: -60,
     alignSelf: "center",
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     padding: 5,
     borderRadius: 65,
   },
@@ -318,52 +323,53 @@ const styles = StyleSheet.create({
   },
 
   userName: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.title,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
     textAlign: "center",
   },
 
   userId: {
-    fontSize: 14,
-    color: "#2A3A56",
+    fontSize: Typography.body,
+    color: Colors.text,
     textAlign: "center",
     opacity: 0.6,
-    marginBottom: 25,
+    marginBottom: Spacing.xl,
   },
 
   menuList: {
-    paddingHorizontal: 25,
+    paddingHorizontal: Spacing.xl,
   },
 
   sectionLabel: {
-    fontSize: 12,
-    fontWeight: "bold",
-    color: "#A0A0A0",
+    fontSize: Typography.caption,
+    fontWeight: FontWeight.bold,
+    color: Colors.progressText,
     textTransform: "uppercase",
     marginBottom: 15,
     marginLeft: 5,
   },
 
   menuItem: {
+    padding: Spacing.card,
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 18,
+    marginBottom: Spacing.cardGap,
   },
 
   menuIconContainer: {
     width: 40,
     height: 40,
-    borderRadius: 12,
+    borderRadius: Radius.md,
     justifyContent: "center",
     alignItems: "center",
     marginRight: 15,
   },
 
   menuText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#2A3A56",
+    fontSize: Typography.subtitle,
+    fontWeight: FontWeight.semibold,
+    color: Colors.text,
   },
 
   adminSection: {
@@ -372,22 +378,22 @@ const styles = StyleSheet.create({
 
   divider: {
     height: 1,
-    backgroundColor: "#F0F0F0",
+    backgroundColor: Colors.borderSubtle,
     marginVertical: 15,
   },
 
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    paddingHorizontal: 25,
+    paddingHorizontal: Spacing.screen,
     paddingTop: 80,
   },
   sectionTitle: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 20,
-    fontWeight: "600",
+    fontSize: Typography.sectionTitle,
+    color: Colors.muted,
+    marginBottom: Spacing.lg,
+    fontWeight: FontWeight.semibold,
   },
 });

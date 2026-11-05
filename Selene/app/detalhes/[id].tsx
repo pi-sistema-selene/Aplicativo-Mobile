@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React from 'react';
 import { 
   View, 
@@ -46,7 +47,7 @@ export default function DetalhesEstufaScreen() {
         <View style={styles.topSection}>
           <SafeAreaView edges={['top']} style={styles.headerRow}>
             <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-              <Feather name="arrow-left" size={24} color="#FFF" />
+              <Feather name="arrow-left" size={24} color={Colors.white} />
             </TouchableOpacity>
             
             <Text style={styles.headerTitle}>Visão Detalhada</Text>
@@ -55,7 +56,7 @@ export default function DetalhesEstufaScreen() {
               <View style={styles.profileBadge}>
                 <Text style={styles.profileText}>LB</Text>
               </View>
-              <Feather name="bell" size={24} color="#FFF" style={{ marginLeft: 10 }} />
+              <Feather name="bell" size={24} color={Colors.white} style={{ marginLeft: 10 }} />
             </View>
           </SafeAreaView>
 
@@ -67,14 +68,14 @@ export default function DetalhesEstufaScreen() {
 
           <View style={styles.summaryRow}>
             <View style={styles.summaryCard}>
-              <Feather name="trending-up" size={20} color="#00D2B1" />
+              <Feather name="trending-up" size={20} color={Colors.accent} />
               <Text style={styles.summaryLabel}>Análises</Text>
               <Text style={styles.summaryValue}>90</Text>
             </View>
             <View style={styles.summaryCard}>
-              <Feather name="alert-triangle" size={20} color="#3B82F6" />
+              <Feather name="alert-triangle" size={20} color={Colors.info} />
               <Text style={styles.summaryLabel}>Detecção</Text>
-              <Text style={[styles.summaryValue, { color: '#3B82F6' }]}>56%</Text>
+              <Text style={[styles.summaryValue, { color: Colors.info }]}>56%</Text>
             </View>
           </View>
         </View>
@@ -98,8 +99,8 @@ export default function DetalhesEstufaScreen() {
             <View style={styles.chartHeader}>
               <Text style={styles.chartTitle}>Relatório Estufa #{id || '2'}</Text>
               <View style={styles.chartHeaderIcons}>
-                <Feather name="search" size={20} color="#00D2B1" />
-                <Feather name="calendar" size={20} color="#00D2B1" style={{ marginLeft: 10 }} />
+                <Feather name="search" size={20} color={Colors.accent} />
+                <Feather name="calendar" size={20} color={Colors.accent} style={{ marginLeft: 10 }} />
               </View>
             </View>
             
@@ -110,7 +111,7 @@ export default function DetalhesEstufaScreen() {
                     styles.barInner, 
                     { 
                       height: item.valor, 
-                      backgroundColor: index % 2 === 0 ? '#00D2B1' : '#3B82F6' 
+                      backgroundColor: index % 2 === 0 ? Colors.accent : Colors.info
                     }
                   ]} />
                   <Text style={styles.barLabel}>{item.dia}</Text>
@@ -121,16 +122,16 @@ export default function DetalhesEstufaScreen() {
 
 
           <View style={styles.pieContainer}>
-             <MaterialCommunityIcons name="chart-donut" size={100} color="#00D2B1" />
+             <MaterialCommunityIcons name="chart-donut" size={100} color={Colors.accent} />
              <Text style={styles.pieText}>79% Saudável</Text>
           </View>
 
 
           <View style={styles.sensorGrid}>
-            {renderCardSensor('Temp.', '21° C', <MaterialCommunityIcons name="thermometer" size={18} color="#FFF" />)}
-            {renderCardSensor('Umid.', '50%', <MaterialCommunityIcons name="water-percent" size={18} color="#FFF" />)}
-            {renderCardSensor('Luz', '10H', <Feather name="sun" size={18} color="#FFF" />)}
-            {renderCardSensor('CO2', '40', <MaterialCommunityIcons name="molecule-co2" size={18} color="#FFF" />)}
+            {renderCardSensor('Temp.', '21° C', <MaterialCommunityIcons name="thermometer" size={18} color={Colors.white} />)}
+            {renderCardSensor('Umid.', '50%', <MaterialCommunityIcons name="water-percent" size={18} color={Colors.white} />)}
+            {renderCardSensor('Luz', '10H', <Feather name="sun" size={18} color={Colors.white} />)}
+            {renderCardSensor('CO2', '40', <MaterialCommunityIcons name="molecule-co2" size={18} color={Colors.white} />)}
           </View>
         </View>
 
@@ -141,10 +142,10 @@ export default function DetalhesEstufaScreen() {
 }
 
 const styles = StyleSheet.create({
-  mainContainer: { flex: 1, backgroundColor: '#FFF' },
+  mainContainer: { flex: 1, backgroundColor: Colors.white },
   
   topSection: { 
-    backgroundColor: '#95C159', 
+    backgroundColor: Colors.primary,
     paddingBottom: 60, 
     borderBottomLeftRadius: 40, 
     borderBottomRightRadius: 40 
@@ -153,77 +154,78 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     alignItems: 'center', 
     justifyContent: 'space-between', 
-    paddingHorizontal: 20, 
+    paddingHorizontal: Spacing.lg,
     paddingTop: 10 
   },
   backBtn: { padding: 5 },
-  headerTitle: { fontSize: 18, fontWeight: 'bold', color: '#FFF' },
+  headerTitle: { fontSize: Typography.pageTitle, fontWeight: FontWeight.bold, color: Colors.white },
   headerIcons: { flexDirection: 'row', alignItems: 'center' },
-  profileBadge: { backgroundColor: '#FFF', borderRadius: 15, paddingHorizontal: 8, paddingVertical: 4 },
-  profileText: { color: '#2A3A56', fontWeight: 'bold', fontSize: 12 },
+  profileBadge: { backgroundColor: Colors.white, borderRadius: Radius.lg, paddingHorizontal: Spacing.xs, paddingVertical: Spacing.xxs },
+  profileText: { color: Colors.text, fontWeight: FontWeight.bold, fontSize: Typography.caption },
 
-  estufaTitleCard: { 
-    backgroundColor: '#FFF', 
-    marginHorizontal: 40, 
-    borderRadius: 15, 
-    paddingVertical: 12, 
+  estufaTitleCard: {
+    padding: Spacing.card,
+    backgroundColor: Colors.white,
+    marginHorizontal: Spacing.section,
+    borderRadius: Radius.card,
     alignItems: 'center', 
-    marginTop: 20, 
+    marginTop: Spacing.lg,
     elevation: 4 
   },
-  estufaTitle: { fontSize: 20, fontWeight: 'bold', color: '#2A3A56' },
-  summaryRow: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 40, marginTop: 20 },
-  summaryCard: { 
-    backgroundColor: '#FFF', 
+  estufaTitle: { fontSize: Typography.titleMedium, fontWeight: FontWeight.bold, color: Colors.text },
+  summaryRow: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: Spacing.section, marginTop: Spacing.lg },
+  summaryCard: {
+    padding: Spacing.card,
+    backgroundColor: Colors.white,
     width: '47%', 
-    borderRadius: 15, 
-    padding: 15, 
+    borderRadius: Radius.card,
     alignItems: 'center', 
     elevation: 2 
   },
-  summaryLabel: { fontSize: 12, color: '#999', marginTop: 5 },
-  summaryValue: { fontSize: 22, fontWeight: 'bold', color: '#2A3A56' },
+  summaryLabel: { fontSize: Typography.caption, color: Colors.mutedLight, marginTop: 5 },
+  summaryValue: { fontSize: Typography.title, fontWeight: FontWeight.bold, color: Colors.text },
 
   contentContainer: { 
     flex: 1, 
     marginTop: -30, 
-    backgroundColor: '#FFF', 
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 40, 
     borderTopRightRadius: 40, 
-    paddingHorizontal: 20, 
-    paddingTop: 30 
+    paddingHorizontal: Spacing.screen,
+    paddingTop: Spacing.xxl
   },
-  sectionTitle: { fontSize: 16, fontWeight: 'bold', color: '#2A3A56', marginBottom: 15 },
+  sectionTitle: { fontSize: Typography.sectionTitle, fontWeight: FontWeight.bold, color: Colors.text, marginBottom: 15 },
 
   timeFilter: { 
     flexDirection: 'row', 
     backgroundColor: '#F0F9F0', 
-    borderRadius: 20, 
+    borderRadius: Radius.xl,
     padding: 5, 
-    marginBottom: 20 
+    marginBottom: Spacing.lg
   },
   timeBtn: { flex: 1, paddingVertical: 10, alignItems: 'center', borderRadius: 18 },
-  timeBtnActive: { backgroundColor: '#00D2B1' },
-  timeTextActive: { color: '#FFF', fontWeight: 'bold' },
-  timeText: { color: '#999' },
+  timeBtnActive: { backgroundColor: Colors.accent },
+  timeTextActive: { color: Colors.white, fontWeight: FontWeight.bold },
+  timeText: { color: Colors.mutedLight },
 
-  chartContainer: { backgroundColor: '#F0F9F0', borderRadius: 25, padding: 20, marginBottom: 20 },
-  chartHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
-  chartTitle: { fontWeight: 'bold', color: '#2A3A56' },
+  chartContainer: {
+    padding: Spacing.card, backgroundColor: '#F0F9F0', borderRadius: Radius.card, marginBottom: Spacing.cardGap},
+  chartHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: Spacing.lg },
+  chartTitle: { fontWeight: FontWeight.bold, color: Colors.text },
   chartHeaderIcons: { flexDirection: 'row' },
   barsArea: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', height: 120 },
   barColumn: { alignItems: 'center', width: 35 },
   barInner: { width: 12, borderRadius: 6, marginBottom: 5 },
-  barLabel: { fontSize: 10, color: '#999' },
+  barLabel: { fontSize: Typography.tiny, color: Colors.mutedLight },
 
   pieContainer: { alignItems: 'center', marginVertical: 15 },
-  pieText: { fontWeight: 'bold', color: '#2A3A56', marginTop: 5 },
+  pieText: { fontWeight: FontWeight.bold, color: Colors.text, marginTop: 5 },
   sensorGrid: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 },
-  cardSensor: { 
+  cardSensor: {
+    padding: Spacing.cardCompact,
     width: width * 0.2, 
     backgroundColor: '#60A5FA', 
-    borderRadius: 20, 
-    padding: 10, 
+    borderRadius: Radius.card,
     alignItems: 'center' 
   },
   iconCircle: { 
@@ -231,6 +233,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.3)', 
     justifyContent: 'center', alignItems: 'center', marginBottom: 5 
   },
-  sensorValue: { color: '#FFF', fontWeight: 'bold', fontSize: 13 },
-  sensorLabel: { color: '#FFF', fontSize: 9 },
+  sensorValue: { color: Colors.white, fontWeight: FontWeight.bold, fontSize: Typography.small },
+  sensorLabel: { color: Colors.white, fontSize: Typography.micro },
 });

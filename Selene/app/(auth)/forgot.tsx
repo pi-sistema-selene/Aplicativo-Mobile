@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useState } from "react";
 import {
   View,
@@ -139,7 +140,7 @@ export default function ForgotPassword() {
             <TextInput
               style={styles.input}
               placeholder="seu@email.com"
-              placeholderTextColor="#A0A0A0"
+              placeholderTextColor={Colors.progressText}
               value={email}
               onChangeText={setEmail}
               autoCapitalize="none"
@@ -155,7 +156,7 @@ export default function ForgotPassword() {
               disabled={loading}
             >
               {loading ? (
-                <ActivityIndicator color="#fff" />
+                <ActivityIndicator color={Colors.white} />
               ) : (
                 <Text style={styles.buttonTextPrimary}>Gerar Nova Senha</Text>
               )}
@@ -175,10 +176,10 @@ export default function ForgotPassword() {
             <Text style={styles.socialText}>Acessar com:</Text>
             <View style={styles.socialIconsRow}>
               <TouchableOpacity style={styles.socialIconButton}>
-                <FontAwesome5 name="facebook-f" size={20} color="#2A3A56" />
+                <FontAwesome5 name="facebook-f" size={20} color={Colors.text} />
               </TouchableOpacity>
               <TouchableOpacity style={styles.socialIconButton}>
-                <FontAwesome5 name="google" size={20} color="#2A3A56" />
+                <FontAwesome5 name="google" size={20} color={Colors.text} />
               </TouchableOpacity>
             </View>
           </View>
@@ -189,48 +190,48 @@ export default function ForgotPassword() {
 }
 
 const styles = StyleSheet.create({
-  mainContainer: { flex: 1, backgroundColor: "#F5F5F5" },
+  mainContainer: { flex: 1, backgroundColor: Colors.background },
 
   topContainer: {
     flex: 0.3,
     justifyContent: "center",
     alignItems: "center",
     paddingTop: 60,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
     minHeight: 180,
   },
   mainTitle: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.large,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
     textAlign: "center",
   },
 
   bottomContainer: {
     flex: 1,
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
-    paddingHorizontal: 30,
-    paddingTop: 40,
-    paddingBottom: 40,
+    paddingHorizontal: Spacing.screen,
+    paddingTop: Spacing.section,
+    paddingBottom: Spacing.section,
   },
   resetTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.heading,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
     marginBottom: 10,
   },
   resetDescription: {
-    fontSize: 13,
-    color: "#2A3A56",
+    fontSize: Typography.small,
+    color: Colors.text,
     lineHeight: 18,
     marginBottom: 35,
   },
   label: {
-    color: "#2A3A56",
-    fontSize: 14,
-    fontWeight: "bold",
+    color: Colors.text,
+    fontSize: Typography.body,
+    fontWeight: FontWeight.bold,
     marginBottom: 5,
     marginLeft: 5,
   },
@@ -238,44 +239,44 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFF",
-    borderRadius: 25,
-    marginBottom: 30,
-    paddingHorizontal: 20,
+    backgroundColor: Colors.white,
+    borderRadius: Radius.xxl,
+    marginBottom: Spacing.xxl,
+    paddingHorizontal: Spacing.lg,
     height: 50,
   },
-  input: { flex: 1, color: "#333", fontSize: 16 },
+  input: { flex: 1, color: Colors.mutedDark, fontSize: Typography.subtitle },
 
-  buttonActionContainer: { alignItems: "center", marginBottom: 40 },
+  buttonActionContainer: { alignItems: "center", marginBottom: Spacing.section },
   buttonPrimary: {
-    backgroundColor: "#2A3A56",
+    backgroundColor: Colors.text,
     width: "80%",
     height: 50,
-    borderRadius: 25,
+    borderRadius: Radius.xxl,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 12,
+    marginBottom: Spacing.sm,
   },
-  buttonTextPrimary: { color: "#FFF", fontWeight: "bold", fontSize: 16 },
+  buttonTextPrimary: { color: Colors.white, fontWeight: FontWeight.bold, fontSize: Typography.subtitle },
   buttonSecondary: {
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     width: "80%",
     height: 50,
-    borderRadius: 25,
+    borderRadius: Radius.xxl,
     justifyContent: "center",
     alignItems: "center",
   },
-  buttonTextSecondary: { color: "#2A3A56", fontWeight: "bold", fontSize: 16 },
+  buttonTextSecondary: { color: Colors.text, fontWeight: FontWeight.bold, fontSize: Typography.subtitle },
 
   socialContainer: { alignItems: "center", marginTop: "auto" },
-  socialText: { color: "#2A3A56", fontSize: 14, marginBottom: 15 },
+  socialText: { color: Colors.text, fontSize: Typography.body, marginBottom: 15 },
   socialIconsRow: { flexDirection: "row" },
   socialIconButton: {
     width: 50,
     height: 50,
-    borderRadius: 25,
+    borderRadius: Radius.xxl,
     borderWidth: 1.5,
-    borderColor: "#2A3A56",
+    borderColor: Colors.text,
     justifyContent: "center",
     alignItems: "center",
     marginHorizontal: 10,

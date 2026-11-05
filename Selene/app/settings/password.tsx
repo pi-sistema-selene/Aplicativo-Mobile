@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -153,7 +154,7 @@ export default function PasswordScreen() {
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
-              <Feather name="arrow-left" size={28} color="#2A3A56" />
+              <Feather name="arrow-left" size={28} color={Colors.text} />
             </TouchableOpacity>
             <View>
               <Text style={styles.welcomeText}>Configurações</Text>
@@ -172,8 +173,8 @@ export default function PasswordScreen() {
                 <Feather
                   name="bell"
                   size={24}
-                  color="#2A3A56"
-                  style={{ marginLeft: 12 }}
+                  color={Colors.text}
+                  style={{ marginLeft: Spacing.sm }}
                 />
               </TouchableOpacity>
             </View>
@@ -198,7 +199,7 @@ export default function PasswordScreen() {
                   placeholder="••••••••••••"
                   secureTextEntry={!showSenhaAtual}
                   style={styles.input}
-                  placeholderTextColor="#A0A0A0"
+                  placeholderTextColor={Colors.progressText}
                   value={senhaAtual}
                   autoCapitalize="none"
                   onChangeText={setSenhaAtual}
@@ -210,7 +211,7 @@ export default function PasswordScreen() {
                   <Feather
                     name={showSenhaAtual ? "eye" : "eye-off"}
                     size={20}
-                    color="#2A3A56"
+                    color={Colors.text}
                   />
                 </TouchableOpacity>
               </View>
@@ -224,7 +225,7 @@ export default function PasswordScreen() {
                   placeholder="••••••••••••"
                   secureTextEntry={!showNovaSenha}
                   style={styles.input}
-                  placeholderTextColor="#A0A0A0"
+                  placeholderTextColor={Colors.progressText}
                   value={novaSenha}
                   autoCapitalize="none"
                   onChangeText={setNovaSenha}
@@ -236,7 +237,7 @@ export default function PasswordScreen() {
                   <Feather
                     name={showNovaSenha ? "eye" : "eye-off"}
                     size={20}
-                    color="#2A3A56"
+                    color={Colors.text}
                   />
                 </TouchableOpacity>
               </View>
@@ -250,7 +251,7 @@ export default function PasswordScreen() {
                   placeholder="••••••••••••"
                   secureTextEntry={!showConfirmarSenha}
                   style={styles.input}
-                  placeholderTextColor="#A0A0A0"
+                  placeholderTextColor={Colors.progressText}
                   value={confirmarSenha}
                   autoCapitalize="none"
                   onChangeText={setConfirmarSenha}
@@ -262,7 +263,7 @@ export default function PasswordScreen() {
                   <Feather
                     name={showConfirmarSenha ? "eye" : "eye-off"}
                     size={20}
-                    color="#2A3A56"
+                    color={Colors.text}
                   />
                 </TouchableOpacity>
               </View>
@@ -274,7 +275,7 @@ export default function PasswordScreen() {
               disabled={loading}
             >
               {loading ? (
-                <ActivityIndicator color="#FFF" />
+                <ActivityIndicator color={Colors.white} />
               ) : (
                 <Text style={styles.btnText}>Salvar Nova Senha</Text>
               )}
@@ -289,16 +290,16 @@ export default function PasswordScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
   },
 
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 30,
+    paddingBottom: Spacing.xxl,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
 
   header: {
@@ -310,14 +311,14 @@ const styles = StyleSheet.create({
   },
 
   welcomeText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.pageTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
 
   subwelcomeText: {
-    fontSize: 14,
-    color: "#2A3A56",
+    fontSize: Typography.body,
+    color: Colors.text,
     opacity: 0.8,
   },
 
@@ -331,68 +332,68 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#E0E0E0",
+    borderColor: Colors.border,
   },
 
   avatarText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.subtitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
 
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    paddingHorizontal: 25,
-    paddingTop: 30,
+    paddingHorizontal: Spacing.screen,
+    paddingTop: Spacing.xxl,
   },
 
   sectionTitle: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 20,
-    fontWeight: "600",
+    fontSize: Typography.sectionTitle,
+    color: Colors.muted,
+    marginBottom: Spacing.lg,
+    fontWeight: FontWeight.semibold,
   },
 
   cardInfo: {
-    fontSize: 13,
-    color: "#666",
-    marginBottom: 25,
+    fontSize: Typography.small,
+    color: Colors.muted,
+    marginBottom: Spacing.xl,
     textAlign: "center",
   },
 
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: Spacing.lg,
   },
 
   label: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: "#2A3A56",
-    marginBottom: 8,
+    fontSize: Typography.body,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
+    marginBottom: Spacing.xs,
   },
 
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#F8FBF8",
-    borderRadius: 15,
+    borderRadius: Radius.lg,
     paddingHorizontal: 15,
     height: 55,
     borderWidth: 1,
-    borderColor: "#E0E0E0",
+    borderColor: Colors.border,
   },
 
   input: {
     flex: 1,
-    color: "#2A3A56",
-    fontSize: 16,
+    color: Colors.text,
+    fontSize: Typography.subtitle,
   },
 
   eyeIcon: {
@@ -400,7 +401,7 @@ const styles = StyleSheet.create({
   },
 
   mainButton: {
-    backgroundColor: "#2A3A56",
+    backgroundColor: Colors.text,
     height: 55,
     borderRadius: 30,
     justifyContent: "center",
@@ -409,15 +410,15 @@ const styles = StyleSheet.create({
   },
 
   confirmButton: {
-    backgroundColor: "#00D1A0",
+    backgroundColor: Colors.accent,
     height: 50,
-    borderRadius: 25,
+    borderRadius: Radius.xxl,
     justifyContent: "center",
     alignItems: "center",
   },
 
   btnText: {
-    color: "#FFF",
-    fontWeight: "bold",
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
   },
 });

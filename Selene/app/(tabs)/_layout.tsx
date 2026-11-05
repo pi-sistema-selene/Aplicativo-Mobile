@@ -1,7 +1,7 @@
 import React from "react";
 import { Tabs } from "expo-router";
 import { SimpleLineIcons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { Colors } from "@/constants/Colors";
+import { Colors, FontWeight, Typography } from "@/constants/Colors";
 
 export default function TabLayout() {
   return (
@@ -18,7 +18,7 @@ export default function TabLayout() {
           borderTopWidth: 1,
           borderTopColor: Colors.tabBorder,
         },
-        tabBarLabelStyle: { fontSize: 12, fontWeight: "600" },
+        tabBarLabelStyle: { fontSize: Typography.caption, fontWeight: FontWeight.semibold },
       }}
     >
       <Tabs.Screen

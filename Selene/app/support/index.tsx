@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -105,7 +106,7 @@ export default function FAQScreen() {
     {
       name: "E-mail",
       icon: "envelope",
-      color: "#00D2B1",
+      color: Colors.accent,
     },
   ];
 
@@ -116,7 +117,7 @@ export default function FAQScreen() {
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
-              <Feather name="arrow-left" size={28} color="#2A3A56" />
+              <Feather name="arrow-left" size={28} color={Colors.text} />
             </TouchableOpacity>
             <View>
               <Text style={styles.welcomeText}>Configurações</Text>
@@ -135,8 +136,8 @@ export default function FAQScreen() {
                 <Feather
                   name="bell"
                   size={24}
-                  color="#2A3A56"
-                  style={{ marginLeft: 12 }}
+                  color={Colors.text}
+                  style={{ marginLeft: Spacing.sm }}
                 />
               </TouchableOpacity>
             </View>
@@ -220,7 +221,7 @@ export default function FAQScreen() {
                 <View style={styles.searchBar}>
                   <TextInput
                     placeholder="Pesquisar dúvida..."
-                    placeholderTextColor="#A0A0A0"
+                    placeholderTextColor={Colors.progressText}
                     style={styles.searchInput}
                   />
                 </View>
@@ -243,7 +244,7 @@ export default function FAQScreen() {
                               : "chevron-down"
                           }
                           size={20}
-                          color="#2A3A56"
+                          color={Colors.text}
                         />
                       </TouchableOpacity>
 
@@ -284,7 +285,7 @@ export default function FAQScreen() {
 
                       <Text style={styles.socialName}>{item.name}</Text>
 
-                      <Feather name="chevron-right" size={20} color="#CCC" />
+                      <Feather name="chevron-right" size={20} color={Colors.border} />
                     </TouchableOpacity>
                   ))}
                 </View>
@@ -308,25 +309,25 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
   },
 
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    padding: 25,
+    padding: Spacing.xl,
   },
 
 
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 30,
+    paddingBottom: Spacing.xxl,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
 
   header: {
@@ -337,8 +338,8 @@ const styles = StyleSheet.create({
     marginBottom: 1,
   },
 
-  welcomeText: { fontSize: 22, fontWeight: "bold", color: "#2A3A56" },
-  subwelcomeText: { fontSize: 14, color: "#2A3A56", opacity: 0.8 },
+  welcomeText: { fontSize: Typography.pageTitle, fontWeight: FontWeight.bold, color: Colors.text },
+  subwelcomeText: { fontSize: Typography.body, color: Colors.text, opacity: 0.8 },
 
   headerIcons: {
     flexDirection: "row",
@@ -350,42 +351,42 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#E0E0E0",
+    borderColor: Colors.border,
   },
 
-  avatarText: { fontSize: 16, fontWeight: "bold", color: "#2A3A56" },
+  avatarText: { fontSize: Typography.subtitle, fontWeight: FontWeight.bold, color: Colors.text },
 
 
   topToggle: {
     flexDirection: "row",
     backgroundColor: "#F0F7F0",
-    borderRadius: 15,
+    borderRadius: Radius.lg,
     padding: 5,
-    marginBottom: 20,
+    marginBottom: Spacing.lg,
   },
 
   toggleBtn: {
     flex: 1,
-    paddingVertical: 12,
+    paddingVertical: Spacing.sm,
     alignItems: "center",
-    borderRadius: 12,
+    borderRadius: Radius.md,
   },
 
   toggleActive: {
-    backgroundColor: "#00D2B1",
+    backgroundColor: Colors.accent,
   },
 
   toggleTextActive: {
-    color: "#FFF",
-    fontWeight: "bold",
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
   },
 
   toggleText: {
-    color: "#2A3A56",
+    color: Colors.text,
   },
 
 
@@ -397,49 +398,49 @@ const styles = StyleSheet.create({
 
   catBtn: {
     flex: 1,
-    backgroundColor: "#F5F5F5",
+    backgroundColor: Colors.background,
     marginHorizontal: 5,
-    paddingVertical: 8,
-    borderRadius: 10,
+    paddingVertical: Spacing.xs,
+    borderRadius: Radius.sm,
     alignItems: "center",
   },
 
   catBtnActive: {
-    backgroundColor: "#E8F5E9",
+    backgroundColor: Colors.greenSoft,
     borderWidth: 1,
-    borderColor: "#95C159",
+    borderColor: Colors.primary,
   },
 
   catText: {
-    color: "#2A3A56",
-    fontSize: 12,
+    color: Colors.text,
+    fontSize: Typography.caption,
   },
 
   catTextActive: {
-    fontWeight: "bold",
+    fontWeight: FontWeight.bold,
     color: "#4CAF50",
   },
 
 
   searchBar: {
     backgroundColor: "#F0FFF4",
-    borderRadius: 12,
+    borderRadius: Radius.md,
     paddingHorizontal: 15,
     height: 48,
     justifyContent: "center",
-    marginBottom: 25,
+    marginBottom: Spacing.xl,
     borderWidth: 1,
-    borderColor: "#00D2B1",
+    borderColor: Colors.accent,
   },
 
   searchInput: {
-    color: "#2A3A56",
-    fontSize: 14,
+    color: Colors.text,
+    fontSize: Typography.body,
   },
 
 
   accordionList: {
-    paddingBottom: 20,
+    paddingBottom: Spacing.lg,
   },
 
   faqWrapper: {
@@ -454,8 +455,8 @@ const styles = StyleSheet.create({
 
   faqQuestion: {
     flex: 1,
-    fontSize: 14,
-    color: "#2A3A56",
+    fontSize: Typography.body,
+    color: Colors.text,
   },
 
   faqBody: {
@@ -463,13 +464,13 @@ const styles = StyleSheet.create({
   },
 
   faqAnswer: {
-    color: "#666",
-    fontSize: 13,
+    color: Colors.muted,
+    fontSize: Typography.small,
   },
 
   divider: {
     height: 1,
-    backgroundColor: "#F0F0F0",
+    backgroundColor: Colors.borderSubtle,
   },
 
 
@@ -483,13 +484,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 15,
     borderBottomWidth: 1,
-    borderBottomColor: "#F0F0F0",
+    borderBottomColor: Colors.borderSubtle,
   },
 
   socialIcon: {
     width: 45,
     height: 45,
-    borderRadius: 12,
+    borderRadius: Radius.md,
     justifyContent: "center",
     alignItems: "center",
     marginRight: 15,
@@ -497,23 +498,23 @@ const styles = StyleSheet.create({
 
   socialName: {
     flex: 1,
-    fontSize: 16,
-    color: "#2A3A56",
+    fontSize: Typography.subtitle,
+    color: Colors.text,
   },
 
 
   btnChat: {
-    backgroundColor: "#00D2B1",
+    backgroundColor: Colors.accent,
     height: 55,
     borderRadius: 28,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: Spacing.lg,
   },
 
   btnText: {
-    color: "#FFF",
-    fontWeight: "bold",
-    fontSize: 16,
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontSize: Typography.subtitle,
   },
 });

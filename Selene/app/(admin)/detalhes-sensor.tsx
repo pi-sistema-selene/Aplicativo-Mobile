@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useEffect, useState, useCallback } from "react";
 import {
   View,
@@ -153,7 +154,7 @@ export default function DetalhesSensor() {
           { justifyContent: "center", alignItems: "center" },
         ]}
       >
-        <ActivityIndicator size="large" color="#2A3A56" />
+        <ActivityIndicator size="large" color={Colors.text} />
       </View>
     );
   }
@@ -177,7 +178,7 @@ export default function DetalhesSensor() {
             <TouchableOpacity
               onPress={() => router.push("/(admin)/(tabs)/monitoring")}
             >
-              <Feather name="arrow-left" size={28} color="#2A3A56" />
+              <Feather name="arrow-left" size={28} color={Colors.text} />
             </TouchableOpacity>
             <View style={styles.textContainer}>
               <Text style={styles.welcomeText}>{nome || "Sensor"}</Text>
@@ -204,8 +205,8 @@ export default function DetalhesSensor() {
               <RefreshControl
                 refreshing={refreshing}
                 onRefresh={onRefresh}
-                colors={["#95C159"]}
-                tintColor="#95C159"
+                colors={[Colors.primary]}
+                tintColor={Colors.primary}
               />
             }
           >
@@ -213,7 +214,7 @@ export default function DetalhesSensor() {
 
             <View style={styles.sectionCard}>
               <View style={styles.sectionHeader}>
-                <Feather name="activity" size={18} color="#2A3A56" />
+                <Feather name="activity" size={18} color={Colors.text} />
                 <Text style={styles.sectionTitle}>Dados do Sensor</Text>
               </View>
 
@@ -249,7 +250,7 @@ export default function DetalhesSensor() {
 
             <View style={styles.sectionCard}>
               <View style={styles.sectionHeader}>
-                <Feather name="clock" size={18} color="#2A3A56" />
+                <Feather name="clock" size={18} color={Colors.text} />
                 <Text style={styles.sectionTitle}>Última Atualização</Text>
               </View>
               <View style={styles.progressBarBg}>
@@ -280,12 +281,12 @@ export default function DetalhesSensor() {
                 });
               }}
             >
-              <Feather name="edit-2" size={20} color="#FFF" />
+              <Feather name="edit-2" size={20} color={Colors.white} />
               <Text style={styles.editBtnText}>Editar Sensor</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.deleteBtn} onPress={handleExcluir}>
-              <Feather name="trash-2" size={20} color="#FFF" />
+              <Feather name="trash-2" size={20} color={Colors.white} />
               <Text style={styles.deleteBtnText}>Excluir Sensor</Text>
             </TouchableOpacity>
           </ScrollView>
@@ -299,25 +300,25 @@ export default function DetalhesSensor() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
   },
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    paddingHorizontal: 25,
-    paddingTop: 40,
+    paddingHorizontal: Spacing.screen,
+    paddingTop: Spacing.section,
   },
 
 
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 30,
+    paddingBottom: Spacing.xxl,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
   header: {
     flexDirection: "row",
@@ -327,16 +328,16 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    marginLeft: 20,
+    marginLeft: Spacing.lg,
   },
   welcomeText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.pageTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
   subwelcomeText: {
-    fontSize: 14,
-    color: "#2A3A56",
+    fontSize: Typography.body,
+    color: Colors.text,
     opacity: 0.8,
   },
 
@@ -345,63 +346,63 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
   },
   avatarText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.subtitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
 
 
   panelTitle: {
-    fontSize: 18,
-    fontWeight: "900",
-    color: "#2A3A56",
-    marginBottom: 20,
+    fontSize: Typography.sectionTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
+    marginBottom: Spacing.lg,
     letterSpacing: 1,
     textAlign: "center",
   },
   sectionCard: {
+    padding: Spacing.card,
     backgroundColor: "#E8F9EE",
-    borderRadius: 20,
-    padding: 15,
-    marginBottom: 20,
+    borderRadius: Radius.card,
+    marginBottom: Spacing.cardGap,
   },
   sectionHeader: {
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-    marginBottom: 12,
+    marginBottom: Spacing.sm,
   },
   sectionTitle: {
-    fontSize: 15,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.sectionTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
 
 
   alertRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     padding: 10,
-    borderRadius: 10,
-    marginBottom: 8,
+    borderRadius: Radius.sm,
+    marginBottom: Spacing.xs,
   },
   alertText: {
-    fontSize: 12,
-    color: "#2A3A56",
+    fontSize: Typography.caption,
+    color: Colors.text,
     flex: 1,
   },
 
 
   progressBarBg: {
     height: 35,
-    backgroundColor: "#F0F0F0",
-    borderRadius: 10,
+    backgroundColor: Colors.borderSubtle,
+    borderRadius: Radius.sm,
     overflow: "hidden",
   },
   progressBarFill: {
@@ -411,40 +412,40 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   progressText: {
-    color: "#FFF",
-    fontWeight: "bold",
-    fontSize: 14,
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontSize: Typography.body,
   },
 
 
   deleteBtn: {
     flexDirection: "row",
-    backgroundColor: "#FF6666",
+    backgroundColor: Colors.danger,
     height: 55,
-    borderRadius: 20,
+    borderRadius: Radius.xl,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 10,
     gap: 10,
   },
   deleteBtnText: {
-    color: "#FFF",
-    fontWeight: "bold",
-    fontSize: 16,
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontSize: Typography.subtitle,
   },
   editBtn: {
     flexDirection: "row",
     backgroundColor: "#4A90E2",
     height: 55,
-    borderRadius: 20,
+    borderRadius: Radius.xl,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: Spacing.lg,
     gap: 10,
   },
   editBtnText: {
-    color: "#FFF",
-    fontWeight: "bold",
-    fontSize: 16,
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontSize: Typography.subtitle,
   },
 });

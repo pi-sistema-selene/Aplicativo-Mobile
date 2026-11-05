@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -96,7 +97,7 @@ export default function CadastroEstufa() {
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
-              <Feather name="arrow-left" size={28} color="#2A3A56" />
+              <Feather name="arrow-left" size={28} color={Colors.text} />
             </TouchableOpacity>
             <View style={styles.textContainer}>
               <Text style={styles.welcomeText}>Estufas</Text>
@@ -115,8 +116,8 @@ export default function CadastroEstufa() {
                 <Feather
                   name="bell"
                   size={24}
-                  color="#2A3A56"
-                  style={{ marginLeft: 12 }}
+                  color={Colors.text}
+                  style={{ marginLeft: Spacing.sm }}
                 />
               </TouchableOpacity>
             </View>
@@ -127,7 +128,7 @@ export default function CadastroEstufa() {
         <View style={styles.content}>
           <ScrollView
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 40 }}
+            contentContainerStyle={{ paddingBottom: Spacing.section }}
             keyboardShouldPersistTaps="handled"
           >
 
@@ -146,7 +147,7 @@ export default function CadastroEstufa() {
               value={nome}
               onChangeText={setNome}
               placeholder="Ex: Estufa Setor Norte"
-              placeholderTextColor="#A0A0A0"
+              placeholderTextColor={Colors.progressText}
             />
 
 
@@ -157,7 +158,7 @@ export default function CadastroEstufa() {
               onChangeText={setQuantidade}
               keyboardType="numeric"
               placeholder="0"
-              placeholderTextColor="#A0A0A0"
+              placeholderTextColor={Colors.progressText}
             />
 
 
@@ -167,12 +168,12 @@ export default function CadastroEstufa() {
               value={camera}
               onChangeText={setCamera}
               placeholder="http://192.168.0.1"
-              placeholderTextColor="#A0A0A0"
+              placeholderTextColor={Colors.progressText}
               autoCapitalize="none"
             />
 
 
-            <Text style={[styles.label, { color: "#00D2B1" }]}>
+            <Text style={[styles.label, { color: Colors.accent }]}>
               Observações
             </Text>
             <TextInput
@@ -183,7 +184,7 @@ export default function CadastroEstufa() {
               numberOfLines={5}
               textAlignVertical="top"
               placeholder="Notas adicionais..."
-              placeholderTextColor="#A0A0A0"
+              placeholderTextColor={Colors.progressText}
             />
 
 
@@ -193,7 +194,7 @@ export default function CadastroEstufa() {
               disabled={loading}
             >
               {loading ? (
-                <ActivityIndicator color="#FFF" />
+                <ActivityIndicator color={Colors.white} />
               ) : (
                 <Text style={styles.btnSalvarText}>Salvar</Text>
               )}
@@ -206,15 +207,15 @@ export default function CadastroEstufa() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#95C159" },
+  container: { flex: 1, backgroundColor: Colors.primary },
 
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 30,
+    paddingBottom: Spacing.xxl,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
 
   header: {
@@ -225,8 +226,8 @@ const styles = StyleSheet.create({
     marginBottom: 1,
   },
 
-  welcomeText: { fontSize: 22, fontWeight: "bold", color: "#2A3A56" },
-  subwelcomeText: { fontSize: 14, color: "#2A3A56", opacity: 0.8 },
+  welcomeText: { fontSize: Typography.pageTitle, fontWeight: FontWeight.bold, color: Colors.text },
+  subwelcomeText: { fontSize: Typography.body, color: Colors.text, opacity: 0.8 },
 
   headerIcons: {
     flexDirection: "row",
@@ -238,65 +239,65 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#E0E0E0",
+    borderColor: Colors.border,
   },
 
-  avatarText: { fontSize: 16, fontWeight: "bold", color: "#2A3A56" },
+  avatarText: { fontSize: Typography.subtitle, fontWeight: FontWeight.bold, color: Colors.text },
 
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    paddingHorizontal: 25,
-    paddingTop: 30,
+    paddingHorizontal: Spacing.screen,
+    paddingTop: Spacing.xxl,
   },
 
   label: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: "#2A3A56",
-    marginBottom: 8,
+    fontSize: Typography.body,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
+    marginBottom: Spacing.xs,
     marginLeft: 5,
   },
   inputContainer: { position: "relative", justifyContent: "center" },
 
   input: {
     backgroundColor: "#E1F5E5",
-    borderRadius: 20,
+    borderRadius: Radius.xl,
     height: 50,
-    paddingHorizontal: 20,
-    marginBottom: 20,
-    color: "#2A3A56",
-    fontSize: 15,
+    paddingHorizontal: Spacing.lg,
+    marginBottom: Spacing.lg,
+    color: Colors.text,
+    fontSize: Typography.medium,
   },
   calendarIcon: {
     position: "absolute",
     right: 15,
     top: 10,
-    backgroundColor: "#00D2B1",
+    backgroundColor: Colors.accent,
     borderRadius: 8,
     padding: 6,
   },
-  textArea: { height: 120, paddingTop: 15, borderRadius: 25 },
+  textArea: { height: 120, paddingTop: 15, borderRadius: Radius.xxl },
 
   btnSalvar: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     height: 55,
-    borderRadius: 25,
+    borderRadius: Radius.xxl,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 10,
     elevation: 3,
   },
-  btnSalvarText: { color: "#FFF", fontWeight: "bold", fontSize: 18 },
+  btnSalvarText: { color: Colors.white, fontWeight: FontWeight.bold, fontSize: Typography.heading },
   textContainer: {
     flex: 1,
-    marginLeft: 20,
+    marginLeft: Spacing.lg,
     justifyContent: "center",
   },
 });

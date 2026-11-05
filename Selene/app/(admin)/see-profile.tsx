@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -245,7 +246,7 @@ export default function PerfilUsuarioScreen() {
           },
         ]}
       >
-        <ActivityIndicator size="large" color="#2A3A56" />
+        <ActivityIndicator size="large" color={Colors.text} />
       </View>
     );
   }
@@ -264,7 +265,7 @@ export default function PerfilUsuarioScreen() {
               <TouchableOpacity
                 onPress={() => router.replace("/(admin)/(tabs)/users")}
               >
-                <Feather name="arrow-left" size={28} color="#2A3A56" />
+                <Feather name="arrow-left" size={28} color={Colors.text} />
               </TouchableOpacity>
 
               <View style={styles.textContainer}>
@@ -303,7 +304,7 @@ export default function PerfilUsuarioScreen() {
 
             <View style={styles.infoItem}>
               <View style={styles.iconBox}>
-                <Feather name="mail" size={18} color="#fff" />
+                <Feather name="mail" size={18} color={Colors.white} />
               </View>
 
               <View style={{ flex: 1 }}>
@@ -315,7 +316,7 @@ export default function PerfilUsuarioScreen() {
 
             <View style={styles.infoItem}>
               <View style={styles.iconBox}>
-                <Feather name="calendar" size={18} color="#fff" />
+                <Feather name="calendar" size={18} color={Colors.white} />
               </View>
 
               <View>
@@ -329,7 +330,7 @@ export default function PerfilUsuarioScreen() {
 
             <View style={styles.infoItem}>
               <View style={styles.iconBox}>
-                <Feather name="phone" size={18} color="#fff" />
+                <Feather name="phone" size={18} color={Colors.white} />
               </View>
 
               <View>
@@ -341,7 +342,7 @@ export default function PerfilUsuarioScreen() {
 
             <View style={styles.infoItem}>
               <View style={styles.iconBox}>
-                <MaterialIcons name="home" size={18} color="#fff" />
+                <MaterialIcons name="home" size={18} color={Colors.white} />
               </View>
 
               <View style={{ flex: 1 }}>
@@ -377,25 +378,25 @@ export default function PerfilUsuarioScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
   },
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    paddingHorizontal: 25,
-    paddingTop: 40,
+    paddingHorizontal: Spacing.screen,
+    paddingTop: Spacing.section,
   },
 
 
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 30,
+    paddingBottom: Spacing.xxl,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
   header: {
     flexDirection: "row",
@@ -410,12 +411,12 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    marginLeft: 20,
+    marginLeft: Spacing.lg,
   },
   welcomeText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.pageTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
 
 
@@ -423,14 +424,14 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 22,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
   },
   avatarText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.subtitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
 
 
@@ -442,28 +443,28 @@ const styles = StyleSheet.create({
   image: {
     width: 120,
     height: 120,
-    borderRadius: 20,
+    borderRadius: Radius.xl,
   },
   name: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.title,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
   label: {
-    fontSize: 12,
-    color: "#666",
+    fontSize: Typography.caption,
+    color: Colors.muted,
   },
   level: {
-    color: "#00D2B1",
-    fontWeight: "bold",
-    fontSize: 16,
+    color: Colors.accent,
+    fontWeight: FontWeight.bold,
+    fontSize: Typography.subtitle,
   },
 
 
   sectionTitle: {
-    marginTop: 20,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    marginTop: Spacing.lg,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
     marginBottom: 10,
   },
   infoItem: {
@@ -475,42 +476,42 @@ const styles = StyleSheet.create({
   iconBox: {
     width: 35,
     height: 35,
-    borderRadius: 10,
-    backgroundColor: "#00D2B1",
+    borderRadius: Radius.sm,
+    backgroundColor: Colors.accent,
     justifyContent: "center",
     alignItems: "center",
   },
   infoLabel: {
-    fontSize: 11,
-    color: "#666",
+    fontSize: Typography.footnote,
+    color: Colors.muted,
   },
   infoText: {
-    fontSize: 13,
-    color: "#2A3A56",
-    fontWeight: "600",
+    fontSize: Typography.small,
+    color: Colors.text,
+    fontWeight: FontWeight.semibold,
   },
 
 
   btnEdit: {
-    backgroundColor: "#F4C542",
+    backgroundColor: Colors.accentYellow,
     padding: 15,
-    borderRadius: 25,
+    borderRadius: Radius.xxl,
     alignItems: "center",
-    marginTop: 20,
+    marginTop: Spacing.lg,
   },
   btnEditText: {
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
   btnDelete: {
-    backgroundColor: "#E74C3C",
+    backgroundColor: Colors.danger,
     padding: 15,
-    borderRadius: 25,
+    borderRadius: Radius.xxl,
     alignItems: "center",
     marginTop: 10,
   },
   btnDeleteText: {
-    fontWeight: "bold",
-    color: "#fff",
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
   },
 });

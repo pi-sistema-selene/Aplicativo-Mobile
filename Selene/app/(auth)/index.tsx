@@ -14,7 +14,7 @@ import { useRouter } from "expo-router";
 import { Feather, FontAwesome5 } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { login, saveSession } from "@/services/authService";
-import { Colors } from "@/constants/Colors";
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 
 export default function Login() {
   const router = useRouter();
@@ -74,7 +74,7 @@ export default function Login() {
             <TextInput
               style={styles.input}
               placeholder="Digite seu acesso"
-              placeholderTextColor="#A0A0A0"
+              placeholderTextColor={Colors.progressText}
               value={email}
               onChangeText={setEmail}
               autoCapitalize="none"
@@ -87,7 +87,7 @@ export default function Login() {
             <TextInput
               style={styles.input}
               placeholder="••••••••"
-              placeholderTextColor="#A0A0A0"
+              placeholderTextColor={Colors.progressText}
               secureTextEntry={!showPassword}
               value={password}
               autoCapitalize="none"
@@ -100,7 +100,7 @@ export default function Login() {
               <Feather
                 name={showPassword ? "eye" : "eye-off"}
                 size={20}
-                color="#2A3A56"
+                color={Colors.text}
               />
             </TouchableOpacity>
           </View>
@@ -111,7 +111,7 @@ export default function Login() {
             disabled={loading}
           >
             {loading ? (
-              <ActivityIndicator color="#fff" />
+              <ActivityIndicator color={Colors.white} />
             ) : (
               <Text style={styles.buttonText}>Entrar</Text>
             )}
@@ -125,10 +125,10 @@ export default function Login() {
             <Text style={styles.socialText}>Acessar com:</Text>
             <View style={styles.socialIconsRow}>
               <TouchableOpacity style={styles.socialIconButton}>
-                <FontAwesome5 name="facebook-f" size={20} color="#2A3A56" />
+                <FontAwesome5 name="facebook-f" size={20} color={Colors.text} />
               </TouchableOpacity>
               <TouchableOpacity style={styles.socialIconButton}>
-                <FontAwesome5 name="google" size={20} color="#2A3A56" />
+                <FontAwesome5 name="google" size={20} color={Colors.text} />
               </TouchableOpacity>
             </View>
           </View>
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     flex: 0.4,
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: 50,
+    paddingTop: Spacing.panel,
     minHeight: 180,
   },
   logo: { width: 250, height: 100 },
@@ -155,14 +155,14 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
-    paddingHorizontal: 30,
-    paddingTop: 40,
-    paddingBottom: 40,
+    paddingHorizontal: Spacing.screen,
+    paddingTop: Spacing.section,
+    paddingBottom: Spacing.section,
   },
   label: {
     color: Colors.text,
-    fontSize: 14,
-    fontWeight: "bold",
+    fontSize: Typography.body,
+    fontWeight: FontWeight.bold,
     marginBottom: 5,
     marginLeft: 5,
   },
@@ -171,39 +171,39 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: Colors.white,
-    borderRadius: 25,
-    marginBottom: 20,
-    paddingHorizontal: 20,
+    borderRadius: Radius.xxl,
+    marginBottom: Spacing.lg,
+    paddingHorizontal: Spacing.lg,
     height: 50,
   },
-  input: { flex: 1, color: "#333", fontSize: 16 },
+  input: { flex: 1, color: Colors.mutedDark, fontSize: Typography.subtitle },
   eyeIcon: { padding: 5 },
 
   button: {
     backgroundColor: Colors.text,
     height: 55,
-    borderRadius: 25,
+    borderRadius: Radius.xxl,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 10,
     marginBottom: 15,
   },
-  buttonText: { color: Colors.white, fontWeight: "bold", fontSize: 18 },
+  buttonText: { color: Colors.white, fontWeight: FontWeight.bold, fontSize: Typography.heading },
   forgotPassword: {
     color: Colors.text,
-    fontWeight: "bold",
+    fontWeight: FontWeight.bold,
     textAlign: "center",
-    fontSize: 13,
-    marginBottom: 40,
+    fontSize: Typography.small,
+    marginBottom: Spacing.section,
   },
 
   socialContainer: { alignItems: "center", marginTop: "auto" },
-  socialText: { color: Colors.text, fontSize: 14, marginBottom: 15 },
+  socialText: { color: Colors.text, fontSize: Typography.body, marginBottom: 15 },
   socialIconsRow: { flexDirection: "row" },
   socialIconButton: {
     width: 50,
     height: 50,
-    borderRadius: 25,
+    borderRadius: Radius.xxl,
     borderWidth: 1.5,
     borderColor: Colors.text,
     justifyContent: "center",

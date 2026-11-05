@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -227,7 +228,7 @@ export default function EditarSensor() {
           alignItems: "center",
         }}
       >
-        <ActivityIndicator size="large" color="#95C159" />
+        <ActivityIndicator size="large" color={Colors.primary} />
       </View>
     );
   }
@@ -245,7 +246,7 @@ export default function EditarSensor() {
               <Feather
                 name="arrow-left"
                 size={28}
-                color="#2A3A56"
+                color={Colors.text}
               />
             </TouchableOpacity>
 
@@ -348,7 +349,7 @@ export default function EditarSensor() {
             disabled={loading}
           >
             {loading ? (
-              <ActivityIndicator color="#FFF" />
+              <ActivityIndicator color={Colors.white} />
             ) : (
               <Text style={styles.buttonText}>
                 Salvar Alterações
@@ -364,12 +365,12 @@ export default function EditarSensor() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
   },
 
   topContainer: {
-    backgroundColor: "#95C159",
-    padding: 20,
+    backgroundColor: Colors.primary,
+    padding: Spacing.lg,
   },
 
   header: {
@@ -383,71 +384,71 @@ const styles = StyleSheet.create({
   },
 
   welcomeText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.pageTitle,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
   },
 
   subwelcomeText: {
-    color: "#2A3A56",
+    color: Colors.text,
   },
 
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
-    padding: 25,
+    padding: Spacing.xl,
   },
 
   label: {
-    fontWeight: "bold",
+    fontWeight: FontWeight.bold,
     marginBottom: 5,
   },
 
   input: {
     borderWidth: 1,
-    borderColor: "#DDD",
-    borderRadius: 10,
+    borderColor: Colors.border,
+    borderRadius: Radius.sm,
     padding: 10,
     marginBottom: 15,
   },
 
   pickerBox: {
     borderWidth: 1,
-    borderColor: "#DDD",
-    borderRadius: 10,
+    borderColor: Colors.border,
+    borderRadius: Radius.sm,
     marginBottom: 15,
   },
 
   row: {
     flexDirection: "row",
     gap: 10,
-    marginBottom: 20,
+    marginBottom: Spacing.lg,
   },
 
   typeButton: {
     flex: 1,
     borderWidth: 1,
-    borderColor: "#95C159",
-    padding: 12,
-    borderRadius: 10,
+    borderColor: Colors.primary,
+    padding: Spacing.sm,
+    borderRadius: Radius.sm,
     alignItems: "center",
   },
 
   typeButtonActive: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
   },
 
   button: {
-    backgroundColor: "#2A3A56",
+    backgroundColor: Colors.text,
     padding: 15,
-    borderRadius: 10,
+    borderRadius: Radius.sm,
     alignItems: "center",
   },
 
   buttonText: {
-    color: "#FFF",
-    fontWeight: "bold",
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
   },
 });

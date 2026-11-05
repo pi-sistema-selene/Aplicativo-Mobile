@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "expo-router";
 import {
@@ -235,7 +236,7 @@ export default function RelatoriosScreen() {
         });
       }
 
-      const html = `<html><head><style>body{font-family:sans-serif;color:#2A3A56;padding:20px;}h1{color:#95C159;}</style></head><body><h1>Relatório de Sensores Selene</h1>${htmlItems.join("\n")}</body></html>`;
+      const html = `<html><head><style>body{font-family:sans-serif;color:${Colors.text};padding:20px;}h1{color:${Colors.primary};}</style></head><body><h1>Relatório de Sensores Selene</h1>${htmlItems.join("\n")}</body></html>`;
 
       const { uri } = await Print.printToFileAsync({ html });
       await Sharing.shareAsync(uri, { mimeType: "application/pdf" });
@@ -267,7 +268,7 @@ export default function RelatoriosScreen() {
         });
       }
 
-      const html = `<html><head><style>body{font-family:sans-serif;color:#2A3A56;padding:20px;}h1{color:#95C159;}</style></head><body><h1>Relatório de Monitoramento Visual</h1>${htmlItems.join("\n")}</body></html>`;
+      const html = `<html><head><style>body{font-family:sans-serif;color:${Colors.text};padding:20px;}h1{color:${Colors.primary};}</style></head><body><h1>Relatório de Monitoramento Visual</h1>${htmlItems.join("\n")}</body></html>`;
 
       const { uri } = await Print.printToFileAsync({ html });
       await Sharing.shareAsync(uri, { mimeType: "application/pdf" });
@@ -293,7 +294,7 @@ export default function RelatoriosScreen() {
 
   const renderItem = ({ item }: { item: ExportHistoryItem }) => (
     <View style={styles.card}>
-      <View style={[styles.iconCircle, { backgroundColor: item.format === "PDF" ? "#FF4B4B" : "#10B981" }]}>
+      <View style={[styles.iconCircle, { backgroundColor: item.format === "PDF" ? Colors.danger : Colors.success }]}>
         <MaterialCommunityIcons
           name={item.format === "PDF" ? "file-pdf-box" : "file-excel-box"}
           size={24}
@@ -304,8 +305,8 @@ export default function RelatoriosScreen() {
       <View style={styles.textContainer}>
         <View style={styles.row}>
           <Text style={styles.itemTitle}>{item.title}</Text>
-          <View style={[styles.badgeFormat, { borderColor: item.format === "PDF" ? "#FF4B4B" : "#10B981" }]}>
-            <Text style={[styles.badgeFormatText, { color: item.format === "PDF" ? "#FF4B4B" : "#10B981" }]}>
+          <View style={[styles.badgeFormat, { borderColor: item.format === "PDF" ? Colors.danger : Colors.success }]}>
+            <Text style={[styles.badgeFormatText, { color: item.format === "PDF" ? Colors.danger : Colors.success }]}>
               {item.format}
             </Text>
           </View>
@@ -316,7 +317,7 @@ export default function RelatoriosScreen() {
             <MaterialCommunityIcons
               name={item.type === "sensores" ? "thermometer" : "image-filter-hdr"}
               size={12}
-              color="#666"
+              color={Colors.muted}
             />
             <Text style={styles.tagTipoText}>{item.type.toUpperCase()}</Text>
           </View>
@@ -342,7 +343,7 @@ export default function RelatoriosScreen() {
               </TouchableOpacity>
 
               <TouchableOpacity onPress={() => router.push("/alert")}>
-                <Feather name="bell" size={24} color="#2A3A56" style={{ marginLeft: 5 }} />
+                <Feather name="bell" size={24} color={Colors.text} />
               </TouchableOpacity>
             </View>
           </View>
@@ -350,7 +351,7 @@ export default function RelatoriosScreen() {
 
         <View style={styles.content}>
 
-          <Text style={[styles.sectionTitle, { marginBottom: 12 }]}>Gerar Novo Relatório</Text>
+          <Text style={[styles.sectionTitle, { marginBottom: Spacing.sm }]}>Gerar Novo Relatório</Text>
           <View style={styles.exportActionsContainer}>
             <TouchableOpacity style={styles.exportActionCard} onPress={() => {
               Alert.alert("Exportar Sensores", "Escolha o formato do arquivo climático:", [
@@ -360,7 +361,7 @@ export default function RelatoriosScreen() {
               ]);
             }}>
               <View style={[styles.exportActionIconBg, { backgroundColor: "#E6F4EA" }]}>
-                <MaterialCommunityIcons name="thermometer" size={24} color="#10B981" />
+                <MaterialCommunityIcons name="thermometer" size={24} color={Colors.success} />
               </View>
               <Text style={styles.exportActionText}>Dados Climáticos</Text>
               <Text style={styles.exportActionSubtext}>Sensores</Text>
@@ -374,7 +375,7 @@ export default function RelatoriosScreen() {
               ]);
             }}>
               <View style={[styles.exportActionIconBg, { backgroundColor: "#E8F0FE" }]}>
-                <MaterialCommunityIcons name="image" size={24} color="#1A73E8" />
+                <MaterialCommunityIcons name="image" size={24} color={Colors.info} />
               </View>
               <Text style={styles.exportActionText}>Monitoramento</Text>
               <Text style={styles.exportActionSubtext}>Imagens</Text>
@@ -385,14 +386,14 @@ export default function RelatoriosScreen() {
             <Text style={styles.sectionTitle}>Histórico de Exportações Salvas</Text>
             {exportHistory.length > 0 && (
               <TouchableOpacity onPress={limparHistorico}>
-                <Ionicons name="trash-outline" size={16} color="#FF4B4B" />
+                <Ionicons name="trash-outline" size={16} color={Colors.danger} />
               </TouchableOpacity>
             )}
           </View>
 
           {loading ? (
             <View style={styles.centerLoading}>
-              <ActivityIndicator size="large" color="#95C159" />
+              <ActivityIndicator size="large" color={Colors.primary} />
               <Text style={styles.loadingText}>Coletando dados da API e automatizando arquivo...</Text>
             </View>
           ) : exportHistory.length === 0 ? (
@@ -410,7 +411,7 @@ export default function RelatoriosScreen() {
               renderItem={renderItem}
               ItemSeparatorComponent={() => <View style={styles.separator} />}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{ paddingBottom: 40 }}
+              contentContainerStyle={{ paddingBottom: Spacing.section }}
             />
           )}
         </View>
@@ -420,14 +421,14 @@ export default function RelatoriosScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#95C159" },
+  container: { flex: 1, backgroundColor: Colors.primary },
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 30,
+    paddingBottom: Spacing.xxl,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
   header: {
     flexDirection: "row",
@@ -436,45 +437,44 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 1,
   },
-  welcomeText: { fontSize: 24, fontWeight: "bold", color: "#2A3A56" },
-  subwelcomeText: { fontSize: 14, color: "#2A3A56", opacity: 0.8 },
-  headerIcons: { flexDirection: "row", alignItems: "center", gap: 10 },
+  welcomeText: { fontSize: Typography.pageTitle, fontWeight: FontWeight.bold, color: Colors.text },
+  subwelcomeText: { fontSize: Typography.body, color: Colors.text, opacity: 0.8 },
+  headerIcons: { flexDirection: "row", alignItems: "center", gap: 15 },
   avatarCircle: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    backgroundColor: "#EDFCED",
+    width: 45,
+    height: 45,
+    borderRadius: 22.5,
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#E0E0E0",
-    marginRight: 4,
+    borderColor: Colors.border,
   },
-  avatarText: { fontSize: 14, fontWeight: "bold", color: "#2A3A56" },
+  avatarText: { fontSize: Typography.subtitle, fontWeight: FontWeight.bold, color: Colors.text },
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    paddingHorizontal: 25,
-    paddingTop: 30,
+    paddingHorizontal: Spacing.screen,
+    paddingTop: Spacing.xxl,
   },
   exportActionsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     gap: 15,
-    marginBottom: 25,
+    marginBottom: Spacing.xl,
   },
   exportActionCard: {
+    padding: Spacing.card,
     flex: 1,
     backgroundColor: "#F9FAFB",
-    borderRadius: 20,
-    padding: 16,
+    borderRadius: Radius.card,
     alignItems: "center",
     borderWidth: 1,
     borderColor: "#F0F2F5",
     elevation: 2,
-    shadowColor: "#000",
+    shadowColor: Colors.black,
     shadowOpacity: 0.05,
     shadowRadius: 3,
     shadowOffset: { width: 0, height: 2 },
@@ -488,14 +488,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   exportActionText: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: "#2A3A56",
+    fontSize: Typography.body,
+    fontWeight: FontWeight.bold,
+    color: Colors.text,
     textAlign: "center",
   },
   exportActionSubtext: {
-    fontSize: 11,
-    color: "#888",
+    fontSize: Typography.footnote,
+    color: Colors.mutedLight,
     marginTop: 2,
   },
   sectionHeaderRow: {
@@ -505,17 +505,17 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   sectionTitle: {
-    fontSize: 15,
-    color: "#2A3A56",
-    fontWeight: "700",
+    fontSize: Typography.sectionTitle,
+    color: Colors.text,
+    fontWeight: FontWeight.bold,
     textAlign: "center",
   },
   card: {
+    padding: Spacing.card,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#F9FAFB",
-    borderRadius: 16,
-    padding: 15,
+    borderRadius: Radius.card,
     borderWidth: 1,
     borderColor: "#F0F2F5",
   },
@@ -535,15 +535,15 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  itemTitle: { fontSize: 15, fontWeight: "bold", color: "#2A3A56" },
+  itemTitle: { fontSize: Typography.medium, fontWeight: FontWeight.bold, color: Colors.text },
   badgeFormat: {
-    paddingHorizontal: 8,
+    paddingHorizontal: Spacing.xs,
     paddingVertical: 2,
     borderRadius: 6,
     borderWidth: 1,
   },
-  badgeFormatText: { fontSize: 10, fontWeight: "bold" },
-  itemSubtitle: { fontSize: 12, color: "#666", marginTop: 2 },
+  badgeFormatText: { fontSize: Typography.tiny, fontWeight: FontWeight.bold },
+  itemSubtitle: { fontSize: Typography.caption, color: Colors.muted, marginTop: 2 },
   footerCardRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -553,23 +553,23 @@ const styles = StyleSheet.create({
   tagTipo: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
+    gap: Spacing.xxs,
     backgroundColor: "#EBF0F5",
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 4,
   },
-  tagTipoText: { fontSize: 9, fontWeight: "bold", color: "#666" },
-  itemDate: { fontSize: 11, color: "#999" },
+  tagTipoText: { fontSize: Typography.micro, fontWeight: FontWeight.bold, color: Colors.muted },
+  itemDate: { fontSize: Typography.footnote, color: Colors.mutedLight },
   separator: { height: 10 },
-  centerLoading: { flex: 1, justifyContent: "center", alignItems: "center", padding: 20 },
-  loadingText: { marginTop: 12, color: "#2A3A56", textAlign: "center", opacity: 0.8 },
+  centerLoading: { flex: 1, justifyContent: "center", alignItems: "center", padding: Spacing.lg },
+  loadingText: { marginTop: Spacing.sm, color: Colors.text, textAlign: "center", opacity: 0.8 },
   emptyStateContainer: {
     flex: 0.6,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 30,
+    paddingHorizontal: Spacing.xxl,
   },
-  emptyStateTitle: { fontSize: 18, fontWeight: "bold", color: "#2A3A56", marginTop: 15 },
-  emptyStateSubtitle: { fontSize: 13, color: "#888", textAlign: "center", marginTop: 8, lineHeight: 18 },
+  emptyStateTitle: { fontSize: Typography.heading, fontWeight: FontWeight.bold, color: Colors.text, marginTop: 15 },
+  emptyStateSubtitle: { fontSize: Typography.small, color: Colors.mutedLight, textAlign: "center", marginTop: Spacing.xs, lineHeight: 18 },
 });

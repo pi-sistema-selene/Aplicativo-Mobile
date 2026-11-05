@@ -1,3 +1,4 @@
+import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -63,8 +64,8 @@ export default function DetalheEstufa() {
   if (loading) {
     return (
       <View style={styles.loadingCenter}>
-        <ActivityIndicator size="large" color="#95C159" />
-        <Text style={{ marginTop: 10, color: '#666' }}>Carregando dados...</Text>
+        <ActivityIndicator size="large" color={Colors.primary} />
+        <Text style={{ marginTop: 10, color: Colors.muted }}>Carregando dados...</Text>
       </View>
     );
   }
@@ -77,7 +78,7 @@ export default function DetalheEstufa() {
         <View style={styles.topContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()}>
-              <Feather name="arrow-left" size={28} color="#2A3A56" />
+              <Feather name="arrow-left" size={28} color={Colors.text} />
             </TouchableOpacity>
             <View style={styles.textContainer}>
               <Text style={styles.statValue}>{estufa?.quantidade_compostos || 0}</Text>
@@ -95,8 +96,8 @@ export default function DetalheEstufa() {
                 <Feather
                   name="bell"
                   size={24}
-                  color="#2A3A56"
-                  style={{ marginLeft: 12 }}
+                  color={Colors.text}
+                  style={{ marginLeft: Spacing.sm }}
                 />
               </TouchableOpacity>
             </View>
@@ -105,7 +106,7 @@ export default function DetalheEstufa() {
 
 
         <View style={styles.content}>
-          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 30 }}>
+          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: Spacing.xxl }}>
 
 
             <View style={styles.topInfoRow}>
@@ -121,7 +122,7 @@ export default function DetalheEstufa() {
                   <Text style={styles.statLabel}>
                     <MaterialCommunityIcons name="magnify" size={14} /> Analisados
                   </Text>
-                  <Text style={[styles.statValue, { color: '#00D2B1' }]}>
+                  <Text style={[styles.statValue, { color: Colors.accent }]}>
                     {estufa?.quantidade_compostos || 0}
                   </Text>
                 </View>
@@ -140,10 +141,10 @@ export default function DetalheEstufa() {
             <View style={styles.progressSection}>
               <View style={styles.progressBarBg}>
                 <View style={[styles.progressBarFill, { width: '100%' }]} />
-                <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 12 }}>100% Completo</Text>
+                <Text style={{ color: Colors.white, fontWeight: FontWeight.bold, fontSize: Typography.caption }}>100% Completo</Text>
               </View>
               <View style={styles.progressCheck}>
-                <Feather name="check-square" size={16} color="#666" />
+                <Feather name="check-square" size={16} color={Colors.muted} />
                 <Text style={styles.progressText}> Todos os compostos foram processados</Text>
               </View>
             </View>
@@ -162,14 +163,14 @@ export default function DetalheEstufa() {
               icon="droplet"
               label="Umidade do Solo"
               value="10%"
-              color="#00D2B1"
+              color={Colors.accent}
               date="Há 5 min"
             />
             <SensorCard
               icon="thermometer"
               label="Temperatura"
               value="21º C"
-              color="#95C159"
+              color={Colors.primary}
               date="Sincronizado"
             />
 
@@ -187,7 +188,7 @@ function SensorCard({ icon, label, value, color, date }: any) {
         <Feather name={icon} size={22} color={color} />
       </View>
 
-      <View style={{ flex: 1, marginLeft: 12 }}>
+      <View style={{ flex: 1, marginLeft: Spacing.sm }}>
         <Text style={styles.sensorLabel}>{label}</Text>
         <Text style={styles.sensorDate}>{date}</Text>
       </View>
@@ -199,24 +200,24 @@ function SensorCard({ icon, label, value, color, date }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#95C159' },
-  loadingCenter: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FFF' },
+  container: { flex: 1, backgroundColor: Colors.primary },
+  loadingCenter: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.white },
 
-  headerTitle: { fontSize: 20, fontWeight: 'bold', color: '#2A3A56' },
+  headerTitle: { fontSize: Typography.pageTitle, fontWeight: FontWeight.bold, color: Colors.text },
   profileCircle: {
     width: 34, height: 34, borderRadius: 17,
-    backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center'
+    backgroundColor: Colors.white, justifyContent: 'center', alignItems: 'center'
   },
-  profileText: { color: '#2A3A56', fontWeight: 'bold', fontSize: 13 },
+  profileText: { color: Colors.text, fontWeight: FontWeight.bold, fontSize: Typography.small },
 
 
   topContainer: {
-    backgroundColor: "#95C159",
+    backgroundColor: Colors.primary,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 30,
+    paddingBottom: Spacing.xxl,
     paddingTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.screen,
   },
 
   header: {
@@ -227,8 +228,8 @@ const styles = StyleSheet.create({
     marginBottom: 1,
   },
 
-  welcomeText: { fontSize: 22, fontWeight: "bold", color: "#2A3A56" },
-  subwelcomeText: { fontSize: 14, color: "#2A3A56", opacity: 0.8 },
+  welcomeText: { fontSize: Typography.pageTitle, fontWeight: FontWeight.bold, color: Colors.text },
+  subwelcomeText: { fontSize: Typography.body, color: Colors.text, opacity: 0.8 },
 
   headerIcons: {
     flexDirection: "row",
@@ -240,68 +241,68 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: "#EDFCED",
+    backgroundColor: Colors.avatarBg,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#E0E0E0",
+    borderColor: Colors.border,
   },
 
-  avatarText: { fontSize: 16, fontWeight: "bold", color: "#2A3A56" },
+  avatarText: { fontSize: Typography.subtitle, fontWeight: FontWeight.bold, color: Colors.text },
 
   content: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    paddingHorizontal: 25,
-    paddingTop: 30,
+    paddingHorizontal: Spacing.screen,
+    paddingTop: Spacing.xxl,
   },
-  topInfoRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 25 },
+  topInfoRow: { flexDirection: 'row', alignItems: 'center', marginBottom: Spacing.xl },
   statsContainer: { flex: 1 },
-  statBox: { marginBottom: 20 },
-  statLabel: { fontSize: 12, color: '#666', marginBottom: 4 },
-  statValue: { fontSize: 28, fontWeight: 'bold', color: '#2A3A56' },
+  statBox: { marginBottom: Spacing.lg },
+  statLabel: { fontSize: Typography.caption, color: Colors.muted, marginBottom: Spacing.xxs },
+  statValue: { fontSize: Typography.large, fontWeight: FontWeight.bold, color: Colors.text },
 
-  imageWrapper: { borderWidth: 3, borderColor: '#007AFF', borderRadius: 20, padding: 2 },
+  imageWrapper: { borderWidth: 3, borderColor: Colors.info, borderRadius: Radius.xl, padding: 2 },
   estufaImage: { width: 140, height: 140, borderRadius: 18 },
 
-  progressSection: { marginBottom: 30 },
+  progressSection: { marginBottom: Spacing.xxl },
   progressBarBg: {
-    height: 30, backgroundColor: '#00D2B1',
-    borderRadius: 15, justifyContent: 'center', alignItems: 'center',
+    height: 30, backgroundColor: Colors.accent,
+    borderRadius: Radius.lg, justifyContent: 'center', alignItems: 'center',
     overflow: 'hidden'
   },
   progressBarFill: {
     position: 'absolute', left: 0, height: '100%',
-    backgroundColor: '#00D2B1', borderRadius: 15
+    backgroundColor: Colors.accent, borderRadius: Radius.lg
   },
   progressCheck: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 10 },
-  progressText: { fontSize: 13, color: '#666' },
+  progressText: { fontSize: Typography.small, color: Colors.muted },
 
-  monthLabel: { fontSize: 18, fontWeight: 'bold', color: '#2A3A56', marginBottom: 15 },
+  monthLabel: { fontSize: Typography.heading, fontWeight: FontWeight.bold, color: Colors.text, marginBottom: 15 },
 
   sensorCard: {
+    padding: Spacing.card,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF',
-    padding: 15,
-    borderRadius: 20,
-    marginBottom: 12,
+    backgroundColor: Colors.white,
+    borderRadius: Radius.card,
+    marginBottom: Spacing.cardGap,
     elevation: 3,
-    shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 5
+    shadowColor: Colors.black, shadowOpacity: 0.05, shadowRadius: 5
   },
   sensorIconBg: {
-    width: 45, height: 45, borderRadius: 15,
+    width: 45, height: 45, borderRadius: Radius.lg,
     backgroundColor: '#F8F8F8', justifyContent: 'center', alignItems: 'center'
   },
-  sensorLabel: { fontSize: 15, fontWeight: 'bold', color: '#2A3A56' },
-  sensorDate: { fontSize: 11, color: '#007AFF' },
-  vDivider: { width: 1, height: 30, backgroundColor: '#EEE', marginHorizontal: 15 },
-  sensorValue: { fontSize: 16, fontWeight: 'bold', color: '#2A3A56' },
+  sensorLabel: { fontSize: Typography.medium, fontWeight: FontWeight.bold, color: Colors.text },
+  sensorDate: { fontSize: Typography.footnote, color: Colors.info },
+  vDivider: { width: 1, height: 30, backgroundColor: Colors.borderSubtle, marginHorizontal: 15 },
+  sensorValue: { fontSize: Typography.subtitle, fontWeight: FontWeight.bold, color: Colors.text },
   textContainer: {
     flex: 1,
-    marginLeft: 20,
+    marginLeft: Spacing.lg,
     justifyContent: "center",
   },
 });
