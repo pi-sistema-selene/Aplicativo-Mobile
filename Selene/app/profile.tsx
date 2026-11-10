@@ -354,7 +354,6 @@ const styles = StyleSheet.create({
     padding: Spacing.card,
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: Spacing.cardGap,
   },
 
   menuIconContainer: {

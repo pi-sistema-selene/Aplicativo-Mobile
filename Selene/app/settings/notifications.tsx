@@ -13,7 +13,6 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import * as Haptics from "expo-haptics";
-import { Audio } from "expo-av";
 
 export default function RelatoriosScreen() {
   const router = useRouter();
