@@ -3,3 +3,11 @@ node_modules
 dist
 build
 coverage
+
+# Arquivos de build Android
+*.apk
+*.aab
+
+# Pastas de build
+android/app/build/
+android/.gradle/
