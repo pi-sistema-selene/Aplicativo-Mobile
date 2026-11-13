@@ -32,8 +32,15 @@ const EstufaSchema = new mongoose.Schema(
     },
     usuario_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Usuario",
+      ref: "User",
+      required: true,
     },
+    dispositivos: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Dispositivo",
+      },
+    ],
   },
   {
     timestamps: true,

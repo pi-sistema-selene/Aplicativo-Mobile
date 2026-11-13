@@ -1,6 +1,11 @@
 export type Gravidade = "Alta" | "Média" | "Baixa";
 export type TipoAlerta = "risco" | "aviso";
 
+export interface AlertaDetalheCampo {
+  label: string;
+  value: string;
+}
+
 export interface AlertaItem {
   id: string;
   titulo: string;
@@ -10,6 +15,10 @@ export interface AlertaItem {
   prioridade: Gravidade;
   corPrioridade: string;
   tipo: TipoAlerta;
+  categoria?: "SENSORES" | "CAMERA";
+  detalhes?: AlertaDetalheCampo[];
+  imagemUri?: string;
+  dataHora?: string;
 }
 
 export interface HomeAlerta {
@@ -20,4 +29,10 @@ export interface HomeAlerta {
   estufa: string;
   tempo: string;
   tipo: TipoAlerta;
+  titulo?: string;
+  prioridade?: Gravidade;
+  categoria?: "SENSORES" | "CAMERA";
+  detalhes?: AlertaDetalheCampo[];
+  imagemUri?: string;
+  dataHora?: string;
 }

@@ -23,10 +23,15 @@ import {
 import {
   hasSensorAnomaly,
   buildHomeAlerta,
+  buildSensorDetailFields,
+  buildImageDetailFields,
+  hasImageAnomaly,
+  buildImageAlert,
   formatAlertaTime,
 } from "@/utils/anomaly";
 import type { HomeAlerta } from "@/types/alerta";
 import type { Leitura } from "@/types/dispositivo";
+import { getApiAssetUrl } from "@/constants/api";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -71,6 +76,15 @@ export default function HomeScreen() {
         setTotalImagens(totals.totalCapturas);
 
         const lista = await getLeituras(primeiroSensor._id, token, 999999);
+        const leiturasPorDispositivo = await Promise.all(
+          sensores.map(async (dispositivo) => ({
+            dispositivo,
+            leituras:
+              dispositivo._id === primeiroSensor._id
+                ? lista
+                : await getLeituras(dispositivo._id, token, 50),
+          })),
+        );
         const leiturasSensores = lista.filter(
           (item) => item.tipo_leitura === "SENSORES",
         );
@@ -93,9 +107,48 @@ export default function HomeScreen() {
                 estufa: primeiroSensor.nome || "Principal",
                 tempo: formatAlertaTime(leitura.createdAt),
                 tipo: alerta.tipo,
+                titulo: alerta.mensagem,
+                prioridade: alerta.gravidade,
+                categoria: "SENSORES",
+                detalhes: buildSensorDetailFields(leitura.dados),
+                dataHora: leitura.createdAt || leitura.timestamp,
               });
             }
           }
+        });
+
+        leiturasPorDispositivo.forEach(({ dispositivo, leituras }) => {
+          leituras.forEach((leitura, index) => {
+            const predicao = leitura.dados?.predicao;
+            if (
+              leitura.tipo_leitura !== "CAMERA" ||
+              !hasImageAnomaly(predicao)
+            ) {
+              return;
+            }
+
+            contadorDeteccoesGeral += 1;
+            if (listaAlertasGerados.length < 4) {
+              const alerta = buildImageAlert(predicao);
+              listaAlertasGerados.push({
+                id: leitura._id || `${dispositivo._id}_camera_${index}`,
+                mensagem: alerta.titulo,
+                submensagem: alerta.sub,
+                gravidade: alerta.prioridade,
+                estufa: dispositivo.nome || "Principal",
+                tempo: formatAlertaTime(leitura.createdAt || leitura.timestamp),
+                tipo: alerta.tipo,
+                titulo: alerta.titulo,
+                prioridade: alerta.prioridade,
+                categoria: "CAMERA",
+                detalhes: buildImageDetailFields(predicao),
+                imagemUri: leitura.dados?.foto_path || leitura.dados?.foto
+                  ? getApiAssetUrl(leitura.dados.foto_path || leitura.dados.foto || "")
+                  : undefined,
+                dataHora: leitura.createdAt || leitura.timestamp,
+              });
+            }
+          });
         });
 
         setTotalAnomalias(contadorDeteccoesGeral);
@@ -285,6 +338,14 @@ export default function HomeScreen() {
               <TouchableOpacity
                 key={alerta.id}
                 activeOpacity={0.8}
+                onPress={() =>
+                  router.push({
+                    pathname: "/alert-detalhe",
+                    params: { alerta: JSON.stringify(alerta) },
+                  })
+                }
+                accessibilityRole="button"
+                accessibilityLabel={`Ver detalhes do alerta: ${alerta.mensagem}`}
               >
                 <View style={styles.cardAlerta}>
                   <View style={styles.cardAlertaMain}>
@@ -327,6 +388,7 @@ export default function HomeScreen() {
                     </Text>
                     <Text style={styles.alertaFooterText}>{alerta.tempo}</Text>
                   </View>
+                  <Text style={styles.alertaDetailHint}>Toque para ver os detalhes</Text>
                 </View>
               </TouchableOpacity>
             ))
@@ -480,6 +542,13 @@ const styles = StyleSheet.create({
   alertaTextContainer: { flex: 1 },
   alertaTitle: { fontSize: Typography.subtitle, fontWeight: FontWeight.bold, color: Colors.text },
   alertaSubtitle: { fontSize: Typography.small, color: Colors.text, opacity: 0.8 },
+  alertaDetailHint: {
+    color: Colors.info,
+    fontSize: Typography.footnote,
+    fontWeight: FontWeight.semibold,
+    marginTop: Spacing.xs,
+    marginLeft: 42,
+  },
   badgeGravidade: {
     borderRadius: Radius.lg,
     paddingHorizontal: Spacing.sm,

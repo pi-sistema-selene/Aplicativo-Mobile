@@ -123,7 +123,7 @@ export default function ForgotPassword() {
       >
 
         <View style={styles.topContainer}>
-          <Text style={styles.mainTitle}>Esqueceu Sua Senha?</Text>
+          <Text style={styles.mainTitle}>Esqueceu sua Senha?</Text>
         </View>
 
 
@@ -169,19 +169,6 @@ export default function ForgotPassword() {
             >
               <Text style={styles.buttonTextSecondary}>Cancelar</Text>
             </TouchableOpacity>
-          </View>
-
-
-          <View style={styles.socialContainer}>
-            <Text style={styles.socialText}>Acessar com:</Text>
-            <View style={styles.socialIconsRow}>
-              <TouchableOpacity style={styles.socialIconButton}>
-                <FontAwesome5 name="facebook-f" size={20} color={Colors.text} />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.socialIconButton}>
-                <FontAwesome5 name="google" size={20} color={Colors.text} />
-              </TouchableOpacity>
-            </View>
           </View>
         </View>
       </ScrollView>

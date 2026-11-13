@@ -1,11 +1,14 @@
 export const SENSOR_THRESHOLDS = {
-  tempMax: 24,
-  tempMin: 10,
-  tempCriticalHigh: 28,
-  umidadeMin: 80,
+  tempMax: 18,
+  tempMin: 13,
+  tempCriticalHigh: 22,
+  tempCriticalLow: 10,
+  umidadeMin: 85,
   umidadeMax: 95,
-  umidadeCriticalLow: 70,
-  luzMin: 0,
+  umidadeCriticalLow: 80,
+  umidadeCriticalHigh: 98,
+  // The ESP32 reports a relative analog percentage, not calibrated lux.
+  luzMin: 10,
 } as const;
 
 export const EXPORT_THRESHOLDS = {

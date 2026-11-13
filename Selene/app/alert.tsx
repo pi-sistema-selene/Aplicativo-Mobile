@@ -19,16 +19,23 @@ import { getMeusDispositivos, getLeituras } from "@/services/dispositivoService"
 import {
   hasSensorAnomaly,
   buildAlertaScreenItem,
+  buildSensorDetailFields,
+  buildImageDetailFields,
+  hasImageAnomaly,
+  buildImageAlert,
+  formatImagePrediction,
   formatAlertaTimeRelative,
 } from "@/utils/anomaly";
 import { formatDateBR, formatTimeBR } from "@/utils/formatDate";
 import type { AlertaItem } from "@/types/alerta";
+import { getApiAssetUrl } from "@/constants/api";
 
 interface AnaliseItem {
   id: string;
   img: string;
   data?: string;
   local?: string;
+  resultado?: string;
 }
 
 export default function AlertasScreen() {
@@ -65,6 +72,30 @@ export default function AlertasScreen() {
                 estufa: dispositivo.nome || "Principal",
                 tempo: formatAlertaTimeRelative(leitura.createdAt),
                 tipo: alerta.tipo,
+                categoria: "SENSORES",
+                detalhes: buildSensorDetailFields(leitura.dados),
+                dataHora: leitura.createdAt || leitura.timestamp,
+              });
+            }
+
+            const predicao = leitura.dados?.predicao;
+            if (leitura.tipo_leitura === "CAMERA" && hasImageAnomaly(predicao)) {
+              const alerta = buildImageAlert(predicao);
+              listaAlertasGerados.push({
+                id: leitura._id || `${dispositivo._id}_camera_alert_${index}`,
+                titulo: alerta.titulo,
+                sub: alerta.sub,
+                prioridade: alerta.prioridade,
+                corPrioridade: alerta.corPrioridade,
+                estufa: dispositivo.nome || "Principal",
+                tempo: formatAlertaTimeRelative(leitura.createdAt || leitura.timestamp),
+                tipo: alerta.tipo,
+                categoria: "CAMERA",
+                detalhes: buildImageDetailFields(predicao),
+                imagemUri: leitura.dados?.foto_path || leitura.dados?.foto
+                  ? getApiAssetUrl(leitura.dados.foto_path || leitura.dados.foto || "")
+                  : undefined,
+                dataHora: leitura.createdAt || leitura.timestamp,
               });
             }
 
@@ -86,6 +117,7 @@ export default function AlertasScreen() {
                   ? `${formatDateBR(dataLeitura)}, ${formatTimeBR(dataLeitura)}`
                   : undefined,
                 local: local || undefined,
+                resultado: formatImagePrediction(predicao),
               });
             }
           });
@@ -198,13 +230,13 @@ export default function AlertasScreen() {
                 alertasFiltrados.map((item) => (
                   <AlertaCard
                     key={item.id}
-                    titulo={item.titulo}
-                    sub={item.sub}
-                    estufa={item.estufa}
-                    tempo={item.tempo}
-                    prioridade={item.prioridade}
-                    corPrioridade={item.corPrioridade}
-                    tipo={item.tipo}
+                      item={item}
+                      onPress={() =>
+                        router.push({
+                          pathname: "/alert-detalhe",
+                          params: { alerta: JSON.stringify(item) },
+                        })
+                      }
                   />
                 ))
               )}
@@ -215,7 +247,13 @@ export default function AlertasScreen() {
                   <Text style={styles.panelTitle}>Últimas Análises</Text>
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.analiseScroll}>
                     {analises.map((item) => (
-                      <AnaliseCard key={item.id} img={item.img} data={item.data} local={item.local} />
+                      <AnaliseCard
+                        key={item.id}
+                        img={item.img}
+                        data={item.data}
+                        local={item.local}
+                        resultado={item.resultado}
+                      />
                     ))}
                   </ScrollView>
                 </View>
@@ -228,40 +266,63 @@ export default function AlertasScreen() {
   );
 }
 
-function AlertaCard({ titulo, sub, estufa, tempo, prioridade, corPrioridade, tipo }: any) {
-  const isAlta = prioridade === "Alta";
+function AlertaCard({
+  item,
+  onPress,
+}: {
+  item: AlertaItem;
+  onPress: () => void;
+}) {
+  const isAlta = item.prioridade === "Alta";
   return (
-    <View style={styles.alertaCard}>
+    <TouchableOpacity
+      style={styles.alertaCard}
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`Ver detalhes do alerta: ${item.titulo}`}
+      activeOpacity={0.8}
+    >
       <View style={styles.alertaHeaderRow}>
         <View style={[styles.alertaIconBg, { backgroundColor: isAlta ? "#FCE8E6" : "#FEF5E7" }]}>
           <Ionicons
-            name={tipo === "risco" ? "close-circle-outline" : "warning-outline"}
+            name={item.tipo === "risco" ? "close-circle-outline" : "warning-outline"}
             size={22}
             color={isAlta ? Colors.alertHigh : Colors.alertMedium}
           />
         </View>
 
         <View style={styles.alertaTextColumn}>
-          <Text style={styles.alertaTitle} numberOfLines={1}>{titulo}</Text>
-          <Text style={styles.alertaSub}>{sub}</Text>
+          <Text style={styles.alertaTitle} numberOfLines={1}>{item.titulo}</Text>
+          <Text style={styles.alertaSub}>{item.sub}</Text>
           <Text style={styles.alertaFooter}>
-            {estufa}    {tempo}
+            {item.estufa}    {item.tempo}
           </Text>
         </View>
 
-        <View style={[styles.badge, { backgroundColor: corPrioridade }]}>
-          <Text style={styles.badgeText}>{prioridade}</Text>
+        <View style={[styles.badge, { backgroundColor: item.corPrioridade }]}>
+          <Text style={styles.badgeText}>{item.prioridade}</Text>
         </View>
       </View>
-    </View>
+      <Text style={styles.detailHint}>Toque para ver os detalhes</Text>
+    </TouchableOpacity>
   );
 }
 
-function AnaliseCard({ img, data, local }: any) {
+function AnaliseCard({
+  img,
+  data,
+  local,
+  resultado,
+}: Pick<AnaliseItem, "img" | "data" | "local" | "resultado">) {
   return (
     <View style={styles.analiseCard}>
       <Image source={{ uri: img }} style={styles.capturedImage} />
       <View style={styles.cardInfoContainer}>
+        {resultado && (
+          <Text style={styles.imageResult} numberOfLines={2}>
+            {resultado}
+          </Text>
+        )}
         {data && (
           <View style={styles.infoRow}>
             <Feather name="calendar" size={12} color={Colors.textMuted} />
@@ -374,6 +435,13 @@ const styles = StyleSheet.create({
   alertaTitle: { fontSize: Typography.subtitle, fontWeight: FontWeight.bold, color: Colors.textAlt, marginBottom: Spacing.xxs },
   alertaSub: { fontSize: Typography.small, color: Colors.textMuted, lineHeight: 18, marginBottom: Spacing.xs },
   alertaFooter: { fontSize: Typography.footnote, color: "#A0AEC0", fontWeight: FontWeight.medium },
+  detailHint: {
+    marginTop: Spacing.xs,
+    marginLeft: 48,
+    color: Colors.info,
+    fontSize: Typography.footnote,
+    fontWeight: FontWeight.semibold,
+  },
   badge: {
     paddingHorizontal: Spacing.sm,
     paddingVertical: Spacing.xxs,
@@ -399,4 +467,10 @@ const styles = StyleSheet.create({
   cardInfoContainer: { padding: Spacing.sm, backgroundColor: Colors.white },
   infoRow: { flexDirection: "row", alignItems: "center", gap: 6, marginBottom: Spacing.xxs },
   imageDate: { color: Colors.textMuted, fontSize: Typography.footnote, fontWeight: FontWeight.medium, flex: 1 },
+  imageResult: {
+    color: Colors.textAlt,
+    fontSize: Typography.footnote,
+    fontWeight: FontWeight.semibold,
+    marginBottom: Spacing.xs,
+  },
 });

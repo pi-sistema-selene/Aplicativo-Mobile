@@ -1,19 +1,55 @@
 import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
-import { API_V1 } from "@/constants/api";
+import { API_V1, getApiAssetUrl } from "@/constants/api";
+
+type DispositivoEstufa = {
+  _id: string;
+  nome?: string;
+  tipo?: string;
+  mac_address?: string;
+  localizacao?: string;
+  online?: boolean;
+};
+
+type LeituraDispositivo = {
+  _id?: string;
+  dispositivo?: string;
+  tipo_leitura?: string;
+  dados?: {
+    temperatura?: number;
+    umidade?: number;
+    luminosidade?: number;
+    foto_path?: string;
+    foto?: string;
+  };
+  timestamp?: string;
+  createdAt?: string;
+};
+
+type EstufaDetalhe = {
+  _id: string;
+  nome?: string;
+  quantidade_compostos?: string | number;
+  data_criacao?: string;
+  observacoes?: string;
+  status?: string;
+  dispositivos?: DispositivoEstufa[];
+};
 
 export default function DetalheEstufa() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
-  const [estufa, setEstufa] = useState<any>(null);
+  const [estufa, setEstufa] = useState<EstufaDetalhe | null>(null);
+  const [leituras, setLeituras] = useState<Record<string, LeituraDispositivo | null>>({});
+  const [erroLeituras, setErroLeituras] = useState(false);
   const [iniciais, setIniciais] = useState("US");
 
   useEffect(() => {
@@ -38,16 +74,58 @@ export default function DetalheEstufa() {
     carregarDadosUsuario();
   }, []);
 
-  const fetchDetalhes = async () => {
+  const fetchDetalhes = useCallback(async () => {
     try {
       const token = await SecureStore.getItemAsync('userToken');
+      if (!token) {
+        router.replace("/(auth)");
+        return;
+      }
 
       const response = await axios.get(`${API_V1}/estufas/detalhes/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
+      if (!response.data?.success) {
+        throw new Error(response.data?.message || "Não foi possível carregar esta estufa.");
+      }
+
       if (response.data.success) {
-        setEstufa(response.data.data);
+        const estufaCarregada = response.data.data as EstufaDetalhe;
+        const dispositivos = Array.isArray(estufaCarregada.dispositivos)
+          ? estufaCarregada.dispositivos
+          : [];
+        setEstufa({ ...estufaCarregada, dispositivos });
+        setErroLeituras(false);
+
+        const resultados = await Promise.all(
+          dispositivos.map(async (dispositivo) => {
+            try {
+              const leituraResponse = await fetch(
+                `${API_V1}/dispositivos/${dispositivo._id}/leituras?limite=40`,
+                { headers: { Authorization: `Bearer ${token}` } },
+              );
+              const leituraJson = await leituraResponse.json();
+              if (!leituraResponse.ok) {
+                throw new Error(leituraJson?.message || "Falha ao carregar leitura.");
+              }
+
+              const leiturasDoTipo = Array.isArray(leituraJson?.data)
+                ? leituraJson.data.filter((leitura: LeituraDispositivo) =>
+                    dispositivo.tipo === "ESP32_CAM"
+                      ? leitura.tipo_leitura === "CAMERA"
+                      : leitura.tipo_leitura === "SENSORES",
+                  )
+                : [];
+              const leituraRecente = leiturasDoTipo[0] || null;
+              return [dispositivo._id, leituraRecente || null] as const;
+            } catch {
+              setErroLeituras(true);
+              return [dispositivo._id, null] as const;
+            }
+          }),
+        );
+        setLeituras(Object.fromEntries(resultados));
       }
     } catch (error) {
       console.error("Erro ao carregar detalhes:", error);
@@ -55,11 +133,13 @@ export default function DetalheEstufa() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, router]);
 
-  useEffect(() => {
-    fetchDetalhes();
-  }, [id]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchDetalhes();
+    }, [fetchDetalhes]),
+  );
 
   if (loading) {
     return (
@@ -81,7 +161,8 @@ export default function DetalheEstufa() {
               <Feather name="arrow-left" size={28} color={Colors.text} />
             </TouchableOpacity>
             <View style={styles.textContainer}>
-              <Text style={styles.statValue}>{estufa?.quantidade_compostos || 0}</Text>
+              <Text style={styles.welcomeText}>{estufa?.nome || "Estufa"}</Text>
+              <Text style={styles.subwelcomeText}>{estufa?.data_criacao || "Detalhes da estufa"}</Text>
             </View>
 
             <View style={styles.headerIcons}>
@@ -109,70 +190,119 @@ export default function DetalheEstufa() {
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: Spacing.xxl }}>
 
 
-            <View style={styles.topInfoRow}>
-              <View style={styles.statsContainer}>
-                <View style={styles.statBox}>
-                  <Text style={styles.statLabel}>
-                    <MaterialCommunityIcons name="grid" size={14} /> Total Compostos
-                  </Text>
-                  <Text style={styles.statValue}>{estufa?.quantidade_compostos || 0}</Text>
-                </View>
-
-                <View style={styles.statBox}>
-                  <Text style={styles.statLabel}>
-                    <MaterialCommunityIcons name="magnify" size={14} /> Analisados
-                  </Text>
-                  <Text style={[styles.statValue, { color: Colors.accent }]}>
-                    {estufa?.quantidade_compostos || 0}
-                  </Text>
-                </View>
+            <View style={styles.summaryRow}>
+              <View style={styles.statBox}>
+                <Text style={styles.statLabel}>Compostos cadastrados</Text>
+                <Text style={styles.statValue}>{estufa?.quantidade_compostos || 0}</Text>
               </View>
-
-
-              <View style={styles.imageWrapper}>
-                <Image
-                  source={{ uri: estufa?.endereco_camera || 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=400' }}
-                  style={styles.estufaImage}
-                />
+              <View style={styles.statBox}>
+                <Text style={styles.statLabel}>Dispositivos vinculados</Text>
+                <Text style={[styles.statValue, { color: Colors.accent }]}>
+                  {estufa?.dispositivos?.length || 0}
+                </Text>
               </View>
             </View>
 
+            <Text style={styles.monthLabel}>Sensores da estufa</Text>
+            {erroLeituras ? (
+              <Text style={styles.readingError}>
+                Algumas leituras não puderam ser carregadas. Tente atualizar mais tarde.
+              </Text>
+            ) : null}
+            {estufa?.dispositivos?.length ? (
+              estufa.dispositivos.map((dispositivo) => {
+                const leitura = leituras[dispositivo._id];
+                const camera = dispositivo.tipo === "ESP32_CAM";
+                const foto = leitura?.dados?.foto_path || leitura?.dados?.foto;
+                const timestamp = leitura?.timestamp || leitura?.createdAt;
 
-            <View style={styles.progressSection}>
-              <View style={styles.progressBarBg}>
-                <View style={[styles.progressBarFill, { width: '100%' }]} />
-                <Text style={{ color: Colors.white, fontWeight: FontWeight.bold, fontSize: Typography.caption }}>100% Completo</Text>
+                return (
+                  <View key={dispositivo._id} style={styles.deviceCard}>
+                    <View style={styles.deviceHeader}>
+                      <View style={styles.sensorIconBg}>
+                        <Feather
+                          name={camera ? "camera" : "thermometer"}
+                          size={20}
+                          color={camera ? Colors.info : Colors.primary}
+                        />
+                      </View>
+                      <View style={styles.deviceHeading}>
+                        <Text style={styles.sensorLabel}>
+                          {dispositivo.nome || (camera ? "Câmera" : "Sensor")}
+                        </Text>
+                        <Text style={styles.sensorDate}>
+                          {camera ? "Câmera" : "Sensor"} · {dispositivo.mac_address || dispositivo.localizacao || ""}
+                        </Text>
+                      </View>
+                      <View style={[styles.onlineDot, dispositivo.online ? styles.online : styles.offline]} />
+                    </View>
+
+                    {camera ? (
+                      foto ? (
+                        <Image
+                          source={{
+                            uri: /^https?:\/\//i.test(foto) || /^data:/i.test(foto)
+                              ? foto
+                              : getApiAssetUrl(foto),
+                          }}
+                          style={styles.cameraPreview}
+                          resizeMode="cover"
+                        />
+                      ) : (
+                        <Text style={styles.noReadingText}>
+                          {leitura ? "A câmera ainda não enviou uma imagem." : "Nenhuma captura disponível."}
+                        </Text>
+                      )
+                    ) : leitura?.dados ? (
+                      <View style={styles.metricsList}>
+                        <Metric
+                          icon="droplet"
+                          label="Umidade"
+                          value={leitura.dados.umidade}
+                          unit="%"
+                          timestamp={timestamp}
+                        />
+                        <Metric
+                          icon="thermometer"
+                          label="Temperatura"
+                          value={leitura.dados.temperatura}
+                          unit="°C"
+                          timestamp={timestamp}
+                        />
+                        <Metric
+                          icon="sun"
+                          label="Luminosidade"
+                          value={leitura.dados.luminosidade}
+                          unit="% relativo"
+                          timestamp={timestamp}
+                        />
+                      </View>
+                    ) : (
+                      <Text style={styles.noReadingText}>Nenhuma leitura de sensor disponível.</Text>
+                    )}
+                    {timestamp ? (
+                      <Text style={styles.readingTimestamp}>
+                        Última atualização: {new Date(timestamp).toLocaleString("pt-BR")}
+                      </Text>
+                    ) : null}
+                  </View>
+                );
+              })
+            ) : (
+              <View style={styles.emptyDevices}>
+                <Feather name="cpu" size={22} color={Colors.mutedLight} />
+                <Text style={styles.noReadingText}>
+                  Nenhum dispositivo foi vinculado a esta estufa.
+                </Text>
               </View>
-              <View style={styles.progressCheck}>
-                <Feather name="check-square" size={16} color={Colors.muted} />
-                <Text style={styles.progressText}> Todos os compostos foram processados</Text>
+            )}
+
+            {estufa?.observacoes ? (
+              <View style={styles.observationsCard}>
+                <Text style={styles.sensorLabel}>Observações</Text>
+                <Text style={styles.observationsText}>{estufa.observacoes}</Text>
               </View>
-            </View>
-
-            <Text style={styles.monthLabel}>Dados de Julho</Text>
-
-
-            <SensorCard
-              icon="alert-triangle"
-              label="Risco de Pragas"
-              value="56%"
-              color="#FFB800"
-              date="Atualizado agora"
-            />
-            <SensorCard
-              icon="droplet"
-              label="Umidade do Solo"
-              value="10%"
-              color={Colors.accent}
-              date="Há 5 min"
-            />
-            <SensorCard
-              icon="thermometer"
-              label="Temperatura"
-              value="21º C"
-              color={Colors.primary}
-              date="Sincronizado"
-            />
+            ) : null}
 
           </ScrollView>
         </View>
@@ -181,20 +311,36 @@ export default function DetalheEstufa() {
   );
 }
 
-function SensorCard({ icon, label, value, color, date }: any) {
+function Metric({
+  icon,
+  label,
+  value,
+  unit,
+  timestamp,
+}: {
+  icon: React.ComponentProps<typeof Feather>["name"];
+  label: string;
+  value?: number;
+  unit: string;
+  timestamp?: string;
+}) {
   return (
-    <View style={styles.sensorCard}>
-      <View style={styles.sensorIconBg}>
-        <Feather name={icon} size={22} color={color} />
+    <View style={styles.metricRow}>
+      <View style={styles.metricIconBg}>
+        <Feather name={icon} size={19} color={Colors.primary} />
       </View>
-
-      <View style={{ flex: 1, marginLeft: Spacing.sm }}>
-        <Text style={styles.sensorLabel}>{label}</Text>
-        <Text style={styles.sensorDate}>{date}</Text>
+      <View style={styles.metricDetails}>
+        <Text style={styles.metricLabel}>{label}</Text>
+        <Text style={styles.metricTimestamp}>
+          {timestamp ? new Date(timestamp).toLocaleString("pt-BR") : "Aguardando leitura"}
+        </Text>
       </View>
-
-      <View style={styles.vDivider} />
-      <Text style={styles.sensorValue}>{value}</Text>
+      <View style={styles.metricDivider} />
+      <Text style={styles.metricValue}>
+        {typeof value === "number"
+          ? `${Number(value).toFixed(label === "Luminosidade" ? 0 : 1)} ${unit}`
+          : "--"}
+      </Text>
     </View>
   );
 }
@@ -258,39 +404,37 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.screen,
     paddingTop: Spacing.xxl,
   },
-  topInfoRow: { flexDirection: 'row', alignItems: 'center', marginBottom: Spacing.xl },
-  statsContainer: { flex: 1 },
-  statBox: { marginBottom: Spacing.lg },
+  summaryRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "#F0F9F7",
+    padding: Spacing.md,
+    borderRadius: Radius.lg,
+    marginBottom: Spacing.xl,
+  },
+  statBox: { flex: 1, alignItems: "center" },
   statLabel: { fontSize: Typography.caption, color: Colors.muted, marginBottom: Spacing.xxs },
   statValue: { fontSize: Typography.large, fontWeight: FontWeight.bold, color: Colors.text },
 
-  imageWrapper: { borderWidth: 3, borderColor: Colors.info, borderRadius: Radius.xl, padding: 2 },
-  estufaImage: { width: 140, height: 140, borderRadius: 18 },
-
-  progressSection: { marginBottom: Spacing.xxl },
-  progressBarBg: {
-    height: 30, backgroundColor: Colors.accent,
-    borderRadius: Radius.lg, justifyContent: 'center', alignItems: 'center',
-    overflow: 'hidden'
-  },
-  progressBarFill: {
-    position: 'absolute', left: 0, height: '100%',
-    backgroundColor: Colors.accent, borderRadius: Radius.lg
-  },
-  progressCheck: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 10 },
-  progressText: { fontSize: Typography.small, color: Colors.muted },
-
   monthLabel: { fontSize: Typography.heading, fontWeight: FontWeight.bold, color: Colors.text, marginBottom: 15 },
 
-  sensorCard: {
-    padding: Spacing.card,
-    flexDirection: 'row',
-    alignItems: 'center',
+  deviceCard: {
+    padding: Spacing.md,
     backgroundColor: Colors.white,
     borderRadius: Radius.card,
     marginBottom: Spacing.cardGap,
+    borderWidth: 1,
+    borderColor: Colors.borderSubtle,
     elevation: 3,
     shadowColor: Colors.black, shadowOpacity: 0.05, shadowRadius: 5
+  },
+  deviceHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  deviceHeading: {
+    flex: 1,
+    marginLeft: Spacing.sm,
   },
   sensorIconBg: {
     width: 45, height: 45, borderRadius: Radius.lg,
@@ -298,8 +442,100 @@ const styles = StyleSheet.create({
   },
   sensorLabel: { fontSize: Typography.medium, fontWeight: FontWeight.bold, color: Colors.text },
   sensorDate: { fontSize: Typography.footnote, color: Colors.info },
-  vDivider: { width: 1, height: 30, backgroundColor: Colors.borderSubtle, marginHorizontal: 15 },
-  sensorValue: { fontSize: Typography.subtitle, fontWeight: FontWeight.bold, color: Colors.text },
+  onlineDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginLeft: Spacing.xs,
+  },
+  online: { backgroundColor: Colors.success },
+  offline: { backgroundColor: Colors.mutedLight },
+  metricsList: {
+    marginTop: Spacing.sm,
+  },
+  metricRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: Spacing.sm,
+    minHeight: 66,
+  },
+  metricIconBg: {
+    width: 42,
+    height: 42,
+    borderRadius: Radius.round,
+    backgroundColor: Colors.surfaceSubtle,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: Spacing.sm,
+  },
+  metricDetails: {
+    flex: 1,
+  },
+  metricDivider: {
+    height: 38,
+    width: 1,
+    backgroundColor: Colors.accent,
+    marginHorizontal: Spacing.sm,
+  },
+  metricLabel: {
+    color: Colors.text,
+    fontSize: Typography.body,
+    fontWeight: FontWeight.semibold,
+  },
+  metricTimestamp: {
+    color: Colors.info,
+    fontSize: Typography.footnote,
+    marginTop: Spacing.xxs,
+  },
+  metricValue: {
+    color: Colors.text,
+    fontSize: Typography.subtitle,
+    fontWeight: FontWeight.bold,
+    minWidth: 78,
+    textAlign: "right",
+  },
+  cameraPreview: {
+    height: 180,
+    width: "100%",
+    borderRadius: Radius.md,
+    backgroundColor: Colors.surfaceSubtle,
+    marginTop: Spacing.md,
+  },
+  noReadingText: {
+    color: Colors.muted,
+    fontSize: Typography.caption,
+    textAlign: "center",
+    paddingVertical: Spacing.md,
+  },
+  readingTimestamp: {
+    color: Colors.mutedLight,
+    fontSize: Typography.footnote,
+    marginTop: Spacing.xs,
+    textAlign: "right",
+  },
+  readingError: {
+    color: Colors.danger,
+    fontSize: Typography.caption,
+    marginBottom: Spacing.sm,
+  },
+  emptyDevices: {
+    alignItems: "center",
+    padding: Spacing.lg,
+    borderRadius: Radius.md,
+    backgroundColor: Colors.surfaceSubtle,
+  },
+  observationsCard: {
+    padding: Spacing.md,
+    backgroundColor: Colors.surfaceSubtle,
+    borderRadius: Radius.md,
+    marginTop: Spacing.sm,
+  },
+  observationsText: {
+    color: Colors.text,
+    fontSize: Typography.body,
+    lineHeight: 21,
+    marginTop: Spacing.xs,
+  },
   textContainer: {
     flex: 1,
     marginLeft: Spacing.lg,

@@ -120,18 +120,6 @@ export default function Login() {
           <TouchableOpacity onPress={() => router.push("/(auth)/forgot")}>
             <Text style={styles.forgotPassword}>Esqueceu sua senha?</Text>
           </TouchableOpacity>
-
-          <View style={styles.socialContainer}>
-            <Text style={styles.socialText}>Acessar com:</Text>
-            <View style={styles.socialIconsRow}>
-              <TouchableOpacity style={styles.socialIconButton}>
-                <FontAwesome5 name="facebook-f" size={20} color={Colors.text} />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.socialIconButton}>
-                <FontAwesome5 name="google" size={20} color={Colors.text} />
-              </TouchableOpacity>
-            </View>
-          </View>
         </View>
       </ScrollView>
     </View>
