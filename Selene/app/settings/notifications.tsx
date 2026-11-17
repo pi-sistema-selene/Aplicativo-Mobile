@@ -7,18 +7,30 @@ import {
   Switch,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
-import { Ionicons, Octicons, Feather } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import * as Haptics from "expo-haptics";
+import {
+  DEFAULT_NOTIFICATION_PREFERENCES,
+  getNotificationPreferences,
+  NotificationPreferences,
+  PUSH_TOKEN_STORAGE_KEY,
+  registerForPushNotifications,
+  removePushToken,
+  saveNotificationPreferences,
+} from "@/services/notificationsService";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 
 export default function RelatoriosScreen() {
   const router = useRouter();
-  const [nomeUsuario, setNomeUsuario] = useState("Usuário");
   const [iniciais, setIniciais] = useState("US");
-  const [loading, setLoading] = useState(true);
+  const [settings, setSettings] = useState<NotificationPreferences>(
+    DEFAULT_NOTIFICATION_PREFERENCES,
+  );
 
   useEffect(() => {
     const carregarDadosUsuario = async () => {
@@ -40,40 +52,73 @@ export default function RelatoriosScreen() {
     };
 
     carregarDadosUsuario();
+
+    const carregarPreferencias = async () => {
+      try {
+        const token = await SecureStore.getItemAsync(STORAGE_KEYS.USER_TOKEN);
+        if (!token) return;
+        const preferencias = await getNotificationPreferences(token);
+        setSettings(preferencias);
+        if (preferencias.geral && preferencias.celular) {
+          const pushToken = await registerForPushNotifications(token);
+          await SecureStore.setItemAsync(PUSH_TOKEN_STORAGE_KEY, pushToken);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar preferências de notificação:", error);
+        Alert.alert(
+          "Notificações",
+          "Não foi possível carregar as configurações de notificação.",
+        );
+      }
+    };
+
+    carregarPreferencias();
   }, []);
 
-  const [settings, setSettings] = useState({
-    geral: true,
-    som: true,
-    celular: true,
-    vibrar: true,
-    personalizadas: false,
-    baixos: false,
-  });
+  const toggle = async (key: keyof NotificationPreferences) => {
+    const next = { ...settings, [key]: !settings[key] };
+    try {
+      const token = await SecureStore.getItemAsync(STORAGE_KEYS.USER_TOKEN);
+      if (!token) {
+        throw new Error("Faça login para alterar as notificações.");
+      }
 
-  const toggle = async (key: keyof typeof settings) => {
-    setSettings((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
+      const notificationsEnabled = next.geral && next.celular;
+      let pushToken: string | null = null;
+      if (
+        notificationsEnabled &&
+        (!settings.geral || !settings.celular)
+      ) {
+        pushToken = await registerForPushNotifications(token);
+      }
 
-    if (key === "vibrar") {
-      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      await saveNotificationPreferences(token, next);
+      if (pushToken) {
+        await SecureStore.setItemAsync(PUSH_TOKEN_STORAGE_KEY, pushToken);
+      } else if (!notificationsEnabled) {
+        const savedPushToken = await SecureStore.getItemAsync(
+          PUSH_TOKEN_STORAGE_KEY,
+        );
+        if (savedPushToken) {
+          await removePushToken(token, savedPushToken);
+          await SecureStore.deleteItemAsync(PUSH_TOKEN_STORAGE_KEY);
+        }
+      }
+
+      setSettings(next);
+      if (key === "vibrar" && next.vibrar) {
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar notificações:", error);
+      Alert.alert(
+        "Notificações",
+        error instanceof Error
+          ? error.message
+          : "Não foi possível atualizar as notificações.",
+      );
     }
   };
-
-  const Row = ({ label, value, onToggle }: any) => (
-    <View style={styles.row}>
-      <Text style={styles.rowText}>{label}</Text>
-      <Switch
-        value={value}
-        onValueChange={onToggle}
-        trackColor={{ false: "#D1D1D1", true: Colors.accent }}
-        thumbColor={Colors.white}
-        ios_backgroundColor="#D1D1D1"
-      />
-    </View>
-  );
 
   return (
     <SafeAreaProvider>
@@ -113,40 +158,67 @@ export default function RelatoriosScreen() {
 
         <View style={styles.content}>
           <ScrollView showsVerticalScrollIndicator={false}>
-            <Row
+            <NotificationRow
               label="Notificações Gerais"
               value={settings.geral}
               onToggle={() => toggle("geral")}
             />
-            <Row
+            <NotificationRow
               label="Som"
               value={settings.som}
               onToggle={() => toggle("som")}
             />
-            <Row
-              label="Som Celular"
+            <NotificationRow
+              label="Notificação no celular"
               value={settings.celular}
               onToggle={() => toggle("celular")}
             />
-            <Row
+            <NotificationRow
               label="Vibrar"
               value={settings.vibrar}
               onToggle={() => toggle("vibrar")}
             />
-            <Row
+            <NotificationRow
               label="Notificações Personalizadas"
               value={settings.personalizadas}
               onToggle={() => toggle("personalizadas")}
             />
-            <Row
+            <NotificationRow
               label="Alertas de Nível Baixo"
               value={settings.baixos}
               onToggle={() => toggle("baixos")}
             />
+            <Text style={styles.notificationHint}>
+              Ative as notificações gerais e no celular para receber alertas
+              mesmo com o aplicativo fechado. A opção Som controla o áudio.
+            </Text>
           </ScrollView>
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
+  );
+}
+
+function NotificationRow({
+  label,
+  value,
+  onToggle,
+}: {
+  label: string;
+  value: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <View style={styles.row}>
+      <Text style={styles.rowText}>{label}</Text>
+      <Switch
+        value={value}
+        onValueChange={onToggle}
+        trackColor={{ false: "#D1D1D1", true: Colors.accent }}
+        thumbColor={Colors.white}
+        ios_backgroundColor="#D1D1D1"
+      />
+    </View>
   );
 }
 
@@ -212,6 +284,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: Spacing.xl,
     paddingVertical: Spacing.xxs, // Melhora a área de toque
+  },
+  notificationHint: {
+    color: Colors.textMuted,
+    fontSize: Typography.small,
+    lineHeight: 19,
+    marginBottom: Spacing.lg,
   },
   rowText: { fontSize: Typography.medium, color: Colors.text, fontWeight: FontWeight.medium },
 

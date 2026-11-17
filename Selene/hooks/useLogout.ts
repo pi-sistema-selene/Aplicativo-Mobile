@@ -4,6 +4,10 @@ import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { clearSession } from "@/services/authService";
+import {
+  PUSH_TOKEN_STORAGE_KEY,
+  removePushToken,
+} from "@/services/notificationsService";
 
 export function useLogout() {
   const router = useRouter();
@@ -15,6 +19,18 @@ export function useLogout() {
         text: "Sair",
         onPress: async () => {
           try {
+            const [authToken, pushToken] = await Promise.all([
+              SecureStore.getItemAsync(STORAGE_KEYS.USER_TOKEN),
+              SecureStore.getItemAsync(PUSH_TOKEN_STORAGE_KEY),
+            ]);
+            if (authToken && pushToken) {
+              try {
+                await removePushToken(authToken, pushToken);
+              } catch (error) {
+                console.error("Erro ao remover token push ao sair:", error);
+              }
+            }
+            await SecureStore.deleteItemAsync(PUSH_TOKEN_STORAGE_KEY);
             await clearSession();
             router.replace("/(auth)");
           } catch (e) {

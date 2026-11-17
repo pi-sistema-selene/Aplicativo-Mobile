@@ -52,6 +52,19 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    pushTokens: {
+      type: [String],
+      default: [],
+      select: false,
+    },
+    notificationPreferences: {
+      geral: { type: Boolean, default: true },
+      som: { type: Boolean, default: true },
+      celular: { type: Boolean, default: false },
+      vibrar: { type: Boolean, default: true },
+      personalizadas: { type: Boolean, default: false },
+      baixos: { type: Boolean, default: false },
+    },
     ativo: {
       type: Boolean,
       default: true,
@@ -80,6 +93,7 @@ userSchema.methods.verificarSenha = async function (senha) {
 userSchema.methods.toJSON = function () {
   const user = this.toObject();
   delete user.senha;
+  delete user.pushTokens;
   return user;
 };
 

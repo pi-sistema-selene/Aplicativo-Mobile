@@ -93,6 +93,17 @@ No Render, normalmente a configuração é:
 
 O Render executa o Node.js em produção e a API fica disponível em uma URL pública fornecida pelo serviço, com acesso ao MongoDB e às variáveis configuradas no ambiente.
 
+## Notificações push
+
+O app registra o token Expo do celular pelas rotas autenticadas de `/api/v1/users/me`. Ao receber uma leitura, a API envia um push quando uma anomalia nova é detectada; leituras seguidas da mesma anomalia não repetem o aviso. O push continua chegando com o app fechado.
+
+Para habilitar em produção:
+
+- Configure as credenciais de push do Android (FCM) e do iOS (APNs) no projeto EAS associado ao `projectId` do app.
+- Gere e instale um novo build nativo após adicionar o plugin `expo-notifications`; notificações remotas devem ser testadas em um dispositivo físico.
+- No app, ative **Notificações Gerais** e **Som Celular**. Os controles **Som** e **Vibrar** definem a apresentação do alerta. **Alertas de Nível Baixo** desligado mantém apenas os alertas de alta prioridade.
+- Faça deploy do backend atualizado para registrar tokens, salvar preferências e enviar os pushes pelo Expo Push Service.
+
 ## Observações importantes
 
 - O backend depende de uma conexão ativa com o MongoDB.

@@ -2,6 +2,11 @@ const Dispositivo = require("../models-mongodb/Dispositivo");
 const Leitura = require("../models-mongodb/Leitura");
 const cloudinary = require("../config/cloudinary");
 const { predictFromUrl } = require("../services/predictService");
+const {
+  getPreviousReading,
+  notifyOnNewSensorAlert,
+  notifyOnNewImageAlert,
+} = require("../services/alertNotificationService");
 
 class LeituraController {
   static async salvarImagemCloudinary(
@@ -56,21 +61,35 @@ class LeituraController {
         await dispositivo.save();
       }
 
+      const dados = {
+        temperatura: temp,
+        umidade: umid,
+        luminosidade: lux,
+        ph: ph,
+        condutividade: cond,
+        nivel_agua: nivel !== undefined ? Boolean(nivel) : null,
+        bateria: bat,
+        rssi: rssi,
+      };
+      const leituraAnterior = await getPreviousReading(
+        dispositivo._id,
+        "SENSORES",
+      );
       const leitura = await Leitura.create({
         dispositivo: dispositivo._id,
         tipo_leitura: "SENSORES",
-        dados: {
-          temperatura: temp,
-          umidade: umid,
-          luminosidade: lux,
-          ph: ph,
-          condutividade: cond,
-          nivel_agua: nivel !== undefined ? Boolean(nivel) : null,
-          bateria: bat,
-          rssi: rssi,
-        },
+        dados,
         timestamp: new Date(),
       });
+      try {
+        await notifyOnNewSensorAlert(
+          dispositivo,
+          dados,
+          leituraAnterior?.dados,
+        );
+      } catch (error) {
+        console.error("Erro ao enviar push do alerta dos sensores:", error);
+      }
 
       res.status(201).json({
         success: true,
@@ -127,6 +146,10 @@ class LeituraController {
         predicao = await predictFromUrl(foto_path);
       }
 
+      const leituraAnterior = await getPreviousReading(
+        dispositivo._id,
+        "CAMERA",
+      );
       const leitura = await Leitura.create({
         dispositivo: dispositivo._id,
         tipo_leitura: "CAMERA",
@@ -137,6 +160,15 @@ class LeituraController {
         },
         timestamp: new Date(),
       });
+      try {
+        await notifyOnNewImageAlert(
+          dispositivo,
+          predicao,
+          leituraAnterior?.dados,
+        );
+      } catch (error) {
+        console.error("Erro ao enviar push do alerta da câmera:", error);
+      }
 
       res.status(201).json({
         success: true,
@@ -436,21 +468,35 @@ class LeituraController {
       dispositivo.ultima_comunicacao = new Date();
       await dispositivo.save();
 
+      const dados = {
+        temperatura: temp,
+        umidade: umid,
+        luminosidade: lux,
+        ph: ph,
+        condutividade: cond,
+        nivel_agua: nivel !== undefined ? Boolean(nivel) : null,
+        bateria: bat,
+        rssi: rssi,
+      };
+      const leituraAnterior = await getPreviousReading(
+        dispositivo._id,
+        "SENSORES",
+      );
       const leitura = await Leitura.create({
         dispositivo: dispositivo._id,
         tipo_leitura: "SENSORES",
-        dados: {
-          temperatura: temp,
-          umidade: umid,
-          luminosidade: lux,
-          ph: ph,
-          condutividade: cond,
-          nivel_agua: nivel !== undefined ? Boolean(nivel) : null,
-          bateria: bat,
-          rssi: rssi,
-        },
+        dados,
         timestamp: new Date(),
       });
+      try {
+        await notifyOnNewSensorAlert(
+          dispositivo,
+          dados,
+          leituraAnterior?.dados,
+        );
+      } catch (error) {
+        console.error("Erro ao enviar push do alerta dos sensores:", error);
+      }
 
       res.status(201).json({
         success: true,
@@ -518,6 +564,10 @@ class LeituraController {
 
       const predicao = await predictFromUrl(fotoPath);
 
+      const leituraAnterior = await getPreviousReading(
+        dispositivo._id,
+        "CAMERA",
+      );
       const leitura = await Leitura.create({
         dispositivo: dispositivo._id,
         tipo_leitura: "CAMERA",
@@ -530,6 +580,15 @@ class LeituraController {
         },
         timestamp: timestamp ? new Date(timestamp * 1000) : new Date(),
       });
+      try {
+        await notifyOnNewImageAlert(
+          dispositivo,
+          predicao,
+          leituraAnterior?.dados,
+        );
+      } catch (error) {
+        console.error("Erro ao enviar push do alerta da câmera:", error);
+      }
 
       res.status(201).json({
         success: true,

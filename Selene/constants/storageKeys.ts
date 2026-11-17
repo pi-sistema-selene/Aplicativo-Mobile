@@ -5,4 +5,5 @@ export const STORAGE_KEYS = {
   USER_ID: "userId",
   USER_EMAIL: "userEmail",
   EXPORT_HISTORY: "selene_export_history",
+  PUSH_TOKEN: "selene_expo_push_token",
 } as const;

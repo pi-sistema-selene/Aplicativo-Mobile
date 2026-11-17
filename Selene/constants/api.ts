@@ -38,6 +38,8 @@ export const ENDPOINTS = {
   users: {
     listar: "/users",
     detalhe: (id: string) => `/users/${id}`,
+    notificationPreferences: "/users/me/notification-preferences",
+    pushToken: "/users/me/push-token",
   },
   chats: {
     listar: "/chats",
