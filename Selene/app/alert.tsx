@@ -29,6 +29,7 @@ import {
 import { formatDateBR, formatTimeBR } from "@/utils/formatDate";
 import type { AlertaItem } from "@/types/alerta";
 import { getApiAssetUrl } from "@/constants/api";
+import { useRealtimeRefresh } from "@/hooks/useRealtimeRefresh";
 
 interface AnaliseItem {
   id: string;
@@ -45,6 +46,7 @@ export default function AlertasScreen() {
   const [alertas, setAlertas] = useState<AlertaItem[]>([]);
   const [analises, setAnalises] = useState<AnaliseItem[]>([]);
   const [activeFilter, setActiveFilter] = useState<"Total" | "Alta" | "Média" | "Baixa">("Total");
+  const [realtimeRefresh, setRealtimeRefresh] = useState(0);
 
   useEffect(() => {
     const carregarEProcessarAlertas = async () => {
@@ -133,7 +135,9 @@ export default function AlertasScreen() {
     };
 
     carregarEProcessarAlertas();
-  }, []);
+  }, [realtimeRefresh]);
+
+  useRealtimeRefresh(() => setRealtimeRefresh((value) => value + 1));
 
   const countTotal = alertas.length;
   const countAlta = alertas.filter((a) => a.prioridade === "Alta").length;

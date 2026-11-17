@@ -18,6 +18,7 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { API_V1 } from "@/constants/api";
+import { useRealtimeRefresh } from "@/hooks/useRealtimeRefresh";
 
 interface Message {
   _id: string;
@@ -150,6 +151,9 @@ export default function ChatScreen() {
   useEffect(() => {
     if (role) fetchMessages();
   }, [chatId, role]);
+  useRealtimeRefresh(() => {
+    if (role) void fetchMessages();
+  }, false);
   useEffect(() => {
     scrollViewRef.current?.scrollToEnd({ animated: true });
   }, [messages]);

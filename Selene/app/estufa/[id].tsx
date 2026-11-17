@@ -7,6 +7,7 @@ import { Feather } from '@expo/vector-icons';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { API_V1, getApiAssetUrl } from "@/constants/api";
+import { useRealtimeRefresh } from "@/hooks/useRealtimeRefresh";
 
 type DispositivoEstufa = {
   _id: string;
@@ -140,6 +141,8 @@ export default function DetalheEstufa() {
       fetchDetalhes();
     }, [fetchDetalhes]),
   );
+
+  useRealtimeRefresh(fetchDetalhes, false);
 
   if (loading) {
     return (

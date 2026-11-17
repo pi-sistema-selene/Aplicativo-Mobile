@@ -13,6 +13,7 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import * as SecureStore from "expo-secure-store";
 import { useRouter, useFocusEffect } from "expo-router";
 import { API_V1 } from "@/constants/api";
+import { useRealtimeRefresh } from "@/hooks/useRealtimeRefresh";
 
 type Chat = {
   _id: string;
@@ -87,6 +88,8 @@ export default function DashboardAdmin() {
       fetchChats();
     }, [])
   );
+
+  useRealtimeRefresh(fetchChats, false);
 
   return (
     <SafeAreaProvider>

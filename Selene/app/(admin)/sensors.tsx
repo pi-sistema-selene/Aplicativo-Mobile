@@ -1,5 +1,6 @@
 import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
 import { API_V1 } from "@/constants/api";
+import { useRealtimeRefresh } from "@/hooks/useRealtimeRefresh";
   import React, { useEffect, useState } from "react";
   import {
     View,
@@ -39,6 +40,7 @@ import { API_V1 } from "@/constants/api";
     const [loadingUsers, setLoadingUsers] = useState(false);
 
     const [token, setToken] = useState<string | null>(null);
+    const [realtimeRefresh, setRealtimeRefresh] = useState(0);
 
     const [iniciais, setIniciais] = useState("US");
 
@@ -124,7 +126,9 @@ import { API_V1 } from "@/constants/api";
       if (token) {
         fetchUsuarios();
       }
-    }, [token]);
+    }, [token, realtimeRefresh]);
+
+    useRealtimeRefresh(() => setRealtimeRefresh((value) => value + 1));
 
     const criarDispositivo = async () => {
       if (!nome || !mac || !usuarioId) {

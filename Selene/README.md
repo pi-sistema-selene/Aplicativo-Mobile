@@ -2,6 +2,32 @@
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
+## Notificações push no Android
+
+O push no Android requer credenciais FCM e um novo build nativo; instalar o
+plugin ou atualizar o JavaScript sozinho não inicializa o Firebase.
+
+1. No Firebase Console, crie/abra um app Android com o ID
+   `com.dinozin.selene` e baixe o `google-services.json`.
+2. No EAS, envie esse arquivo como uma variável de ambiente do tipo **File**
+   chamada `GOOGLE_SERVICES_JSON` para o perfil de build usado. O `app.config.js`
+   passa o caminho do arquivo ao Gradle sem incluir a credencial no Git.
+3. Configure também as credenciais FCM do projeto EAS para o Expo Push Service.
+4. Gere e instale um novo APK/build. O APK já instalado não passa a ter Firebase
+   quando o arquivo é adicionado depois.
+
+Para build local, coloque o arquivo em `google-services.json` (ignorado pelo
+Git) e defina `GOOGLE_SERVICES_JSON=./google-services.json` antes de rodar o
+prebuild/build Android.
+
+## Atualização de dados em tempo real
+
+As telas de dados usam Socket.IO autenticado para receber o evento
+`data:changed` e buscar novamente as informações pela API. As alterações só
+aparecem em tempo real quando a versão atualizada do backend está publicada e
+o celular tem conexão com a internet; telas em segundo plano recarregam ao
+voltar ao foco.
+
 ## Get started
 
 1. Install dependencies

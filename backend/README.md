@@ -40,6 +40,15 @@ Também existem endpoints úteis:
 - `/api/v1/health` — verifica se a API está funcionando
 - `/api/v1/test-db` — verifica a conexão com MongoDB
 
+## Atualização em tempo real
+
+O servidor também disponibiliza Socket.IO autenticado por JWT no mesmo host
+da API. Após qualquer alteração concluída com sucesso por uma rota HTTP, envia
+o evento `data:changed` sem incluir dados pessoais; os clientes atualizam as
+telas ativas buscando novamente os dados pelas rotas autenticadas existentes.
+O evento é agrupado em uma janela curta para evitar rajadas durante alterações
+em sequência.
+
 ## Autenticação
 
 As rotas protegidas exigem um token no header:

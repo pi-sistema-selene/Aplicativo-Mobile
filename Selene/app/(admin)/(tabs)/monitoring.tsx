@@ -15,6 +15,7 @@ import { useRouter } from "expo-router";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import * as SecureStore from "expo-secure-store";
 import { API_V1 } from "@/constants/api";
+import { useRealtimeRefresh } from "@/hooks/useRealtimeRefresh";
 
 type Sensor = {
   id: string;
@@ -32,6 +33,7 @@ export default function MonitoramentoAdmin() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [token, setToken] = useState<string | null>(null);
+  const [realtimeRefresh, setRealtimeRefresh] = useState(0);
 
   const handleGoProfile = () => {
     router.push("/(admin)/profile-admin");
@@ -119,7 +121,9 @@ export default function MonitoramentoAdmin() {
 
   useEffect(() => {
     if (token) fetchSensores();
-  }, [token]);
+  }, [token, realtimeRefresh]);
+
+  useRealtimeRefresh(() => setRealtimeRefresh((value) => value + 1));
 
   const renderSensor = ({ item }: { item: Sensor }) => {
     const tipoUpper = item.tipo?.toUpperCase() || "";

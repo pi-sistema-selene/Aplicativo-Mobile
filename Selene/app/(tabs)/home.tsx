@@ -32,6 +32,7 @@ import {
 import type { HomeAlerta } from "@/types/alerta";
 import type { Leitura } from "@/types/dispositivo";
 import { getApiAssetUrl } from "@/constants/api";
+import { useRealtimeRefresh } from "@/hooks/useRealtimeRefresh";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -160,6 +161,8 @@ export default function HomeScreen() {
       setLoading(false);
     }
   };
+
+  useRealtimeRefresh(carregarDados);
   
   useEffect(() => {
     carregarDados();

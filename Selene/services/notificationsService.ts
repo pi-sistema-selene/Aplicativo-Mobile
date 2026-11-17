@@ -121,9 +121,24 @@ export async function registerForPushNotifications(
     throw new Error("ID do projeto Expo não configurado para notificações push.");
   }
 
-  const pushToken = (
-    await Notifications.getExpoPushTokenAsync({ projectId })
-  ).data;
+  let pushToken: string;
+  try {
+    pushToken = (
+      await Notifications.getExpoPushTokenAsync({ projectId })
+    ).data;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (
+      Platform.OS === "android" &&
+      /FirebaseApp is not initialized|googleServicesFile/i.test(message)
+    ) {
+      throw new Error(
+        "O Firebase ainda não está configurado neste build Android. Configure o google-services.json no projeto EAS e gere um novo APK.",
+      );
+    }
+    throw error;
+  }
+
   await requestJson(
     authToken,
     ENDPOINTS.users.pushToken,

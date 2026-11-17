@@ -15,6 +15,7 @@ import { useRouter } from "expo-router";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { API_V1 } from "@/constants/api";
+import { useRealtimeRefresh } from "@/hooks/useRealtimeRefresh";
 
 interface Estufa {
   _id: string;
@@ -30,6 +31,7 @@ export default function EstufasScreen() {
   const [loadingEstufas, setLoadingEstufas] = useState(true);
 
   const [iniciais, setIniciais] = useState("US");
+  const [realtimeRefresh, setRealtimeRefresh] = useState(0);
 
   useEffect(() => {
     const carregarDadosUsuario = async () => {
@@ -80,7 +82,9 @@ export default function EstufasScreen() {
 
   useEffect(() => {
     fetchEstufas();
-  }, []);
+  }, [realtimeRefresh]);
+
+  useRealtimeRefresh(() => setRealtimeRefresh((value) => value + 1));
 
   const renderItem = ({ item }: { item: Estufa }) => (
     <TouchableOpacity

@@ -20,6 +20,7 @@ import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { useRouter, useFocusEffect } from "expo-router";
 import { useCallback } from "react";
 import { API_V1 } from "@/constants/api";
+import { useRealtimeRefresh } from "@/hooks/useRealtimeRefresh";
 
 interface Usuario {
   id: string;
@@ -157,6 +158,8 @@ export default function ControleAcessoScreen() {
       }
     }, [token]),
   );
+
+  useRealtimeRefresh(fetchDados, false);
 
   const renderUserItem = (item: Usuario) => (
     <TouchableOpacity

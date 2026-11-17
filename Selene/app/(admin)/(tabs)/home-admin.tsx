@@ -15,6 +15,7 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import axios from "axios";
 import { API_V1 } from "@/constants/api";
+import { useRealtimeRefresh } from "@/hooks/useRealtimeRefresh";
 
 export default function AdminHome() {
   const router = useRouter();
@@ -22,6 +23,7 @@ export default function AdminHome() {
   const [iniciais, setIniciais] = useState("US");
   const [loading, setLoading] = useState(true);
   const [nomeUsuario, setNomeUsuario] = useState("Usuário");
+  const [realtimeRefresh, setRealtimeRefresh] = useState(0);
 
   const [stats, setStats] = useState({
     usuarios_total: 0,
@@ -79,7 +81,9 @@ export default function AdminHome() {
     };
 
     carregarStats();
-  }, []);
+  }, [realtimeRefresh]);
+
+  useRealtimeRefresh(() => setRealtimeRefresh((value) => value + 1));
 
   const MenuButton = ({ title, subtitle, icon, onPress }: any) => (
     <TouchableOpacity style={styles.card} onPress={onPress}>

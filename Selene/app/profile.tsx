@@ -19,11 +19,13 @@ import { API_V1, getApiAssetUrl } from "@/constants/api";
 import { useLogout } from "@/hooks/useLogout";
 import { getInitials } from "@/utils/initials";
 import { isAdminRole } from "@/utils/role";
+import { useRealtimeRefresh } from "@/hooks/useRealtimeRefresh";
 
 export default function ProfileScreen() {
   const router = useRouter();
   const { logout } = useLogout();
   const [loading, setLoading] = useState(true);
+  const [realtimeRefresh, setRealtimeRefresh] = useState(0);
   const [isAdmin, setIsAdmin] = useState(false);
   const [iniciais, setIniciais] = useState("US");
   const [fotoUri, setFotoUri] = useState<string | null>(null);
@@ -53,6 +55,22 @@ export default function ProfileScreen() {
             if (profile.data?.foto_perfil) {
               setFotoUri(getApiAssetUrl(profile.data.foto_perfil));
             }
+            const nomeAtualizado = profile.data?.nome_completo;
+            if (
+              typeof nomeAtualizado === "string" &&
+              nomeAtualizado.trim() &&
+              nomeAtualizado !== nomeCompleto
+            ) {
+              const nome = nomeAtualizado.trim();
+              const iniciaisAtualizadas = getInitials(nome);
+              await SecureStore.setItemAsync(STORAGE_KEYS.USER_NAME, nome);
+              setIniciais(iniciaisAtualizadas);
+              setUserData({
+                nome,
+                id: userId ? userId.substring(0, 8) : "--------",
+                iniciais: iniciaisAtualizadas,
+              });
+            }
           }
         }
 
@@ -73,7 +91,9 @@ export default function ProfileScreen() {
     };
 
     loadUserData();
-  }, []);
+  }, [realtimeRefresh]);
+
+  useRealtimeRefresh(() => setRealtimeRefresh((value) => value + 1));
 
   return (
     <SafeAreaProvider>

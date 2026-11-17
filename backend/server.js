@@ -1,16 +1,43 @@
 const express = require('express');
+const http = require('http');
 const cors = require('cors');
 const helmet = require('helmet');
+const { Server } = require('socket.io');
+const jwt = require('jsonwebtoken');
 const path = require('path');
 require('dotenv').config();
 
 const routes = require('./routes');
 const errorHandler = require('./middleware/errorHandler');
 const { connectDB } = require('./config/mongodb');
+const { setRealtimeServer, broadcastDataChanged } = require('./services/realtimeService');
 
 const app = express();
+const httpServer = http.createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: true,
+    methods: ['GET', 'POST'],
+  },
+});
 const PORT = process.env.PORT || 3000;
 const API_PREFIX = process.env.API_PREFIX || '/api/v1';
+
+setRealtimeServer(io);
+
+io.use((socket, next) => {
+  const token = socket.handshake.auth?.token;
+  if (typeof token !== 'string' || !token) {
+    return next(new Error('Autenticação necessária'));
+  }
+
+  try {
+    jwt.verify(token, process.env.JWT_SECRET || 'secret_fallback');
+    return next();
+  } catch (error) {
+    return next(new Error('Token inválido ou expirado'));
+  }
+});
 
 app.use(helmet());
 
@@ -45,6 +72,13 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 app.use((req, res, next) => {
   console.log(`📡 ${new Date().toISOString()} - ${req.method} ${req.url}`);
+  if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
+    res.on('finish', () => {
+      if (res.statusCode >= 200 && res.statusCode < 300) {
+        broadcastDataChanged();
+      }
+    });
+  }
   next();
 });
 
@@ -58,7 +92,7 @@ async function startServer() {
     
     console.log('✅ Conectado ao MongoDB com sucesso');
 
-    app.listen(PORT, () => {
+    httpServer.listen(PORT, () => {
       console.log(`
 🚀 SERVIDOR INICIADO COM SUCESSO!
 ================================

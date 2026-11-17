@@ -15,6 +15,7 @@ import { Feather } from "@expo/vector-icons";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import * as SecureStore from "expo-secure-store";
 import { API_V1 } from "@/constants/api";
+import { useRealtimeRefresh } from "@/hooks/useRealtimeRefresh";
 
 export default function DetalhesSensor() {
   const router = useRouter();
@@ -82,6 +83,11 @@ export default function DetalhesSensor() {
       setRefreshing(false);
     }
   }, [id, token, buscarLeituras]);
+
+  useRealtimeRefresh(() => {
+    const sensorId = Array.isArray(id) ? id[0] : id;
+    if (sensorId && token) void buscarLeituras(sensorId, token);
+  });
 
   useEffect(() => {
     const bootstrap = async () => {

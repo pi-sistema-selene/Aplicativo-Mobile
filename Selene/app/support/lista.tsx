@@ -22,6 +22,7 @@ import { useProfileNavigation } from "@/hooks/useProfileNavigation";
 import { listarChats } from "@/services/chatService";
 import { isAdminRole } from "@/utils/role";
 import type { Chat } from "@/types/chat";
+import { useRealtimeRefresh } from "@/hooks/useRealtimeRefresh";
 
 export default function ListaChats() {
   const router = useRouter();
@@ -60,6 +61,8 @@ export default function ListaChats() {
       fetchChats();
     }, [role]),
   );
+
+  useRealtimeRefresh(fetchChats, false);
 
   const iniciarNovoChat = async () => {
     if (isAdminRole(role)) {

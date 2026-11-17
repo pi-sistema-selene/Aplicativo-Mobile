@@ -15,12 +15,14 @@ import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { API_V1 } from "@/constants/api";
+import { useRealtimeRefresh } from "@/hooks/useRealtimeRefresh";
 
 export default function PerfilUsuarioScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
 
   const [loading, setLoading] = useState(true);
+  const [realtimeRefresh, setRealtimeRefresh] = useState(0);
   const [userData, setUserData] = useState<any>(null);
   const [iniciaisLogado, setIniciaisLogado] = useState("US");
 
@@ -54,6 +56,8 @@ export default function PerfilUsuarioScreen() {
 
     carregarIniciaisHeader();
   }, [id]);
+
+  useRealtimeRefresh(() => setRealtimeRefresh((value) => value + 1));
 
   useEffect(() => {
     const buscarDadosUsuario = async () => {
@@ -144,7 +148,7 @@ export default function PerfilUsuarioScreen() {
     };
 
     buscarDadosUsuario();
-  }, [id]);
+  }, [id, realtimeRefresh]);
 
   const handleExcluir = async () => {
     Alert.alert("Confirmar", "Deseja realmente excluir este usuário?", [
