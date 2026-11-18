@@ -10,12 +10,11 @@ import {
 } from "react-native";
 
 import { Feather } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 
 import * as SecureStore from "expo-secure-store";
-import { useFocusEffect } from "@react-navigation/native";
 import { API_V1 } from "@/constants/api";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { useUserInitials } from "@/hooks/useUserInitials";
