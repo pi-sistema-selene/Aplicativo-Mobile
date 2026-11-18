@@ -4,6 +4,13 @@ const User = require("../models-mongodb/User");
 const Leitura = require("../models-mongodb/Leitura");
 
 class DispositivoController {
+  static filtroPorProprietario(req, id) {
+    return {
+      _id: id,
+      ...(!req.adminId ? { usuario: req.userId } : {}),
+    };
+  }
+
   static async listar(req, res) {
     try {
       const usuarioId = req.userId;
@@ -115,6 +122,16 @@ class DispositivoController {
         });
       }
 
+      if (
+        planta_id &&
+        !(await Planta.exists({ _id: planta_id, usuario: usuario_id }))
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "A planta selecionada não pertence ao usuário informado",
+        });
+      }
+
       const dispositivo = await Dispositivo.create({
         mac_address,
         nome: nome || `ESP32_${mac_address.slice(-6)}`,
@@ -170,7 +187,10 @@ class DispositivoController {
       }
 
       if (planta_id) {
-        const plantaExiste = await Planta.findById(planta_id);
+        const plantaExiste = await Planta.findOne({
+          _id: planta_id,
+          usuario: usuario_id || dispositivo.usuario,
+        });
 
         if (!plantaExiste) {
           return res.status(404).json({
@@ -218,7 +238,9 @@ class DispositivoController {
       const { id } = req.params;
       const { online } = req.body;
 
-      const dispositivo = await Dispositivo.findById(id);
+      const dispositivo = await Dispositivo.findOne(
+        DispositivoController.filtroPorProprietario(req, id),
+      );
 
       if (!dispositivo) {
         return res.status(404).json({
@@ -227,8 +249,8 @@ class DispositivoController {
         });
       }
 
-      const atualizado = await Dispositivo.findByIdAndUpdate(
-        id,
+      const atualizado = await Dispositivo.findOneAndUpdate(
+        DispositivoController.filtroPorProprietario(req, id),
         {
           online,
           ultima_comunicacao: new Date(),
@@ -258,7 +280,9 @@ class DispositivoController {
       const { id } = req.params;
       const { ativo } = req.body;
 
-      const dispositivo = await Dispositivo.findById(id);
+      const dispositivo = await Dispositivo.findOne(
+        DispositivoController.filtroPorProprietario(req, id),
+      );
 
       if (!dispositivo) {
         return res.status(404).json({
@@ -349,6 +373,15 @@ class DispositivoController {
       const { id } = req.params;
 
       const limite = parseInt(req.query.limite) || 40;
+      const dispositivo = await Dispositivo.findOne(
+        DispositivoController.filtroPorProprietario(req, id),
+      ).select("_id");
+      if (!dispositivo) {
+        return res.status(404).json({
+          success: false,
+          message: "Dispositivo não encontrado",
+        });
+      }
 
       const leituras = await Leitura.find({
         dispositivo: id,
@@ -373,6 +406,15 @@ class DispositivoController {
   static async buscarResumo(req, res) {
     try {
       const { id } = req.params;
+      const dispositivo = await Dispositivo.findOne(
+        DispositivoController.filtroPorProprietario(req, id),
+      ).select("_id");
+      if (!dispositivo) {
+        return res.status(404).json({
+          success: false,
+          message: "Dispositivo não encontrado",
+        });
+      }
 
       const [totalLeituras, totalCapturas, totalSensores] = await Promise.all([
         Leitura.countDocuments({ dispositivo: id }),

@@ -4,9 +4,16 @@ const Chat = require("../models-mongodb/Chat");
 const Message = require("../models-mongodb/Message");
 
 class ChatController {
+  static filtroDeAcesso(req, chatId) {
+    return {
+      _id: chatId,
+      ...(!req.adminId ? { userId: String(req.userId) } : {}),
+    };
+  }
+
   static async listarChats(req, res) {
     try {
-      const userId = req.user.id;
+      const userId = String(req.userId);
 
       const chats = await Chat.find({ userId }).sort({ updatedAt: -1 });
 
@@ -20,7 +27,7 @@ class ChatController {
 
   static async criarChat(req, res) {
     try {
-      const userId = req.user.id;
+      const userId = String(req.userId);
 
       const chatExistente = await Chat.findOne({
         userId,
@@ -65,7 +72,7 @@ class ChatController {
       const { chatId } = req.params;
       const { texto } = req.body;
 
-      if (!texto) {
+      if (typeof texto !== "string" || !texto.trim()) {
         return res.status(400).json({
           error: "Texto obrigatório",
         });
@@ -88,9 +95,9 @@ class ChatController {
       const mensagem = await Message.create({
         chatId,
 
-        texto,
+        texto: texto.trim(),
 
-        autor: req.adminId,
+        autor: String(req.adminId),
 
         tipo: "admin",
       });
@@ -116,9 +123,13 @@ class ChatController {
         });
       }
 
-      const chat = await Chat.findByIdAndUpdate(
-        chatId,
-        { status: "encerrado" },
+      const chat = await Chat.findOneAndUpdate(
+        ChatController.filtroDeAcesso(req, chatId),
+        {
+          status: "encerrado",
+          encerradoPor: req.adminId || req.userId,
+          encerradoPorTipo: req.adminId ? "Admin" : "User",
+        },
         { new: true },
       );
 
@@ -146,9 +157,18 @@ class ChatController {
         });
       }
 
-      const mensagens = await Message.find({
-        chatId,
-      }).sort({ createdAt: 1 });
+      const chat = await Chat.findOne(
+        ChatController.filtroDeAcesso(req, chatId),
+      ).select("_id");
+      if (!chat) {
+        return res.status(404).json({
+          error: "Chat não encontrado",
+        });
+      }
+
+      const mensagens = await Message.find({ chatId: chat._id }).sort({
+        createdAt: 1,
+      });
 
       res.json(mensagens);
     } catch (err) {
@@ -163,7 +183,7 @@ class ChatController {
       const { chatId } = req.params;
       const { texto } = req.body;
 
-      if (!texto) {
+      if (typeof texto !== "string" || !texto.trim()) {
         return res.status(400).json({
           error: "Texto obrigatório",
         });
@@ -175,14 +195,23 @@ class ChatController {
         });
       }
 
+      const chat = await Chat.findOne(
+        ChatController.filtroDeAcesso(req, chatId),
+      ).select("_id");
+      if (!chat) {
+        return res.status(404).json({
+          error: "Chat não encontrado",
+        });
+      }
+
       const mensagem = await Message.create({
-        chatId,
+        chatId: chat._id,
 
-        texto,
+        texto: texto.trim(),
 
-        autor: req.user.id,
+        autor: String(req.adminId || req.userId),
 
-        tipo: "user",
+        tipo: req.adminId ? "admin" : "user",
       });
 
       await Chat.findByIdAndUpdate(chatId, { updatedAt: new Date() });

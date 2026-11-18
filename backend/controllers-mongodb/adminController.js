@@ -47,6 +47,7 @@ class adminController {
         { expiresIn: "24h" },
       );
 
+      req.adminId = admin._id;
       res.json({
         success: true,
         message: "Login de administrador realizado com sucesso",

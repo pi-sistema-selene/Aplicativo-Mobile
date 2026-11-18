@@ -59,6 +59,19 @@ Authorization: Bearer <token>
 
 O token é validado no middleware de autenticação e identifica o usuário ou admin autenticado.
 
+## Dados por usuário e histórico de ações
+
+As rotas de plantas, alertas e configurações de alerta exigem autenticação.
+Consultas e alterações de dados de usuário são limitadas ao proprietário; admins
+mantêm a visão global. Leituras e alertas ficam associados ao proprietário do
+dispositivo que os gerou. Registros antigos são preservados e não recebem um
+proprietário por inferência.
+
+Alterações bem-sucedidas autenticadas (criação, atualização e exclusão) são
+registradas sem armazenar o conteúdo enviado. Cada conta consulta apenas o
+próprio histórico em `GET /api/v1/users/me/activity`; `limit` e `page` são
+opcionais.
+
 ## Variáveis de ambiente
 
 O backend espera as seguintes variáveis no arquivo `.env`:

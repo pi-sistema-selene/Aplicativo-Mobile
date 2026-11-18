@@ -94,8 +94,7 @@ async function notifyOnNewSensorAlert(device, data, previousData) {
 async function notifyOnNewImageAlert(device, prediction, previousData) {
   if (
     !device.usuario ||
-    prediction?.anomalia !== true ||
-    (previousData?.predicao && previousData.predicao.anomalia === true)
+    prediction?.anomalia !== true
   ) {
     return;
   }

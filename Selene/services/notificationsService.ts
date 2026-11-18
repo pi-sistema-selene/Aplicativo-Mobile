@@ -1,7 +1,7 @@
 import { API_V1, ENDPOINTS } from "@/constants/api";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { authHeaders } from "@/utils/authHeaders";
-import Constants from "expo-constants";
+import Constants, { AppOwnership } from "expo-constants";
 import * as Notifications from "expo-notifications";
 import { AndroidImportance } from "expo-notifications";
 import { Platform } from "react-native";
@@ -18,11 +18,15 @@ export interface NotificationPreferences {
 export const DEFAULT_NOTIFICATION_PREFERENCES: NotificationPreferences = {
   geral: true,
   som: true,
-  celular: false,
+  celular: true,
   vibrar: true,
   personalizadas: false,
   baixos: false,
 };
+
+function isExpoGo(): boolean {
+  return Constants.appOwnership === AppOwnership.Expo;
+}
 
 function getProjectId(): string | undefined {
   return (
@@ -77,7 +81,7 @@ export async function saveNotificationPreferences(
 }
 
 async function configureAndroidChannels() {
-  if (Platform.OS !== "android") return;
+  if (Platform.OS !== "android" || isExpoGo()) return;
 
   for (const sound of [true, false]) {
     for (const vibrate of [true, false]) {
@@ -102,6 +106,11 @@ export async function registerForPushNotifications(
 ): Promise<string> {
   if (Platform.OS === "web") {
     throw new Error("Notificações push estão disponíveis no aplicativo para celular.");
+  }
+  if (isExpoGo()) {
+    throw new Error(
+      "Push remoto não funciona no Expo Go para Android. Instale o development build do Selene para ativar notificações push.",
+    );
   }
 
   await configureAndroidChannels();

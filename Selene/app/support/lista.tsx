@@ -6,6 +6,7 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 
 import { Feather } from "@expo/vector-icons";
@@ -43,23 +44,28 @@ export default function ListaChats() {
     init();
   }, []);
 
-  const fetchChats = async () => {
+  const fetchChats = useCallback(async () => {
     try {
       const token = await SecureStore.getItemAsync(STORAGE_KEYS.USER_TOKEN);
 
       if (!token) {
-        return;
+        throw new Error("Sua sessão expirou. Entre novamente.");
       }
 
       const lista = await listarChats(token, isAdminRole(role));
       setChats(lista);
-    } catch (err) {}
-  };
+    } catch (err) {
+      Alert.alert(
+        "Erro ao carregar conversas",
+        err instanceof Error ? err.message : "Tente novamente.",
+      );
+    }
+  }, [role]);
 
   useFocusEffect(
     useCallback(() => {
-      fetchChats();
-    }, [role]),
+      void fetchChats();
+    }, [fetchChats]),
   );
 
   useRealtimeRefresh(fetchChats, false);
@@ -86,18 +92,30 @@ export default function ListaChats() {
       );
 
       const data = await res.json();
+      if (!res.ok) {
+        throw new Error(
+          typeof data?.message === "string"
+            ? data.message
+            : `Não foi possível iniciar a conversa (HTTP ${res.status}).`,
+        );
+      }
 
       const chatId = data.data?._id || data._id;
 
       if (!chatId) {
-        return;
+        throw new Error("A API não retornou o identificador da conversa.");
       }
 
       router.push({
         pathname: "/support/chat",
         params: { chatId },
       });
-    } catch (err) {}
+    } catch (err) {
+      Alert.alert(
+        "Erro ao iniciar conversa",
+        err instanceof Error ? err.message : "Tente novamente.",
+      );
+    }
   };
 
   return (

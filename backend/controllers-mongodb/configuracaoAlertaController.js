@@ -1,13 +1,55 @@
 const ConfiguracaoAlerta = require("../models-mongodb/ConfiguracaoAlerta");
+const Dispositivo = require("../models-mongodb/Dispositivo");
+const User = require("../models-mongodb/User");
+
 class ConfiguracaoAlertaController {
+  static async usuarioDaConfiguracao(req, res, usuarioId) {
+    const id = usuarioId || req.userId;
+    if (!id || !(await User.exists({ _id: id }))) {
+      res.status(400).json({
+        success: false,
+        message: "Usuário inválido para a configuração",
+      });
+      return null;
+    }
+    return id;
+  }
+
+  static async dispositivoDoUsuario(dispositivoId, usuarioId) {
+    if (!dispositivoId) return true;
+    return Boolean(
+      await Dispositivo.exists({
+        _id: dispositivoId,
+        usuario: usuarioId,
+      }),
+    );
+  }
+
   static async criar(req, res) {
     try {
+      const usuario = await ConfiguracaoAlertaController.usuarioDaConfiguracao(
+        req,
+        res,
+        req.adminId ? req.body.usuario : req.userId,
+      );
+      if (!usuario) return;
+      if (
+        !(await ConfiguracaoAlertaController.dispositivoDoUsuario(
+          req.body.dispositivo,
+          usuario,
+        ))
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "O dispositivo não pertence ao usuário da configuração",
+        });
+      }
       const dados = {
         ...req.body,
-        usuario: req.userId,
+        usuario,
       };
       const existe = await ConfiguracaoAlerta.findOne({
-        usuario: req.userId,
+        usuario,
         tipo: dados.tipo,
         dispositivo: dados.dispositivo || null,
         subtipo: dados.subtipo || null,
@@ -35,7 +77,11 @@ class ConfiguracaoAlertaController {
   static async listar(req, res) {
     try {
       const { dispositivo, tipo, ativo } = req.query;
-      let filtro = { usuario: req.userId };
+      const filtro = req.adminId
+        ? req.query.usuario
+          ? { usuario: req.query.usuario }
+          : {}
+        : { usuario: req.userId };
       if (dispositivo) {
         filtro.dispositivo = dispositivo === "null" ? null : dispositivo;
       }
@@ -65,7 +111,7 @@ class ConfiguracaoAlertaController {
     try {
       const configuracao = await ConfiguracaoAlerta.findOne({
         _id: req.params.id,
-        usuario: req.userId,
+        ...(!req.adminId ? { usuario: req.userId } : {}),
       }).populate("dispositivo", "nome mac_address");
       if (!configuracao) {
         return res.status(404).json({
@@ -87,12 +133,51 @@ class ConfiguracaoAlertaController {
   }
   static async atualizar(req, res) {
     try {
+      const filtro = {
+        _id: req.params.id,
+        ...(!req.adminId ? { usuario: req.userId } : {}),
+      };
+      const atual = await ConfiguracaoAlerta.findOne(filtro);
+      if (!atual) {
+        return res.status(404).json({
+          success: false,
+          message: "Configuração não encontrada",
+        });
+      }
+      const camposPermitidos = [
+        "dispositivo",
+        "tipo",
+        "subtipo",
+        "ativo",
+        "limite_min",
+        "limite_max",
+        "unidade",
+        "severidade",
+        "mensagem_template",
+        "dias_antecedencia_colheita",
+        "observacoes",
+      ];
+      const dados = Object.fromEntries(
+        camposPermitidos
+          .filter((campo) => req.body[campo] !== undefined)
+          .map((campo) => [campo, req.body[campo]]),
+      );
+      const usuario = req.adminId ? atual.usuario : req.userId;
+      if (
+        dados.dispositivo !== undefined &&
+        !(await ConfiguracaoAlertaController.dispositivoDoUsuario(
+          dados.dispositivo,
+          usuario,
+        ))
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "O dispositivo não pertence ao usuário da configuração",
+        });
+      }
       const configuracao = await ConfiguracaoAlerta.findOneAndUpdate(
-        {
-          _id: req.params.id,
-          usuario: req.userId,
-        },
-        req.body,
+        filtro,
+        dados,
         { new: true, runValidators: true },
       );
       if (!configuracao) {
@@ -117,7 +202,7 @@ class ConfiguracaoAlertaController {
     try {
       const configuracao = await ConfiguracaoAlerta.findOneAndDelete({
         _id: req.params.id,
-        usuario: req.userId,
+        ...(!req.adminId ? { usuario: req.userId } : {}),
       });
       if (!configuracao) {
         return res.status(404).json({
@@ -141,8 +226,20 @@ class ConfiguracaoAlertaController {
     try {
       const { dispositivoId } = req.params;
 
+      if (
+        !req.adminId &&
+        !(await ConfiguracaoAlertaController.dispositivoDoUsuario(
+          dispositivoId,
+          req.userId,
+        ))
+      ) {
+        return res.status(404).json({
+          success: false,
+          message: "Dispositivo não encontrado",
+        });
+      }
       const configuracoes = await ConfiguracaoAlerta.find({
-        usuario: req.userId,
+        ...(req.adminId ? {} : { usuario: req.userId }),
         $or: [{ dispositivo: dispositivoId }, { dispositivo: null }],
       });
       res.json({
@@ -211,11 +308,18 @@ class ConfiguracaoAlertaController {
       }
       const dados = {
         ...defaults[tipo],
-        usuario: req.userId,
+        usuario: req.adminId
+          ? await ConfiguracaoAlertaController.usuarioDaConfiguracao(
+              req,
+              res,
+              req.body.usuario,
+            )
+          : req.userId,
         ativo: true,
       };
+      if (!dados.usuario) return;
       const existe = await ConfiguracaoAlerta.findOne({
-        usuario: req.userId,
+        usuario: dados.usuario,
         tipo: dados.tipo,
         subtipo: dados.subtipo || null,
         dispositivo: null,

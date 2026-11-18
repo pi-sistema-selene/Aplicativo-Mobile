@@ -1,5 +1,5 @@
 import { Colors, FontWeight, Radius, Spacing, Typography } from "@/constants/Colors";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   View,
   Text,
@@ -9,16 +9,20 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Alert,
+  type ScrollViewInstance,
 } from "react-native";
 
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useRouter, useLocalSearchParams } from "expo-router";
 
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import * as SecureStore from "expo-secure-store";
 import { API_V1 } from "@/constants/api";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { useRealtimeRefresh } from "@/hooks/useRealtimeRefresh";
+import { isAdminRole } from "@/utils/role";
 
 interface Message {
   _id: string;
@@ -33,7 +37,7 @@ export default function ChatScreen() {
   const { chatId } = useLocalSearchParams();
   const [iniciais, setIniciais] = useState("US");
 
-  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollViewRef = useRef<ScrollViewInstance | null>(null);
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
@@ -42,15 +46,14 @@ export default function ChatScreen() {
   const [isTyping, setIsTyping] = useState(false);
 
   const handleGoProfile = async () => {
-    const role = await SecureStore.getItemAsync("userRole");
-    const isAdmin = role === "admin" || role === "superadmin";
+    const role = await SecureStore.getItemAsync(STORAGE_KEYS.USER_ROLE);
 
-    router.push(isAdmin ? "/(admin)/profile-admin" : "/(tabs)/profile");
+    router.push(isAdminRole(role) ? "/(admin)/profile-admin" : "/profile");
   };
 
   useEffect(() => {
     const carregarDadosUsuario = async () => {
-      const nome = await SecureStore.getItemAsync("userName");
+      const nome = await SecureStore.getItemAsync(STORAGE_KEYS.USER_NAME);
       if (nome) {
         const partes = nome.split(" ");
         const init =
@@ -64,13 +67,13 @@ export default function ChatScreen() {
     carregarDadosUsuario();
   }, []);
 
-  const loadUserData = async () => {
-    const userId = await SecureStore.getItemAsync("userId");
-    const userRole = await SecureStore.getItemAsync("userRole");
+  const loadUserData = useCallback(async () => {
+    const userId = await SecureStore.getItemAsync(STORAGE_KEYS.USER_ID);
+    const userRole = await SecureStore.getItemAsync(STORAGE_KEYS.USER_ROLE);
 
     setCurrentUserId(userId);
     setRole(userRole);
-  };
+  }, []);
 
   const formatTime = (date: string) => {
     return new Date(date).toLocaleTimeString("pt-BR", {
@@ -96,9 +99,12 @@ export default function ChatScreen() {
     return msgDate.toLocaleDateString("pt-BR");
   };
 
-  const fetchMessages = async () => {
+  const fetchMessages = useCallback(async (showError = false) => {
     try {
-      const token = await SecureStore.getItemAsync("userToken");
+      const token = await SecureStore.getItemAsync(STORAGE_KEYS.USER_TOKEN);
+      if (!token) {
+        throw new Error("Sua sessão expirou. Entre novamente.");
+      }
 
       let url =
         role === "admin" || role === "superadmin"
@@ -111,15 +117,29 @@ export default function ChatScreen() {
 
       setMessages(res.data.data || res.data || []);
     } catch (err) {
-      console.log(err);
+      const responseMessage = isAxiosError(err)
+        ? err.response?.data?.message
+        : undefined;
+      const message =
+        typeof responseMessage === "string"
+          ? responseMessage
+          : err instanceof Error
+            ? err.message
+            : "Tente novamente.";
+      if (showError) Alert.alert("Erro ao carregar conversa", message);
+      else console.error("Erro ao atualizar conversa:", err);
     }
-  };
+  }, [chatId, role]);
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim()) return;
+    const texto = newMessage.trim();
+    if (!texto || isTyping) return;
 
     try {
-      const token = await SecureStore.getItemAsync("userToken");
+      const token = await SecureStore.getItemAsync(STORAGE_KEYS.USER_TOKEN);
+      if (!token) {
+        throw new Error("Sua sessão expirou. Entre novamente.");
+      }
 
       let url =
         role === "admin" || role === "superadmin"
@@ -130,35 +150,47 @@ export default function ChatScreen() {
 
       const res = await axios.post(
         url,
-        { texto: newMessage },
+        { texto },
         { headers: { Authorization: `Bearer ${token}` } },
       );
 
       const nova = res.data.data || res.data;
 
-      setMessages((prev) => [...prev, nova]);
+      setMessages((prev) =>
+        prev.some((message) => message._id === nova._id)
+          ? prev
+          : [...prev, nova],
+      );
       setNewMessage("");
       setIsTyping(false);
     } catch (err) {
-      console.log(err);
+      const responseMessage = isAxiosError(err)
+        ? err.response?.data?.message
+        : undefined;
+      Alert.alert(
+        "Erro ao enviar mensagem",
+        typeof responseMessage === "string"
+          ? responseMessage
+          : err instanceof Error
+            ? err.message
+            : "Tente novamente.",
+      );
       setIsTyping(false);
     }
   };
 
   useEffect(() => {
-    loadUserData();
-  }, []);
+    void Promise.resolve().then(loadUserData);
+  }, [loadUserData]);
   useEffect(() => {
-    if (role) fetchMessages();
-  }, [chatId, role]);
+    if (role) void Promise.resolve().then(() => fetchMessages(true));
+  }, [fetchMessages, role]);
   useRealtimeRefresh(() => {
     if (role) void fetchMessages();
   }, false);
   useEffect(() => {
     scrollViewRef.current?.scrollToEnd({ animated: true });
   }, [messages]);
-
-  let lastDate = "";
 
   return (
     <SafeAreaProvider>
@@ -188,15 +220,16 @@ export default function ChatScreen() {
 
         <View style={styles.content}>
           <ScrollView ref={scrollViewRef}>
-            {messages.map((msg) => {
+            {messages.map((msg, index) => {
               const isMe =
-                role === "admin"
+                isAdminRole(role)
                   ? msg.tipo === "admin"
                   : msg.autor === currentUserId;
 
               const dateLabel = getDateLabel(msg.createdAt);
-              const showDate = dateLabel !== lastDate;
-              lastDate = dateLabel;
+              const previousDate =
+                index > 0 ? getDateLabel(messages[index - 1].createdAt) : "";
+              const showDate = dateLabel !== previousDate;
 
               return (
                 <View key={msg._id}>

@@ -12,8 +12,8 @@ async function sendAlertPush(userId, alert) {
 
   const preferences = user.notificationPreferences || {};
   if (
-    !preferences.geral ||
-    !preferences.celular ||
+    preferences.geral === false ||
+    preferences.celular === false ||
     (!preferences.baixos && alert.severity !== "Alta") ||
     user.pushTokens.length === 0
   ) {

@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const leituraSchema = new mongoose.Schema({
+  usuario: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    index: true,
+  },
   dispositivo: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Dispositivo",

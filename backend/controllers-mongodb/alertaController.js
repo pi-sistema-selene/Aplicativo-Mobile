@@ -14,14 +14,24 @@ class AlertaController {
       const filtro = {
         resolvido: resolvido === "true",
       };
+      const restricoes = [];
+      if (!req.adminId) {
+        const dispositivosDoUsuario = await Dispositivo.find({
+          usuario: req.userId,
+        }).distinct("_id");
+        restricoes.push({ dispositivo: { $in: dispositivosDoUsuario } });
+      }
       if (severidade) {
         filtro.severidade = severidade.toUpperCase();
       }
       if (dispositivo_id) {
-        filtro.dispositivo = dispositivo_id;
+        restricoes.push({ dispositivo: dispositivo_id });
       }
       if (planta_id) {
-        filtro.planta = planta_id;
+        restricoes.push({ planta: planta_id });
+      }
+      if (restricoes.length) {
+        filtro.$and = restricoes;
       }
       const alertas = await Alerta.find(filtro)
         .populate("dispositivo", "nome localizacao")
@@ -45,7 +55,14 @@ class AlertaController {
     try {
       const { id } = req.params;
       const { observacoes } = req.body;
-      const alerta = await Alerta.findById(id);
+      const filtro = { _id: id };
+      if (!req.adminId) {
+        const dispositivosDoUsuario = await Dispositivo.find({
+          usuario: req.userId,
+        }).distinct("_id");
+        filtro.dispositivo = { $in: dispositivosDoUsuario };
+      }
+      const alerta = await Alerta.findOne(filtro);
       if (!alerta) {
         return res.status(404).json({
           success: false,
@@ -61,6 +78,8 @@ class AlertaController {
       alerta.resolvido = true;
       alerta.resolvido_em = new Date();
       alerta.observacoes_resolucao = observacoes || "Resolvido manualmente";
+      alerta.resolvido_por = req.adminId || req.userId;
+      alerta.resolvido_por_tipo = req.adminId ? "Admin" : "User";
       await alerta.save();
       res.json({
         success: true,
@@ -93,11 +112,16 @@ class AlertaController {
       }
       const dataLimite = new Date();
       dataLimite.setDate(dataLimite.getDate() - dias);
+      const filtro = { timestamp: { $gte: dataLimite } };
+      if (!req.adminId) {
+        const dispositivosDoUsuario = await Dispositivo.find({
+          usuario: req.userId,
+        }).distinct("_id");
+        filtro.dispositivo = { $in: dispositivosDoUsuario };
+      }
       const estatisticas = await Alerta.aggregate([
         {
-          $match: {
-            timestamp: { $gte: dataLimite },
-          },
+          $match: filtro,
         },
         {
           $group: {
@@ -149,9 +173,7 @@ class AlertaController {
       ]);
       const porTipo = await Alerta.aggregate([
         {
-          $match: {
-            timestamp: { $gte: dataLimite },
-          },
+          $match: filtro,
         },
         {
           $group: {
@@ -188,7 +210,16 @@ class AlertaController {
   }
   static async criarAlerta(dados) {
     try {
-      const alerta = new Alerta(dados);
+      const dispositivo = await Dispositivo.findById(dados.dispositivo).select(
+        "usuario",
+      );
+      if (!dispositivo?.usuario) {
+        throw new Error("Não é possível associar o alerta a um dispositivo sem proprietário");
+      }
+      const alerta = new Alerta({
+        ...dados,
+        usuario: dispositivo.usuario,
+      });
       await alerta.save();
       return alerta;
     } catch (error) {

@@ -11,6 +11,7 @@ const routes = require('./routes');
 const errorHandler = require('./middleware/errorHandler');
 const { connectDB } = require('./config/mongodb');
 const { setRealtimeServer, broadcastDataChanged } = require('./services/realtimeService');
+const auditActivity = require('./middleware/activity-audit-mongodb');
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -69,6 +70,7 @@ app.use('/fotos_perfil', cors(), express.static(path.join(__dirname, '..', 'foto
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+app.use(auditActivity);
 
 app.use((req, res, next) => {
   console.log(`📡 ${new Date().toISOString()} - ${req.method} ${req.url}`);

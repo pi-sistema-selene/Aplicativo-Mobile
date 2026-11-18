@@ -76,6 +76,7 @@ class AuthController {
       }
 
       const usuario = await User.create(usuarioData);
+      req.userId = usuario._id;
 
       const token = jwt.sign(
         { userId: usuario._id, email: usuario.email },
@@ -132,6 +133,7 @@ class AuthController {
         { expiresIn: "7d" },
       );
 
+      req.userId = usuario._id;
       res.json({
         success: true,
         message: "Login realizado com sucesso",

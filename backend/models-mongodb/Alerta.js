@@ -32,6 +32,19 @@ const alertaSchema = new mongoose.Schema(
       ref: "Dispositivo",
       required: true,
     },
+    usuario: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      index: true,
+    },
+    resolvido_por: {
+      type: mongoose.Schema.Types.ObjectId,
+      refPath: "resolvido_por_tipo",
+    },
+    resolvido_por_tipo: {
+      type: String,
+      enum: ["User", "Admin"],
+    },
     planta: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Planta",

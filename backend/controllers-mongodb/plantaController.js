@@ -1,11 +1,15 @@
 const Planta = require("../models-mongodb/Planta");
 const Dispositivo = require("../models-mongodb/Dispositivo");
 const Leitura = require("../models-mongodb/Leitura");
+const User = require("../models-mongodb/User");
 class PlantaController {
   static async listar(req, res) {
     try {
       const { ativo = true } = req.query;
       const filtro = {};
+      if (!req.adminId) {
+        filtro.usuario = req.userId;
+      }
       if (ativo !== undefined) {
         filtro.ativo = ativo === "true";
       }
@@ -13,7 +17,10 @@ class PlantaController {
         .populate({
           path: "dispositivos",
           select: "nome tipo online localizacao",
-          match: { ativo: true },
+          match: {
+            ativo: true,
+            ...(!req.adminId ? { usuario: req.userId } : {}),
+          },
         })
         .sort({ data_plantio: -1 });
       res.json({
@@ -32,9 +39,12 @@ class PlantaController {
   static async buscar(req, res) {
     try {
       const { id } = req.params;
-      const planta = await Planta.findById(id).populate({
+      const filtro = { _id: id };
+      if (!req.adminId) filtro.usuario = req.userId;
+      const planta = await Planta.findOne(filtro).populate({
         path: "dispositivos",
         select: "nome tipo online localizacao mac_address",
+        match: !req.adminId ? { usuario: req.userId } : {},
         populate: {
           path: "leituras",
           select: "temperatura ph altura_planta timestamp",
@@ -89,9 +99,15 @@ class PlantaController {
         data_colheita_estimada: data_colheita_estimada
           ? new Date(data_colheita_estimada)
           : null,
-        usuario: req.userId,
+        usuario: req.adminId ? req.body.usuario_id : req.userId,
         ativo: true,
       });
+      if (req.adminId && !(await User.exists({ _id: req.body.usuario_id }))) {
+        return res.status(400).json({
+          success: false,
+          message: "Selecione um usuário válido para esta planta",
+        });
+      }
       await planta.save();
       res.status(201).json({
         success: true,
@@ -110,7 +126,9 @@ class PlantaController {
     try {
       const { id } = req.params;
       const dados = req.body;
-      const planta = await Planta.findById(id);
+      const filtro = { _id: id };
+      if (!req.adminId) filtro.usuario = req.userId;
+      const planta = await Planta.findOne(filtro);
       if (!planta) {
         return res.status(404).json({
           success: false,
@@ -155,7 +173,9 @@ class PlantaController {
     try {
       const { id } = req.params;
       const { data_colheita, observacoes } = req.body;
-      const planta = await Planta.findById(id);
+      const filtro = { _id: id };
+      if (!req.adminId) filtro.usuario = req.userId;
+      const planta = await Planta.findOne(filtro);
       if (!planta) {
         return res.status(404).json({
           success: false,
@@ -189,7 +209,9 @@ class PlantaController {
     try {
       const { id } = req.params;
       const { dias = 30 } = req.query;
-      const planta = await Planta.findById(id);
+      const filtro = { _id: id };
+      if (!req.adminId) filtro.usuario = req.userId;
+      const planta = await Planta.findOne(filtro);
       if (!planta) {
         return res.status(404).json({
           success: false,
@@ -200,6 +222,7 @@ class PlantaController {
         planta: id,
         tipo: "ESP32_CAM",
         ativo: true,
+        ...(req.adminId ? {} : { usuario: req.userId }),
       });
       if (dispositivos.length === 0) {
         return res.json({

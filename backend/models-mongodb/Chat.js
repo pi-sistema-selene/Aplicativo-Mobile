@@ -17,6 +17,14 @@ const ChatSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    encerradoPor: {
+      type: mongoose.Schema.Types.ObjectId,
+      refPath: "encerradoPorTipo",
+    },
+    encerradoPorTipo: {
+      type: String,
+      enum: ["User", "Admin"],
+    },
   },
   { timestamps: true },
 );

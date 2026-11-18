@@ -76,7 +76,10 @@ class DashboardController {
       const dispositivo = await Dispositivo.findOne({
         _id: id,
         usuario: usuarioId,
-      }).populate("planta");
+      }).populate({
+        path: "planta",
+        match: { usuario: usuarioId },
+      });
       if (!dispositivo) {
         return res.status(404).json({
           success: false,
@@ -161,7 +164,7 @@ class DashboardController {
       })
         .populate({
           path: "dispositivos",
-          match: { ativo: true },
+          match: { ativo: true, usuario: usuarioId },
           populate: {
             path: "leituras",
             match: { "dados.altura_planta": { $exists: true, $ne: null } },

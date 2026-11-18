@@ -4,10 +4,12 @@ const router = express.Router();
 const AuthMiddleware = require("../middleware/auth-mongodb");
 const userController = require("../controllers-mongodb/userController");
 const adminAuthMiddleware = require("../middleware/admin-auth-mongodb");
+const ActivityController = require("../controllers-mongodb/activityController");
 
 router.post("/", adminAuthMiddleware, userController.criar);
 router.post("/ping", AuthMiddleware, userController.ping);
 router.get("/me", AuthMiddleware, userController.perfil);
+router.get("/me/activity", AuthMiddleware, ActivityController.listarMinhasAcoes);
 router.put("/me", AuthMiddleware, userController.atualizarPerfil);
 router.get(
   "/me/notification-preferences",

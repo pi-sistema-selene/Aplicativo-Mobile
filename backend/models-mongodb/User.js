@@ -60,7 +60,7 @@ const userSchema = new mongoose.Schema(
     notificationPreferences: {
       geral: { type: Boolean, default: true },
       som: { type: Boolean, default: true },
-      celular: { type: Boolean, default: false },
+      celular: { type: Boolean, default: true },
       vibrar: { type: Boolean, default: true },
       personalizadas: { type: Boolean, default: false },
       baixos: { type: Boolean, default: false },

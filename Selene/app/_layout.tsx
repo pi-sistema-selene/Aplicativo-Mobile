@@ -1,9 +1,13 @@
 import {
   configureAndroidNotificationChannels,
+  getNotificationPreferences,
+  registerForPushNotifications,
 } from "@/services/notificationsService";
 import * as Notifications from "expo-notifications";
 import { Stack, useRouter } from "expo-router";
 import { useEffect } from "react";
+import * as SecureStore from "expo-secure-store";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 
 Notifications.setNotificationHandler({
   handleNotification: async (notification) => ({
@@ -21,6 +25,22 @@ export default function RootLayout() {
     configureAndroidNotificationChannels().catch((error) => {
       console.error("Erro ao configurar canais de notificação:", error);
     });
+
+    const registerPushToken = async () => {
+      try {
+        const token = await SecureStore.getItemAsync(STORAGE_KEYS.USER_TOKEN);
+        if (!token) return;
+
+        const preferences = await getNotificationPreferences(token);
+        if (preferences.geral && preferences.celular) {
+          await registerForPushNotifications(token);
+        }
+      } catch (error) {
+        console.error("Erro ao registrar notificações push:", error);
+      }
+    };
+
+    registerPushToken();
 
     const subscription = Notifications.addNotificationResponseReceivedListener(
       () => router.push("/alert"),

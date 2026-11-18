@@ -1,5 +1,6 @@
 const Estufa = require("../models-mongodb/Estufa");
 const Dispositivo = require("../models-mongodb/Dispositivo");
+const User = require("../models-mongodb/User");
 const mongoose = require("mongoose");
 
 class EstufaController {
@@ -11,10 +12,11 @@ class EstufaController {
         filtro.usuario_id = req.userId;
       }
 
-      const estufa = await Estufa.findOne(filtro).populate(
-        "dispositivos",
-        "nome tipo mac_address localizacao online ativo",
-      );
+      const estufa = await Estufa.findOne(filtro).populate({
+        path: "dispositivos",
+        select: "nome tipo mac_address localizacao online ativo",
+        match: req.adminId ? {} : { usuario: req.userId },
+      });
 
       if (!estufa) {
         return res
@@ -38,7 +40,11 @@ class EstufaController {
     try {
       const filtro = req.adminId ? {} : { usuario_id: req.userId };
       const estufas = await Estufa.find(filtro)
-        .populate("dispositivos", "nome tipo mac_address localizacao online ativo")
+        .populate({
+          path: "dispositivos",
+          select: "nome tipo mac_address localizacao online ativo",
+          match: req.adminId ? {} : { usuario: req.userId },
+        })
         .sort({ createdAt: -1 });
 
       return res.status(200).json({
@@ -88,9 +94,16 @@ class EstufaController {
       }
 
       const idsUnicos = [...new Set(dispositivos_ids.map(String))];
+      const usuarioId = req.adminId ? req.body.usuario_id : req.userId;
+      if (req.adminId && !(await User.exists({ _id: usuarioId }))) {
+        return res.status(400).json({
+          success: false,
+          message: "Selecione um usuário válido para esta estufa.",
+        });
+      }
       const dispositivos = await Dispositivo.find({
         _id: { $in: idsUnicos },
-        usuario: req.userId,
+        usuario: usuarioId,
         ativo: true,
       }).select("_id");
 
@@ -108,7 +121,7 @@ class EstufaController {
         observacoes,
         data_criacao: data_criacao || new Date().toLocaleDateString("pt-BR"),
         status,
-        usuario_id: req.userId,
+        usuario_id: usuarioId,
       });
 
       return res.status(201).json({

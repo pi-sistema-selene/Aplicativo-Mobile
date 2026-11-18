@@ -9,6 +9,13 @@ const {
 } = require("../services/alertNotificationService");
 
 class LeituraController {
+  static async buscarDispositivoAutorizado(req, dispositivoId) {
+    return Dispositivo.findOne({
+      _id: dispositivoId,
+      ...(!req.adminId ? { usuario: req.userId } : {}),
+    }).select("_id usuario");
+  }
+
   static async salvarImagemCloudinary(
     equipamento,
     usuarioId,
@@ -43,22 +50,24 @@ class LeituraController {
         });
       }
 
-      let dispositivo = await Dispositivo.findOneAndUpdate(
-        { mac_address: mac },
+      const dispositivo = await Dispositivo.findOneAndUpdate(
+        {
+          mac_address: mac,
+          ...(!req.adminId ? { usuario: req.userId } : {}),
+        },
         {
           $set: {
             online: true,
             ultima_comunicacao: new Date(),
           },
         },
-        { new: true, upsert: true },
+        { new: true },
       );
-
-      if (dispositivo.__v === 0) {
-        dispositivo.nome = `ESP32_${mac.slice(-6)}`;
-        dispositivo.tipo = "ESP32_SENSORES";
-        dispositivo.usuario = req.userId || null;
-        await dispositivo.save();
+      if (!dispositivo) {
+        return res.status(404).json({
+          success: false,
+          message: "Dispositivo não encontrado para este usuário",
+        });
       }
 
       const dados = {
@@ -76,6 +85,7 @@ class LeituraController {
         "SENSORES",
       );
       const leitura = await Leitura.create({
+        usuario: dispositivo.usuario,
         dispositivo: dispositivo._id,
         tipo_leitura: "SENSORES",
         dados,
@@ -123,22 +133,24 @@ class LeituraController {
         });
       }
 
-      let dispositivo = await Dispositivo.findOneAndUpdate(
-        { mac_address: mac },
+      const dispositivo = await Dispositivo.findOneAndUpdate(
+        {
+          mac_address: mac,
+          ...(!req.adminId ? { usuario: req.userId } : {}),
+        },
         {
           $set: {
             online: true,
             ultima_comunicacao: new Date(),
           },
         },
-        { new: true, upsert: true },
+        { new: true },
       );
-
-      if (dispositivo.__v === 0) {
-        dispositivo.nome = `ESP32-CAM_${mac.slice(-6)}`;
-        dispositivo.tipo = "ESP32_CAM";
-        dispositivo.usuario = req.userId || null;
-        await dispositivo.save();
+      if (!dispositivo) {
+        return res.status(404).json({
+          success: false,
+          message: "Dispositivo não encontrado para este usuário",
+        });
       }
 
       let predicao = null;
@@ -151,6 +163,7 @@ class LeituraController {
         "CAMERA",
       );
       const leitura = await Leitura.create({
+        usuario: dispositivo.usuario,
         dispositivo: dispositivo._id,
         tipo_leitura: "CAMERA",
         dados: {
@@ -201,6 +214,16 @@ class LeituraController {
     try {
       const { dispositivo_id } = req.params;
       const { limit = 100, page = 1 } = req.query;
+      const dispositivo = await LeituraController.buscarDispositivoAutorizado(
+        req,
+        dispositivo_id,
+      );
+      if (!dispositivo) {
+        return res.status(404).json({
+          success: false,
+          message: "Dispositivo não encontrado",
+        });
+      }
 
       const leituras = await Leitura.find({ dispositivo: dispositivo_id })
         .sort({ timestamp: -1 })
@@ -230,6 +253,16 @@ class LeituraController {
         periodo = "24h",
         agrupamento = "auto",
       } = req.query;
+      const dispositivo = await LeituraController.buscarDispositivoAutorizado(
+        req,
+        dispositivo_id,
+      );
+      if (!dispositivo) {
+        return res.status(404).json({
+          success: false,
+          message: "Dispositivo não encontrado",
+        });
+      }
 
       const sensoresPermitidos = [
         "temperatura",
@@ -347,6 +380,16 @@ class LeituraController {
     try {
       const { dispositivo_id } = req.params;
       const { periodo = "24h" } = req.query;
+      const dispositivo = await LeituraController.buscarDispositivoAutorizado(
+        req,
+        dispositivo_id,
+      );
+      if (!dispositivo) {
+        return res.status(404).json({
+          success: false,
+          message: "Dispositivo não encontrado",
+        });
+      }
 
       let horas;
       switch (periodo) {
@@ -463,6 +506,13 @@ class LeituraController {
           message: "Dispositivo não cadastrado. Cadastre primeiro no sistema.",
         });
       }
+      if (!dispositivo.usuario) {
+        return res.status(409).json({
+          success: false,
+          message:
+            "Dispositivo sem proprietário. Peça a um administrador para vinculá-lo a um usuário.",
+        });
+      }
 
       dispositivo.online = true;
       dispositivo.ultima_comunicacao = new Date();
@@ -483,6 +533,7 @@ class LeituraController {
         "SENSORES",
       );
       const leitura = await Leitura.create({
+        usuario: dispositivo.usuario,
         dispositivo: dispositivo._id,
         tipo_leitura: "SENSORES",
         dados,
@@ -542,6 +593,13 @@ class LeituraController {
           message: "Dispositivo não cadastrado. Cadastre primeiro no sistema.",
         });
       }
+      if (!dispositivo.usuario) {
+        return res.status(409).json({
+          success: false,
+          message:
+            "Dispositivo sem proprietário. Peça a um administrador para vinculá-lo a um usuário.",
+        });
+      }
 
       dispositivo.online = true;
       dispositivo.ultima_comunicacao = new Date();
@@ -569,6 +627,7 @@ class LeituraController {
         "CAMERA",
       );
       const leitura = await Leitura.create({
+        usuario: dispositivo.usuario,
         dispositivo: dispositivo._id,
         tipo_leitura: "CAMERA",
         dados: {
@@ -664,8 +723,20 @@ class LeituraController {
           message: "Dispositivo não cadastrado",
         });
       }
+      if (!dispositivo.usuario) {
+        return res.status(409).json({
+          success: false,
+          message:
+            "Dispositivo sem proprietário. Peça a um administrador para vinculá-lo a um usuário.",
+        });
+      }
 
+      const leituraAnterior = await getPreviousReading(
+        dispositivo._id,
+        "CAMERA",
+      );
       const leitura = await Leitura.create({
+        usuario: dispositivo.usuario,
         dispositivo: dispositivo._id,
         tipo_leitura: "CAMERA",
         dados: {
@@ -674,6 +745,16 @@ class LeituraController {
         },
         timestamp: new Date(),
       });
+
+      try {
+        await notifyOnNewImageAlert(
+          dispositivo,
+          predicao,
+          leituraAnterior?.dados,
+        );
+      } catch (error) {
+        console.error("Erro ao enviar push do alerta da câmera:", error);
+      }
 
       res.status(201).json({
         success: true,
